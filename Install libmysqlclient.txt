@@ -1,0 +1,37 @@
+#
+# Instructions for installing libmysqlclient.
+# LPMS_Backup_Manager-3.xx uses a MySQL 5.7 connecter which is tested to work with libmysqlclient20_5.7
+#
+
+#
+# Copies of 'libmysqlclient20_5.7.29-1ubuntu18.04_amd64.deb' and 'libmysqlclient20_5.7.29-1ubuntu18.04_i386' are distributed with the installation material
+# If available then these can be used without having to download the .tar files below
+#
+
+#
+# Instructions for 64 bit environments
+#
+# Download mysql-server_5.7.29-1ubuntu18.04_amd64.deb-bundle.tar from 'https://dev.mysql.com/downloads/mysql/'
+# Extract libmysqlclient20_5.7.29-1ubuntu18.04_amd64.deb
+# Open a Terminal and cd to the directory where libmysqlclient20_5.7.29-1ubuntu18.04_amd64.deb was extracted
+# Execute the following command
+#
+  
+sudo dpkg -i libmysqlclient20_5.7.29-1ubuntu18.04_amd64.deb
+
+#
+# Instructions for 32-bit environments
+#
+# Download mysql-server_5.7.29-1ubuntu18.04_i386.deb-bundle.tar from 'https://dev.mysql.com/downloads/mysql/'
+# Extract libmysqlclient20_5.7.29-1ubuntu18.04_i386
+# Open a Terminal and cd to the directory where libmysqlclient20_5.7.29-1ubuntu18.04_i386 was extracted
+# Execute the following command
+#
+  
+sudo dpkg -i libmysqlclient20_5.7.29-1ubuntu18.04_i386
+
+#
+# Then run the following command for both 32-bit and 64-bit environments 
+#
+
+sudo apt-get install libc6 mysql-common zlib1g
