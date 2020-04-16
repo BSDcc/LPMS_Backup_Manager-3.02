@@ -2464,9 +2464,10 @@ begin
          LogTokens.Destroy;
 
       end;
-   end;
 
-   LogLines.Destroy;
+      LogLines.Destroy;
+
+   end;
 
    if (NumLines = 0) then begin
       DispLogMsg(FormatDateTime('yyyy/MM/dd',Now()),FormatDateTime('hh:nn:ss.zzz',Now()),'##New Log File Created', '');
