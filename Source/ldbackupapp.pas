@@ -190,6 +190,7 @@ private { private declarations }
    BackupMsg       : string;      // Holds nex backup date and time
    OSDelim         : string;      // Holds '/' or '\' depending on the OS
    CfgFile         : string;      // Name of the default Configuration File
+   SMSResult       : string;      // Holds result returned by the SMS Provider
    StartTime       : TDateTime;   // Start time of the current Backup
    EndTime         : TDateTime;   // End time of the current Backup
    IniFile         : TINIFile;    // IniFile holding defaults
@@ -341,7 +342,7 @@ begin
          if Instr_List[idx1].Instruction = ThisNode.Text then begin
 
 //***
-//--- TO DO - Add a switch to indciate whether inactive instructions should be
+//--- TO DO - Add a switch to indicate whether inactive instructions should be
 //--- left out from the Config file
 //***
 
@@ -472,6 +473,25 @@ begin
    FormatSettings.ThousandSeparator := ',';
 
    ListNum := GetInstruction();
+
+//--- Check whether the selected instruction is active (a config file exists)
+
+   if Instr_List[ListNum].Active = False then begin
+
+      if (MessageDlg('LPMS Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo) then begin
+
+         tvInstructions.Items.Item[0].Selected := True;
+         tvInstructionsClick(Application);
+
+         Exit;
+
+      end;
+
+//***
+//*** TO DO - Code to do a Config
+//***
+
+   end;
 
 //--- Initialize the date/time dropdown boxes and the input fields
 
@@ -1406,7 +1426,7 @@ begin
       if (SMSDone = true) then
          DispLogMsg('SMS indicating SUCCESS with message "' + DispMessage + '" sent to "' + edtSMSNumber.Text + '"')
       else
-         DispLogMsg('Attempt to send SMS indicating SUCCESS failed');
+         DispLogMsg('Attempt to send SMS indicating SUCCESS failed with message "' + SMSResult + '"');
    end;
 
    DispLogMsg('Backup attempt completed on ' + FormatDateTime('yyyy/MM/dd',Now()) + ' at ' + FormatDateTime('hh:nn:ss.zzz',EndTime) + ', Time taken: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime));
@@ -1967,10 +1987,9 @@ begin
          send_xml.Add('<default_flash>False</default_flash>');
          send_xml.Add('<default_type>SMS</default_type>');
          send_xml.Add('<default_senderid/>');
-//         send_xml.Add('<default_senderid></default_senderid>');
          send_xml.Add('</settings>');
          send_xml.Add('<entries>');
-         send_xml.Add('<numto>' + SMSNumber + '</numto>');
+         send_xml.Add('<numto>' + Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber + '</numto>');
          send_xml.Add('<customerid>LPMS Backup Manager</customerid>');
          send_xml.Add('</entries>');
          send_xml.Add('</senddata>');
@@ -2039,7 +2058,15 @@ begin
          PosEnd   := AnsiPos('</result>',Answer);
          Req_Result := Copy(Answer,PosStart + 8,PosEnd - (PosStart + 8));
 
-         if (lowercase(Req_Result) = 'true') then SMSDone := true;
+         if (lowercase(Req_Result) = 'true') then
+            SMSDone := true
+         else begin
+            PosStart := AnsiPos('<error>',Answer);
+            PosEnd   := AnsiPos('</error>',Answer);
+            SMSResult := Copy(Answer,PosStart + 7,PosEnd - (PosStart + 7));
+         end;
+
+
       end;
 
       2: begin
@@ -2435,6 +2462,10 @@ var
    LogLines  : TStringList;
    LogTokens : TStrings;
 
+//***
+//*** TO DO - Check for invalid log file content/format and give user options
+//***
+
 begin
 
 //--- Set the Format Settings to override the system locale
@@ -2482,30 +2513,28 @@ var
    idx1      : integer;
    ThisLine  : string;
    SaveList  : TStringList;
-//   ThisLV    : TListView;
 
 const
    Delim     : char = '|';
 
 begin
-//   if (tvInstructions.Selected.Index = 0) then
-//      ThisLV := lvLogAll
-//   else
-//      ThisLV := lvLogSel;
 
    SaveList := TStringList.Create;
 
    for idx1 := 0 to lvLogAll.Items.Count - 1 do begin
+
       ThisLine := lvLogAll.Items.Item[idx1].Caption + Delim +
                   lvLogAll.Items.Item[idx1].SubItems.Strings[0] + Delim +
                   lvLogAll.Items.Item[idx1].SubItems.Strings[1] + Delim +
                   lvLogAll.Items.Item[idx1].SubItems.Strings[2] + Delim;
 
       SaveList.Add(ThisLine);
+
    end;
 
    SaveList.SaveToFile(FileName);
-   SaveList.Free;
+   SaveList.Destroy;
+
 end;
 
 //---------------------------------------------------------------------------

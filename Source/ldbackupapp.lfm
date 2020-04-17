@@ -13,8 +13,8 @@ object FLPMSBackup: TFLPMSBackup
   LCLVersion = '2.0.6.0'
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 23
-    Top = 727
+    Height = 21
+    Top = 729
     Width = 1242
     Panels = <    
       item
@@ -37,35 +37,35 @@ object FLPMSBackup: TFLPMSBackup
   end
   object splSplit01: TSplitter
     Left = 200
-    Height = 622
+    Height = 624
     Top = 57
     Width = 5
     Beveled = True
   end
   object pnlP00: TPanel
     Left = 205
-    Height = 622
+    Height = 624
     Top = 57
     Width = 1037
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 622
+    ClientHeight = 624
     ClientWidth = 1037
     TabOrder = 2
     object pnlP00b: TPanel
       Left = 0
-      Height = 622
+      Height = 624
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 622
+      ClientHeight = 624
       ClientWidth = 1037
       TabOrder = 1
       object lvLogAll: TListView
         Left = 0
-        Height = 622
+        Height = 624
         Top = 0
         Width = 1037
         Align = alClient
@@ -85,7 +85,7 @@ object FLPMSBackup: TFLPMSBackup
           item
             AutoSize = True
             Caption = 'Message'
-            Width = 61
+            Width = 720
           end>
         GridLines = True
         ReadOnly = True
@@ -96,36 +96,36 @@ object FLPMSBackup: TFLPMSBackup
     end
     object pnlP00a: TPanel
       Left = 0
-      Height = 622
+      Height = 624
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 622
+      ClientHeight = 624
       ClientWidth = 1037
       TabOrder = 0
       object pnlP00a1: TPanel
         Left = 0
-        Height = 63
+        Height = 65
         Top = 4
         Width = 1038
         Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
-        ClientHeight = 63
+        ClientHeight = 65
         ClientWidth = 1038
         TabOrder = 0
         object Label2: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 4
-          Width = 53
+          Width = 55
           Caption = 'Template:'
           ParentColor = False
           ParentShowHint = False
         end
         object edtTemplate: TEdit
           Left = 150
-          Height = 23
+          Height = 27
           Hint = 'Valid values are: &Date, &Year, &Month, &Day, &Time, &Hour, &Minute, &CpyName, &HostName, &BackupType'
           Top = 0
           Width = 877
@@ -137,16 +137,16 @@ object FLPMSBackup: TFLPMSBackup
         end
         object Label3: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 38
-          Width = 91
+          Width = 94
           Caption = 'Backup Location:'
           ParentColor = False
           ParentShowHint = False
         end
         object edtLocation: TDirectoryEdit
           Left = 150
-          Height = 23
+          Height = 27
           Top = 35
           Width = 877
           OnAcceptDirectory = edtLocationAcceptDirectory
@@ -160,29 +160,29 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnlP00a2: TPanel
         Left = 0
-        Height = 132
+        Height = 134
         Top = 74
         Width = 1038
         Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
-        ClientHeight = 132
+        ClientHeight = 134
         ClientWidth = 1038
         TabOrder = 1
         object Label4: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 39
-          Width = 71
+          Width = 74
           Caption = 'Backup Type:'
           ParentColor = False
           ParentShowHint = False
         end
         object cbxType: TComboBox
           Left = 150
-          Height = 23
+          Height = 27
           Top = 35
           Width = 150
-          ItemHeight = 15
+          ItemHeight = 0
           ItemIndex = 1
           Items.Strings = (
             'Hourly'
@@ -195,19 +195,19 @@ object FLPMSBackup: TFLPMSBackup
         end
         object lblL01: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 74
-          Width = 22
+          Width = 24
           Caption = 'T01:'
           ParentColor = False
           ParentShowHint = False
         end
         object cbxT01: TComboBox
           Left = 150
-          Height = 23
+          Height = 27
           Top = 70
           Width = 150
-          ItemHeight = 15
+          ItemHeight = 0
           ItemIndex = 0
           Items.Strings = (
             ''
@@ -217,19 +217,19 @@ object FLPMSBackup: TFLPMSBackup
         end
         object lblL02: TLabel
           Left = 334
-          Height = 15
+          Height = 17
           Top = 74
-          Width = 19
+          Width = 21
           Caption = 'T02'
           ParentColor = False
           ParentShowHint = False
         end
         object cbxT02: TComboBox
           Left = 456
-          Height = 23
+          Height = 27
           Top = 70
           Width = 150
-          ItemHeight = 15
+          ItemHeight = 0
           ItemIndex = 0
           Items.Strings = (
             ''
@@ -239,19 +239,19 @@ object FLPMSBackup: TFLPMSBackup
         end
         object lblL03: TLabel
           Left = 658
-          Height = 15
+          Height = 17
           Top = 74
-          Width = 19
+          Width = 21
           Caption = 'T03'
           ParentColor = False
           ParentShowHint = False
         end
         object cbxT03: TComboBox
           Left = 772
-          Height = 23
+          Height = 27
           Top = 70
           Width = 150
-          ItemHeight = 15
+          ItemHeight = 0
           ItemIndex = 0
           Items.Strings = (
             ''
@@ -261,16 +261,16 @@ object FLPMSBackup: TFLPMSBackup
         end
         object Label6: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 109
-          Width = 73
+          Width = 77
           Caption = 'SMS Number:'
           ParentColor = False
           ParentShowHint = False
         end
         object edtSMSNumber: TEdit
           Left = 150
-          Height = 23
+          Height = 27
           Top = 105
           Width = 106
           OnChange = edtTemplateChange
@@ -279,27 +279,27 @@ object FLPMSBackup: TFLPMSBackup
         end
         object rbSMSSuccess: TRadioButton
           Left = 270
-          Height = 19
+          Height = 21
           Top = 109
-          Width = 104
+          Width = 113
           Caption = 'SMS on Success'
           OnChange = edtTemplateChange
           TabOrder = 6
         end
         object rbSMSFailure: TRadioButton
           Left = 410
-          Height = 19
+          Height = 21
           Top = 109
-          Width = 98
+          Width = 106
           Caption = 'SMS on Failure'
           OnChange = edtTemplateChange
           TabOrder = 7
         end
         object rbSMSNever: TRadioButton
           Left = 700
-          Height = 19
+          Height = 21
           Top = 109
-          Width = 105
+          Width = 115
           Caption = 'Never send SMS'
           OnChange = edtTemplateChange
           TabOrder = 9
@@ -316,9 +316,9 @@ object FLPMSBackup: TFLPMSBackup
         end
         object rbSMSAlways: TRadioButton
           Left = 550
-          Height = 19
+          Height = 21
           Top = 109
-          Width = 111
+          Width = 120
           Caption = 'Always send SMS'
           Checked = True
           OnChange = edtTemplateChange
@@ -327,7 +327,7 @@ object FLPMSBackup: TFLPMSBackup
         end
         object edtLastBackup: TEdit
           Left = 150
-          Height = 23
+          Height = 27
           Top = 0
           Width = 845
           Anchors = [akTop, akLeft, akRight]
@@ -373,9 +373,9 @@ object FLPMSBackup: TFLPMSBackup
         end
         object Label5: TLabel
           Left = 12
-          Height = 15
+          Height = 17
           Top = 4
-          Width = 66
+          Width = 70
           Caption = 'Last Backup:'
           ParentColor = False
           ParentShowHint = False
@@ -383,18 +383,18 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnlP00a3: TPanel
         Left = 12
-        Height = 410
+        Height = 412
         Top = 212
         Width = 1013
         Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
         Caption = 'pnlP00a3'
-        ClientHeight = 410
+        ClientHeight = 412
         ClientWidth = 1013
         TabOrder = 2
         object lvLogSel: TListView
           Left = 0
-          Height = 410
+          Height = 412
           Top = 0
           Width = 1013
           Align = alClient
@@ -414,7 +414,7 @@ object FLPMSBackup: TFLPMSBackup
             item
               AutoSize = True
               Caption = 'Message'
-              Width = 61
+              Width = 696
             end>
           GridLines = True
           ReadOnly = True
@@ -886,18 +886,18 @@ object FLPMSBackup: TFLPMSBackup
   end
   object pnlP02: TPanel
     Left = 0
-    Height = 622
+    Height = 624
     Top = 57
     Width = 200
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 622
+    ClientHeight = 624
     ClientWidth = 200
     TabOrder = 4
     object tvInstructions: TTreeView
       Left = 0
-      Height = 622
+      Height = 624
       Top = 0
       Width = 200
       Align = alClient
@@ -917,7 +917,7 @@ object FLPMSBackup: TFLPMSBackup
   object pnlP03: TPanel
     Left = 0
     Height = 48
-    Top = 679
+    Top = 681
     Width = 1242
     Align = alBottom
     BevelOuter = bvNone
@@ -976,8 +976,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL04: TLabel
       Left = 12
-      Height = 15
-      Top = 8
+      Height = 17
+      Top = 6
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -985,8 +985,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL05: TLabel
       Left = 12
-      Height = 15
-      Top = 28
+      Height = 17
+      Top = 26
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
