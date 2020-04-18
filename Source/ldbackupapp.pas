@@ -22,9 +22,10 @@ interface
 // Uses clause
 //------------------------------------------------------------------------------
 uses
-  Classes, SysUtils, sqldb, mysql50conn, mysql57conn, LCLType, FileUtil, Forms,
-  Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons,
-  ExtCtrls, EditBtn, strutils, INIFiles, HTTPSend, Synacode, DateUtils;
+  Classes, SysUtils, sqldb, mysql50conn, mysql57conn, mysql56conn, LCLType,
+  FileUtil, Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
+  StdCtrls, Buttons, ExtCtrls, EditBtn, strutils, INIFiles, HTTPSend, Synacode,
+  DateUtils;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -44,7 +45,6 @@ type
     lvLogAll: TListView;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
-    sqlCon: TMySQL57Connection;
     pnlP00b: TPanel;
     pnlP00: TPanel;
     pnlP00a: TPanel;
@@ -235,15 +235,28 @@ end;
 // Global variables
 //------------------------------------------------------------------------------
 var
-  FLPMSBackup: TFLPMSBackup;
+   FLPMSBackup: TFLPMSBackup;
 
-  ActiveInstr : integer;         // Set by the Timer to indicate which backup instruction popped
-  InstrSel    : string;          // Contains the Text of the selected TreeView item
+   ActiveInstr : integer;         // Set by the Timer to indicate which backup instruction popped
+   InstrSel    : string;          // Contains the Text of the selected TreeView item
 
-  NextDate    : TDateTime = 0;   // Next backup time
-  TimeBackup  : TTime;           // Time (in minutes) of next backup
+   NextDate    : TDateTime = 0;   // Next backup time
+   TimeBackup  : TTime;           // Time (in minutes) of next backup
 
-  SMSDone     : boolean = false; // True if SMS send was successful
+   SMSDone     : boolean = false; // True if SMS send was successful
+
+{$IFDEF WINDOWS}
+   sqlCon : TMySQL56Connection;       // Running on Windows
+{$ELSE}
+   {$IFDEF LINUX}
+      sqlCon : TMySQL57Connection;    // Running on Linux
+   {$ELSE}
+      {$IFDEF LCLCARBON}
+         sqlCon : TMySQL57Connection; // Running on macOS 10.*
+      {$ENDIF}
+   {$ENDIF}
+{$ENDIF}
+
 
 implementation
 
@@ -259,16 +272,31 @@ uses ldBackupSMSConfig;
 procedure TFLPMSBackup.FormActivate(Sender: TObject);
 begin
 
-//--- Determine the Platform on which we are running
+//--- Determine the Platform on which we are running and set the defaults to be
+//--- Platform specific
 
-   {$IFDEF WINDOWS}
-      OSDelim := '\';
-   {$ELSE}
+{$IFDEF WINDOWS}
+   OSDelim := '\';
+   sqlCon  := TMySQL56Connection.Create(nil);
+{$ELSE}
+   {$IFDEF LINUX}
       OSDelim := '/';
+      sqlCon  := TMySQL57Connection.Create(nil);
+   {$ELSE}
+      {$IFDEF LCLCARBON}
+         OSDelim := '/';
+         sqlCon  := TMySQL57Connection.Create(nil);
+      {$ENDIF}
    {$ENDIF}
+{$ENDIF}
+
+   sqlTran.DataBase    := sqlCon;
+   sqlQry1.Transaction := sqlTran;
+
+//--- Set up
 
    FLPMSBackup.Caption := 'LPMS Backup Manager';
-   DebugOn             := false;
+   DebugOn             := True;
    CfgFile             := 'LPMS Backup Manager.cfg';
 
    tvInstructions.Items.Clear;
