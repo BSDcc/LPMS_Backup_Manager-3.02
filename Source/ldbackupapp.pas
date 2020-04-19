@@ -35,6 +35,16 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+   Bevel3: TBevel;
+   Bevel4: TBevel;
+   edtSMS: TEdit;
+   edtInstruction: TEdit;
+   edtNextBackup: TEdit;
+   edtDBVersion: TEdit;
+   lblDBVersion: TLabel;
+   Label7: TLabel;
+   Label8: TLabel;
+   Label9: TLabel;
    MenuItem6: TMenuItem;
    MenuItem7: TMenuItem;
    N1: TMenuItem;
@@ -42,6 +52,9 @@ type
    FileFile: TMenuItem;
    HelpHelp: TMenuItem;
    MenuItem5: TMenuItem;
+   pnl00b2: TPanel;
+   pnl00b1: TPanel;
+   ToolBar1: TToolBar;
    ToolsTools: TMenuItem;
    ToolsMinimise: TAction;
     Bevel1: TBevel;
@@ -106,6 +119,7 @@ type
     timTimer2: TTimer;
     timTimer1: TTimer;
     TrayIcon: TTrayIcon;
+    TreeView1: TTreeView;
     tvInstructions: TTreeView;
 
     procedure btnMinimiseClick(Sender: TObject);
@@ -122,6 +136,7 @@ type
     procedure edtTemplateChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure TabControl1Change( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
     procedure timTimer1Timer(Sender: TObject);
     procedure ToolsRestoreExecute(Sender: TObject);
@@ -261,7 +276,7 @@ var
    {$IFDEF LINUX}
       sqlCon : TMySQL57Connection;    // Running on Linux
    {$ELSE}
-      {$IFDEF LCLCARBON}
+      {$IFDEF DARWIN}
          sqlCon : TMySQL57Connection; // Running on macOS 10.*
       {$ENDIF}
    {$ENDIF}
@@ -298,7 +313,7 @@ begin
       OSName  := 'Linux';
       sqlCon  := TMySQL57Connection.Create(nil);
    {$ELSE}
-      {$IFDEF LCLCARBON}
+      {$IFDEF DARWIN}
          OSDelim := '/';
          OSName  := 'macOS';
          sqlCon  := TMySQL57Connection.Create(nil);
@@ -458,6 +473,11 @@ begin
    LogList.Free;
    timTimer1.Enabled := false;
    TrayIcon.Visible := false;
+end;
+
+procedure TFLPMSBackup. TabControl1Change( Sender: TObject);
+begin
+
 end;
 
 //------------------------------------------------------------------------------

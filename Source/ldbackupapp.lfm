@@ -12,43 +12,6 @@ object FLPMSBackup: TFLPMSBackup
   OnClose = FormClose
   Position = poScreenCenter
   LCLVersion = '2.0.6.0'
-  object sbStatus: TStatusBar
-    Left = 0
-    Height = 21
-    Top = 708
-    Width = 1242
-    Panels = <    
-      item
-        Width = 450
-      end    
-      item
-        Text = ' '
-        Width = 110
-      end    
-      item
-        Width = 80
-      end    
-      item
-        Width = 205
-      end    
-      item
-        Width = 80
-      end    
-      item
-        Width = 80
-      end    
-      item
-        Width = 100
-      end>
-    SimplePanel = False
-  end
-  object splSplit01: TSplitter
-    Left = 200
-    Height = 603
-    Top = 57
-    Width = 5
-    Beveled = True
-  end
   object pnlP00: TPanel
     Left = 205
     Height = 603
@@ -61,70 +24,188 @@ object FLPMSBackup: TFLPMSBackup
     TabOrder = 2
     object pnlP00b: TPanel
       Left = 0
-      Height = 603
-      Top = 0
+      Height = 577
+      Top = 26
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 603
+      ClientHeight = 577
       ClientWidth = 1037
       TabOrder = 1
-      object lvLogAll: TListView
+      object pnl00b2: TPanel
         Left = 0
-        Height = 603
-        Top = 0
+        Height = 439
+        Top = 138
         Width = 1037
         Align = alClient
-        Columns = <        
-          item
-            Caption = 'Date'
-            Width = 100
-          end        
-          item
-            Caption = 'Time'
-            Width = 100
-          end        
-          item
-            Caption = 'Instruction'
-            Width = 100
-          end        
-          item
-            AutoSize = True
-            Caption = 'Message'
-            Width = 720
-          end>
-        GridLines = True
-        ReadOnly = True
-        RowSelect = True
-        TabOrder = 0
-        ViewStyle = vsReport
+        BevelOuter = bvNone
+        ClientHeight = 439
+        ClientWidth = 1037
+        TabOrder = 1
+        object lvLogAll: TListView
+          Left = 0
+          Height = 439
+          Top = 0
+          Width = 1037
+          Align = alClient
+          Columns = <          
+            item
+              Caption = 'Date'
+              Width = 100
+            end          
+            item
+              Caption = 'Time'
+              Width = 100
+            end          
+            item
+              Caption = 'Instruction'
+              Width = 100
+            end          
+            item
+              AutoSize = True
+              Caption = 'Message'
+              Width = 720
+            end>
+          GridLines = True
+          ReadOnly = True
+          RowSelect = True
+          TabOrder = 0
+          ViewStyle = vsReport
+        end
       end
+      object pnl00b1: TPanel
+        Left = 0
+        Height = 138
+        Top = 0
+        Width = 1037
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 138
+        ClientWidth = 1037
+        TabOrder = 0
+        object TreeView1: TTreeView
+          Left = 0
+          Height = 136
+          Top = 2
+          Width = 151
+          Align = alLeft
+          Images = imgSmall
+          TabOrder = 0
+          Items.Data = {
+            F9FFFFFF0200030000000100000003000000FFFFFFFFFFFFFFFF000000000000
+            000000060000004D50413030310100000003000000FFFFFFFFFFFFFFFF000000
+            000000000000060000004253413030310100000003000000FFFFFFFFFFFFFFFF
+            0000000000000000000B0000006C706D7364656661756C74
+          }
+        end
+        object Label7: TLabel
+          Left = 160
+          Height = 17
+          Top = 12
+          Width = 25
+          Caption = 'SMS'
+          ParentColor = False
+        end
+        object Label8: TLabel
+          Left = 160
+          Height = 17
+          Top = 44
+          Width = 60
+          Caption = 'Instruction'
+          ParentColor = False
+        end
+        object Label9: TLabel
+          Left = 160
+          Height = 17
+          Top = 76
+          Width = 70
+          Caption = 'Next Backup'
+          ParentColor = False
+        end
+        object lblDBVersion: TLabel
+          Left = 160
+          Height = 17
+          Top = 108
+          Width = 62
+          Caption = 'DB Version'
+          ParentColor = False
+          Visible = False
+        end
+        object edtSMS: TEdit
+          Left = 264
+          Height = 27
+          Top = 8
+          Width = 761
+          Anchors = [akTop, akLeft, akRight]
+          TabOrder = 1
+        end
+        object edtInstruction: TEdit
+          Left = 264
+          Height = 27
+          Top = 40
+          Width = 761
+          Anchors = [akTop, akLeft, akRight]
+          TabOrder = 2
+        end
+        object edtNextBackup: TEdit
+          Left = 264
+          Height = 27
+          Top = 72
+          Width = 761
+          Anchors = [akTop, akLeft, akRight]
+          TabOrder = 3
+        end
+        object edtDBVersion: TEdit
+          Left = 264
+          Height = 27
+          Top = 104
+          Width = 761
+          Anchors = [akTop, akLeft, akRight]
+          TabOrder = 4
+          Visible = False
+        end
+        object Bevel3: TBevel
+          Left = 0
+          Height = 2
+          Top = 0
+          Width = 1037
+          Align = alTop
+        end
+      end
+    end
+    object ToolBar1: TToolBar
+      Left = 0
+      Height = 26
+      Top = 0
+      Width = 1037
+      Caption = 'ToolBar1'
+      TabOrder = 2
     end
     object pnlP00a: TPanel
       Left = 0
-      Height = 603
-      Top = 0
+      Height = 577
+      Top = 26
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 603
+      ClientHeight = 577
       ClientWidth = 1037
       TabOrder = 0
       object pnlP00a1: TPanel
         Left = 0
-        Height = 68
-        Top = 4
+        Height = 72
+        Top = 0
         Width = 1038
         Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
-        ClientHeight = 68
+        ClientHeight = 72
         ClientWidth = 1038
         TabOrder = 0
         object Label2: TLabel
           Left = 12
           Height = 17
-          Top = 4
+          Top = 12
           Width = 55
           Caption = 'Template:'
           ParentColor = False
@@ -134,7 +215,7 @@ object FLPMSBackup: TFLPMSBackup
           Left = 150
           Height = 27
           Hint = 'Valid values are: &Date, &Year, &Month, &Day, &Time, &Hour, &Minute, &CpyName, &HostName, &BackupType'
-          Top = 0
+          Top = 8
           Width = 877
           Anchors = [akTop, akLeft, akRight]
           OnChange = edtTemplateChange
@@ -145,7 +226,7 @@ object FLPMSBackup: TFLPMSBackup
         object Label3: TLabel
           Left = 12
           Height = 17
-          Top = 38
+          Top = 44
           Width = 94
           Caption = 'Backup Location:'
           ParentColor = False
@@ -154,31 +235,39 @@ object FLPMSBackup: TFLPMSBackup
         object edtLocation: TDirectoryEdit
           Left = 150
           Height = 27
-          Top = 35
+          Top = 40
           Width = 877
           OnAcceptDirectory = edtLocationAcceptDirectory
           ShowHidden = False
           ButtonWidth = 28
           NumGlyphs = 1
+          Anchors = [akTop, akLeft, akRight]
           MaxLength = 0
           TabOrder = 1
           OnButtonClick = edtLocationButtonClick
         end
+        object Bevel4: TBevel
+          Left = 0
+          Height = 2
+          Top = 0
+          Width = 1038
+          Align = alTop
+        end
       end
       object pnlP00a2: TPanel
         Left = 0
-        Height = 134
-        Top = 74
+        Height = 130
+        Top = 72
         Width = 1038
         Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
-        ClientHeight = 134
+        ClientHeight = 130
         ClientWidth = 1038
         TabOrder = 1
         object Label4: TLabel
           Left = 12
           Height = 17
-          Top = 39
+          Top = 36
           Width = 74
           Caption = 'Backup Type:'
           ParentColor = False
@@ -187,7 +276,7 @@ object FLPMSBackup: TFLPMSBackup
         object cbxType: TComboBox
           Left = 150
           Height = 27
-          Top = 35
+          Top = 32
           Width = 150
           ItemHeight = 0
           ItemIndex = 1
@@ -203,7 +292,7 @@ object FLPMSBackup: TFLPMSBackup
         object lblL01: TLabel
           Left = 12
           Height = 17
-          Top = 74
+          Top = 68
           Width = 24
           Caption = 'T01:'
           ParentColor = False
@@ -212,7 +301,7 @@ object FLPMSBackup: TFLPMSBackup
         object cbxT01: TComboBox
           Left = 150
           Height = 27
-          Top = 70
+          Top = 64
           Width = 150
           ItemHeight = 0
           ItemIndex = 0
@@ -225,7 +314,7 @@ object FLPMSBackup: TFLPMSBackup
         object lblL02: TLabel
           Left = 334
           Height = 17
-          Top = 74
+          Top = 68
           Width = 21
           Caption = 'T02'
           ParentColor = False
@@ -234,7 +323,7 @@ object FLPMSBackup: TFLPMSBackup
         object cbxT02: TComboBox
           Left = 456
           Height = 27
-          Top = 70
+          Top = 64
           Width = 150
           ItemHeight = 0
           ItemIndex = 0
@@ -247,7 +336,7 @@ object FLPMSBackup: TFLPMSBackup
         object lblL03: TLabel
           Left = 658
           Height = 17
-          Top = 74
+          Top = 68
           Width = 21
           Caption = 'T03'
           ParentColor = False
@@ -256,7 +345,7 @@ object FLPMSBackup: TFLPMSBackup
         object cbxT03: TComboBox
           Left = 772
           Height = 27
-          Top = 70
+          Top = 64
           Width = 150
           ItemHeight = 0
           ItemIndex = 0
@@ -269,7 +358,7 @@ object FLPMSBackup: TFLPMSBackup
         object Label6: TLabel
           Left = 12
           Height = 17
-          Top = 109
+          Top = 100
           Width = 77
           Caption = 'SMS Number:'
           ParentColor = False
@@ -278,7 +367,7 @@ object FLPMSBackup: TFLPMSBackup
         object edtSMSNumber: TEdit
           Left = 150
           Height = 27
-          Top = 105
+          Top = 96
           Width = 106
           OnChange = edtTemplateChange
           ParentShowHint = False
@@ -287,7 +376,7 @@ object FLPMSBackup: TFLPMSBackup
         object rbSMSSuccess: TRadioButton
           Left = 270
           Height = 21
-          Top = 109
+          Top = 100
           Width = 113
           Caption = 'SMS on Success'
           OnChange = edtTemplateChange
@@ -296,7 +385,7 @@ object FLPMSBackup: TFLPMSBackup
         object rbSMSFailure: TRadioButton
           Left = 410
           Height = 21
-          Top = 109
+          Top = 100
           Width = 106
           Caption = 'SMS on Failure'
           OnChange = edtTemplateChange
@@ -305,7 +394,7 @@ object FLPMSBackup: TFLPMSBackup
         object rbSMSNever: TRadioButton
           Left = 700
           Height = 21
-          Top = 109
+          Top = 100
           Width = 115
           Caption = 'Never send SMS'
           OnChange = edtTemplateChange
@@ -314,7 +403,7 @@ object FLPMSBackup: TFLPMSBackup
         object btnSMSConfig: TButton
           Left = 942
           Height = 28
-          Top = 105
+          Top = 96
           Width = 85
           Anchors = [akTop, akRight]
           Caption = 'Configure'
@@ -324,7 +413,7 @@ object FLPMSBackup: TFLPMSBackup
         object rbSMSAlways: TRadioButton
           Left = 550
           Height = 21
-          Top = 109
+          Top = 100
           Width = 120
           Caption = 'Always send SMS'
           Checked = True
@@ -390,18 +479,17 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnlP00a3: TPanel
         Left = 12
-        Height = 391
-        Top = 212
+        Height = 375
+        Top = 200
         Width = 1013
-        Anchors = [akTop, akLeft, akRight, akBottom]
         BevelOuter = bvNone
         Caption = 'pnlP00a3'
-        ClientHeight = 391
+        ClientHeight = 375
         ClientWidth = 1013
         TabOrder = 2
         object lvLogSel: TListView
           Left = 0
-          Height = 391
+          Height = 375
           Top = 0
           Width = 1013
           Align = alClient
@@ -431,6 +519,43 @@ object FLPMSBackup: TFLPMSBackup
         end
       end
     end
+  end
+  object sbStatus: TStatusBar
+    Left = 0
+    Height = 21
+    Top = 708
+    Width = 1242
+    Panels = <    
+      item
+        Width = 450
+      end    
+      item
+        Text = ' '
+        Width = 110
+      end    
+      item
+        Width = 80
+      end    
+      item
+        Width = 205
+      end    
+      item
+        Width = 80
+      end    
+      item
+        Width = 80
+      end    
+      item
+        Width = 100
+      end>
+    SimplePanel = False
+  end
+  object splSplit01: TSplitter
+    Left = 200
+    Height = 603
+    Top = 57
+    Width = 5
+    Beveled = True
   end
   object pnlP01: TPanel
     Left = 0
@@ -941,7 +1066,7 @@ object FLPMSBackup: TFLPMSBackup
     object btnClose: TButton
       Left = 1146
       Height = 28
-      Top = 10
+      Top = 8
       Width = 85
       Anchors = [akRight, akBottom]
       Caption = 'Close'
@@ -951,7 +1076,7 @@ object FLPMSBackup: TFLPMSBackup
     object btnCancel: TButton
       Left = 864
       Height = 28
-      Top = 10
+      Top = 8
       Width = 85
       Anchors = [akRight, akBottom]
       Caption = 'Cancel'
@@ -961,7 +1086,7 @@ object FLPMSBackup: TFLPMSBackup
     object btnUpdate: TButton
       Left = 958
       Height = 28
-      Top = 10
+      Top = 8
       Width = 85
       Anchors = [akRight, akBottom]
       Caption = 'Update'
@@ -971,7 +1096,7 @@ object FLPMSBackup: TFLPMSBackup
     object btnRunNow: TButton
       Left = 772
       Height = 28
-      Top = 10
+      Top = 8
       Width = 85
       Anchors = [akRight, akBottom]
       Caption = 'Run Now'
@@ -981,7 +1106,7 @@ object FLPMSBackup: TFLPMSBackup
     object btnMinimise: TButton
       Left = 1052
       Height = 28
-      Top = 10
+      Top = 8
       Width = 85
       Anchors = [akRight, akBottom]
       Caption = 'Minimise'
