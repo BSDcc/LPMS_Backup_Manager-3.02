@@ -37,6 +37,7 @@ type
   TFLPMSBackup = class(TForm)
    Bevel3: TBevel;
    Bevel4: TBevel;
+   CoolBar1: TCoolBar;
    edtSMS: TEdit;
    edtInstruction: TEdit;
    edtNextBackup: TEdit;
@@ -52,12 +53,13 @@ type
    FileFile: TMenuItem;
    HelpHelp: TMenuItem;
    MenuItem5: TMenuItem;
+   Panel1: TPanel;
+   Panel2: TPanel;
+   Panel3: TPanel;
    pnl00b2: TPanel;
    pnl00b1: TPanel;
-   ToolBar1: TToolBar;
    ToolsTools: TMenuItem;
    ToolsMinimise: TAction;
-    Bevel1: TBevel;
     Bevel2: TBevel;
     btnOpenLB: TSpeedButton;
     edtLocation: TDirectoryEdit;
