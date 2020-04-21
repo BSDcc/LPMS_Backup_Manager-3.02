@@ -24,8 +24,8 @@ interface
 uses
   Classes, SysUtils, sqldb, mysql50conn, mysql57conn, mysql56conn, LCLType,
   FileUtil, Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
-  StdCtrls, Buttons, ExtCtrls, EditBtn, strutils, INIFiles, HTTPSend, Synacode,
-  DateUtils;
+  StdCtrls, Buttons, ExtCtrls, EditBtn, strutils, INIFiles,
+  HTTPSend, Synacode, DateUtils;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -35,29 +35,53 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+   Bevel1: TBevel;
    Bevel3: TBevel;
-   Bevel4: TBevel;
-   CoolBar1: TCoolBar;
    edtSMS: TEdit;
    edtInstruction: TEdit;
    edtNextBackup: TEdit;
    edtDBVersion: TEdit;
+   imgLarge: TImageList;
    lblDBVersion: TLabel;
    Label7: TLabel;
    Label8: TLabel;
    Label9: TLabel;
+   MenuItem10: TMenuItem;
+   MenuItem11: TMenuItem;
+   MenuItem12: TMenuItem;
+   MenuItem13: TMenuItem;
+   MenuItem14: TMenuItem;
+   MenuItem15: TMenuItem;
+   MenuItem16: TMenuItem;
+   MenuItem17: TMenuItem;
+   MenuItem18: TMenuItem;
    MenuItem6: TMenuItem;
    MenuItem7: TMenuItem;
+   MenuItem8: TMenuItem;
+   N2: TMenuItem;
+   MenuItem9: TMenuItem;
    N1: TMenuItem;
    mnuMain: TMainMenu;
    FileFile: TMenuItem;
    HelpHelp: TMenuItem;
    MenuItem5: TMenuItem;
+   PageControl1: TPageControl;
+   PageControl2: TPageControl;
    Panel1: TPanel;
    Panel2: TPanel;
    Panel3: TPanel;
    pnl00b2: TPanel;
    pnl00b1: TPanel;
+   TabSheet1: TTabSheet;
+   TabSheet2: TTabSheet;
+   ToolBar1: TToolBar;
+   ToolButton1: TToolButton;
+   ToolButton2: TToolButton;
+   ToolButton3: TToolButton;
+   ToolButton4: TToolButton;
+   ToolButton5: TToolButton;
+   ToolButton6: TToolButton;
+   ToolButton7: TToolButton;
    ToolsTools: TMenuItem;
    ToolsMinimise: TAction;
     Bevel2: TBevel;
@@ -138,6 +162,7 @@ type
     procedure edtTemplateChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure MenuItem18Click( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
     procedure timTimer1Timer(Sender: TObject);
     procedure ToolsRestoreExecute(Sender: TObject);
@@ -285,6 +310,21 @@ var
       {$ENDIF}
    {$ENDIF}
 {$ENDIF}
+
+const
+
+   WeekArray   : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
+                 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+
+   HourArray   : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
+                 '06', '07', '08', '09', '10', '11', '12', '13', '14', '15',
+                 '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
+                 '26', '27', '28', '29', '30', '31');
+
+   MinArray    : array[1..4]  of string = ('00', '15', '30', '45');
+
+   SMSProvider : array[1..4] of string = ('Inactive', 'SMS Portal',
+                 'BulkSMS', 'WinSMS');
 
 
 implementation
@@ -1059,6 +1099,7 @@ procedure TFLPMSBackup.cbxTypeChange(Sender: TObject);
 var
    idx : integer;
 
+{
 const
 
    WeekArray : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
@@ -1068,6 +1109,7 @@ const
                '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
                '26', '27', '28', '29', '30', '31');
    MinArray  : array[1..4]  of string = ('00', '15', '30', '45');
+}
 
 begin
 
@@ -1281,6 +1323,7 @@ begin
 
             RunBackup := False;
             sbStatus.Panels.Items[2].Text := ' Running...';
+            sbStatus.Refresh;
 
             if (DoBackup() = false) then begin
 
@@ -1340,6 +1383,7 @@ begin
    FormatSettings.ThousandSeparator := ',';
 
    sbStatus.Panels.Items[6].Text := FormatDateTime('HH:mm:ss',Now());
+   sbStatus.Refresh;
 
 //--- If timTimer1 is inactive then it means a backup is running and we only
 //--- update the time display in the Status Bar. Similarly if we are at the
@@ -1479,7 +1523,7 @@ begin
 
    ThisTime := FormatDateTime('hh',Now()) + 'h' + FormatDateTime('nn',Now());
 
-   OutFile := edtLocation.Text + edtTemplate.Text + '.lpb';
+   OutFile := Instr_List[ActiveInstr].Instr_Rec.BackupLocation + Instr_List[ActiveInstr].Instr_Rec.BackupTemplate + '.lpb';
 
    OutFile := AnsiReplaceStr(OutFile,'&Date',FormatDateTime('yyyyMMdd',Now()));
    OutFile := AnsiReplaceStr(OutFile,'&Year',FormatDateTime('yyyy',Now()));
@@ -1489,6 +1533,7 @@ begin
    OutFile := AnsiReplaceStr(OutFile,'&Hour',FormatDateTime('hh',Now()));
    OutFile := AnsiReplaceStr(OutFile,'&Minute',FormatDateTime('nn',Now()));
    OutFile := AnsiReplaceStr(OutFile,'&CpyName',Instr_List[ActiveInstr].SymCpy);
+   OutFile := AnsiReplaceStr(OutFile,'&Instruction',Instr_List[ActiveInstr].Instruction);
    OutFile := AnsiReplaceStr(OutFile,'&HostName',Instr_List[ActiveInstr].Instr_Rec.BackupHostName);
    OutFile := AnsiReplaceStr(OutFile,'&BackupType',cbxType.Text);
    OutFile := AnsiReplaceStr(OutFile,'&DBPrefix',Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
@@ -1545,7 +1590,14 @@ begin
 //--- Get the next time slot for this backup instruction then return
 
    GetNextSlot(ActiveInstr);
-   lblL04.Caption := Instr_List[ActiveInstr].Instr_Rec.BackupMsg;
+
+   if tvInstructions.Selected.Level = 0 then begin
+
+      lblL04.Caption := '';
+      lblL05.Caption := '';
+
+   end else
+      lblL04.Caption := Instr_List[ActiveInstr].Instr_Rec.BackupMsg;
 
    Result := true;
 
@@ -1775,8 +1827,8 @@ begin
 
       if (ActiveName = InstrSel) then begin
 
-         lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading...';
-         lblL05.Refresh;
+//         lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading...';
+//         lblL05.Refresh;
 
       end;
 
@@ -1858,14 +1910,12 @@ begin
 
          LimitStart := LimitStart + Instr_List[ActiveInstr].Instr_Rec.BackupBlock;
 
-{
          if ActiveName = InstrSel then begin
 
-            lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading...';
+            lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading up to ' + FloatToStrF(Instr_List[ActiveInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' records';
             lblL05.Refresh;
 
          end;
-}
 
          if (ReadTable(ThisTable,LimitStart,LimitEnd) = false) then begin
             Result := false;
@@ -2558,6 +2608,10 @@ begin
          Instr_List[idx1].Active := True;
          Instr_List[idx1].Status := ord(STAT_WAITING);
          ThisNode.ImageIndex     := 1;
+
+//--- Set the name of the SMS Service Provider
+
+         Instr_List[idx1].Instr_Rec.BackupSMSProviderName := SMSProvider[Instr_List[idx1].Instr_Rec.BackupSMSProvider + 1];
 
       end;
 
