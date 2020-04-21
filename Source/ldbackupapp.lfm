@@ -1,7 +1,7 @@
 object FLPMSBackup: TFLPMSBackup
-  Left = 122
+  Left = 387
   Height = 718
-  Top = 0
+  Top = 162
   Width = 1242
   ActiveControl = pnlP01
   Caption = 'FLPMSBackup'
@@ -90,6 +90,7 @@ object FLPMSBackup: TFLPMSBackup
           Top = 2
           Width = 151
           Align = alLeft
+          BorderStyle = bsNone
           Images = imgSmall
           TabOrder = 0
           Items.Data = {
@@ -103,32 +104,32 @@ object FLPMSBackup: TFLPMSBackup
           Left = 160
           Height = 17
           Top = 12
-          Width = 25
-          Caption = 'SMS'
+          Width = 28
+          Caption = 'SMS:'
           ParentColor = False
         end
         object Label8: TLabel
           Left = 160
           Height = 17
           Top = 44
-          Width = 60
-          Caption = 'Instruction'
+          Width = 63
+          Caption = 'Instruction:'
           ParentColor = False
         end
         object Label9: TLabel
           Left = 160
           Height = 17
           Top = 76
-          Width = 70
-          Caption = 'Next Backup'
+          Width = 73
+          Caption = 'Next Backup:'
           ParentColor = False
         end
         object lblDBVersion: TLabel
           Left = 160
           Height = 17
           Top = 108
-          Width = 62
-          Caption = 'DB Version'
+          Width = 65
+          Caption = 'DB Version:'
           ParentColor = False
           Visible = False
         end
@@ -394,7 +395,7 @@ object FLPMSBackup: TFLPMSBackup
         end
         object btnSMSConfig: TButton
           Left = 942
-          Height = 28
+          Height = 27
           Top = 96
           Width = 85
           Anchors = [akTop, akRight]
@@ -523,7 +524,6 @@ object FLPMSBackup: TFLPMSBackup
         Width = 450
       end    
       item
-        Text = ' '
         Width = 110
       end    
       item
@@ -533,6 +533,7 @@ object FLPMSBackup: TFLPMSBackup
         Width = 205
       end    
       item
+        Alignment = taRightJustify
         Width = 80
       end    
       item
@@ -568,22 +569,22 @@ object FLPMSBackup: TFLPMSBackup
       Align = alTop
     end
     object Panel1: TPanel
-      Left = 614
+      Left = 1008
       Height = 55
       Top = 2
-      Width = 569
+      Width = 175
       Align = alRight
       BevelOuter = bvNone
       ClientHeight = 55
-      ClientWidth = 569
+      ClientWidth = 175
       TabOrder = 0
       object Label1: TLabel
-        Left = 12
+        Left = 0
         Height = 36
         Top = 14
-        Width = 556
+        Width = 176
         AutoSize = False
-        Caption = 'Legal Practise Management System - Backup Manager'
+        Caption = 'Backup Manager'
         Font.Height = -20
         Font.Style = [fsBold]
         ParentColor = False
@@ -594,17 +595,17 @@ object FLPMSBackup: TFLPMSBackup
       Left = 0
       Height = 55
       Top = 2
-      Width = 614
+      Width = 1008
       Align = alClient
       BevelOuter = bvNone
       ClientHeight = 55
-      ClientWidth = 614
+      ClientWidth = 1008
       TabOrder = 1
       object CoolBar1: TCoolBar
         Left = 0
         Height = 34
-        Top = 7
-        Width = 614
+        Top = 9
+        Width = 990
         Align = alNone
         BandBorderStyle = bsNone
         Bands = <        

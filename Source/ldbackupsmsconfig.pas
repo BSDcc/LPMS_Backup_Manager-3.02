@@ -56,6 +56,7 @@ type
     procedure edtDBPrefixChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+
   private { private declarations }
     DoSave          : boolean;    // Controls whether a Save is required before Exiting
     DBPrefixChanged : boolean;    // Indicates  change in the value of DBPrefix
@@ -70,6 +71,7 @@ type
     DBPrefix        : string;     // DBPRefix value passed from calling program
     BackupViewer    : string;     // App to view the last backup
     MultiCompany    : boolean;    // Multi Company value passed from calling program
+
 end;
 
 //------------------------------------------------------------------------------
@@ -78,8 +80,8 @@ end;
 var
   FLPMSBackupSMSConfig: TFLPMSBackupSMSConfig;
 
-  IniFile        : TINIFile;    // IniFile holding defaults
-  DebugOn        : boolean;     // Debug switch
+  IniFile     : TINIFile;    // IniFile holding defaults
+  DebugOn     : boolean;     // Debug switch
 
 implementation
 
@@ -322,7 +324,7 @@ begin
    FLPMSBackup.DoSave          := true;
    FLPMSBackup.MultiCompany    := cbMultiCpy.Checked;
    FLPMSBackup.BackupViewer    := edtViewer.Text;
-   FLPMSBackup.SMSProviderName := cbSMSProvider.Text;
+//   FLPMSBackup.SMSProviderName := cbSMSProvider.Text;
 
    if ((cbSMSProvider.ItemIndex > 0) and (edtSMSUser.Text <> '') and (edtSMSPass.Text <> '')) then
       btnSMSTest.Enabled := true
