@@ -1,7 +1,7 @@
 object FLPMSBackupSMSConfig: TFLPMSBackupSMSConfig
-  Left = 475
+  Left = 0
   Height = 291
-  Top = 221
+  Top = 739
   Width = 534
   Caption = 'FLPMSBackupSMSConfig'
   ClientHeight = 291

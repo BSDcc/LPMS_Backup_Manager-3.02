@@ -24,7 +24,7 @@ interface
 uses
   Classes, SysUtils, sqldb, mysql50conn, mysql57conn, mysql56conn, LCLType,
   FileUtil, Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
-  StdCtrls, Buttons, ExtCtrls, EditBtn, strutils, INIFiles,
+  StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, strutils, INIFiles,
   HTTPSend, Synacode, DateUtils;
 
 //------------------------------------------------------------------------------
@@ -35,13 +35,47 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+   btnSMSTest: TButton;
+   btnViewer: TSpeedButton;
+   cbSMSProviderC: TComboBox;
+   edtInstrNameC: TEdit;
+   edtHostNameC: TEdit;
+   edtLocationC: TDirectoryEdit;
+   edtSMSPassC: TEdit;
+   edtSMSUserC: TEdit;
+   edtTemplateC: TEdit;
+   edtViewerC: TEdit;
+   HelpAbout: TAction;
+   ActionsRunNow: TAction;
+   ActionsNext: TAction;
+   ActionsPrevious: TAction;
+   ActionsLast: TAction;
+   ActionsFirst: TAction;
+   imgSmall: TImageList;
+   imgLargeD: TImageList;
+   imgLargeH: TImageList;
+   Label10: TLabel;
+   Label11: TLabel;
+   Label12: TLabel;
+   Label13: TLabel;
+   Label14: TLabel;
+   Label15: TLabel;
+   Label16: TLabel;
+   Label17: TLabel;
+   Label18: TLabel;
+   lblSMSPass: TLabel;
+   lblSMSUser: TLabel;
+   SearchFindAgain: TAction;
+   SearchFind: TAction;
+   EditUpdate: TAction;
+   EditCancel: TAction;
    Bevel1: TBevel;
    Bevel3: TBevel;
    edtSMS: TEdit;
    edtInstruction: TEdit;
    edtNextBackup: TEdit;
    edtDBVersion: TEdit;
-   imgLarge: TImageList;
+   imgLargeN: TImageList;
    lblDBVersion: TLabel;
    Label7: TLabel;
    Label8: TLabel;
@@ -55,40 +89,50 @@ type
    MenuItem16: TMenuItem;
    MenuItem17: TMenuItem;
    MenuItem18: TMenuItem;
+   MenuItem19: TMenuItem;
+   MenuItem20: TMenuItem;
    MenuItem6: TMenuItem;
    MenuItem7: TMenuItem;
    MenuItem8: TMenuItem;
    N2: TMenuItem;
    MenuItem9: TMenuItem;
-   N1: TMenuItem;
    mnuMain: TMainMenu;
    FileFile: TMenuItem;
    HelpHelp: TMenuItem;
    MenuItem5: TMenuItem;
-   PageControl1: TPageControl;
    PageControl2: TPageControl;
    Panel1: TPanel;
    Panel2: TPanel;
    Panel3: TPanel;
    pnl00b2: TPanel;
    pnl00b1: TPanel;
+   speBlockSizeC: TSpinEdit;
    TabSheet1: TTabSheet;
    TabSheet2: TTabSheet;
    ToolBar1: TToolBar;
    ToolButton1: TToolButton;
+   ToolButton10: TToolButton;
+   ToolButton11: TToolButton;
+   ToolButton12: TToolButton;
+   ToolButton13: TToolButton;
+   ToolButton14: TToolButton;
+   ToolButton15: TToolButton;
+   ToolButton16: TToolButton;
    ToolButton2: TToolButton;
    ToolButton3: TToolButton;
    ToolButton4: TToolButton;
    ToolButton5: TToolButton;
    ToolButton6: TToolButton;
    ToolButton7: TToolButton;
+   ToolButton8: TToolButton;
+   ToolButton9: TToolButton;
    ToolsTools: TMenuItem;
    ToolsMinimise: TAction;
     Bevel2: TBevel;
     btnOpenLB: TSpeedButton;
     edtLocation: TDirectoryEdit;
     edtLastBackup: TEdit;
-    imgSmall: TImageList;
+    imgTree: TImageList;
     Label5: TLabel;
     lvLogSel: TListView;
     lvLogAll: TListView;
@@ -148,21 +192,27 @@ type
     TreeView1: TTreeView;
     tvInstructions: TTreeView;
 
+    procedure ActionsFirstExecute( Sender: TObject);
+    procedure ActionsLastExecute( Sender: TObject);
+    procedure ActionsNextExecute( Sender: TObject);
+    procedure ActionsPreviousExecute( Sender: TObject);
+    procedure ActionsRunNowExecute( Sender: TObject);
+    procedure btnSMSTestClick( Sender: TObject);
+    procedure EditCancelExecute( Sender: TObject);
     procedure btnMinimiseClick(Sender: TObject);
     procedure btnOpenLBClick(Sender: TObject);
-    procedure btnRunNowClick(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
-    procedure btnCloseClick(Sender: TObject);
     procedure btnSMSConfigClick(Sender: TObject);
-    procedure btnUpdateClick(Sender: TObject);
     procedure cbxTypeChange(Sender: TObject);
+    procedure EditUpdateExecute( Sender: TObject);
+    procedure edtInstrNameCChange( Sender: TObject);
     procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
     procedure edtLocationButtonClick(Sender: TObject);
-    procedure edtDBPrefixChange(Sender: TObject);
-    procedure edtTemplateChange(Sender: TObject);
+    procedure FileCloseExecute( Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure MenuItem18Click( Sender: TObject);
+    procedure HelpAboutExecute( Sender: TObject);
+    procedure SearchFindAgainExecute( Sender: TObject);
+    procedure SearchFindExecute( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
     procedure timTimer1Timer(Sender: TObject);
     procedure ToolsRestoreExecute(Sender: TObject);
@@ -173,7 +223,7 @@ type
    TYPE_DISPLAY = (TYPE_LOGALL, TYPE_LOGSEL, TYPE_BOTH);
    HINT_OPTIONS = (HINT_WAITING, HINT_RUNNING);
    STAT_OPTIONS = (STAT_INACTIVE, STAT_WAITING, STAT_RUNNOW, STAT_SCHEDULED);
-   BTN_STATE    = (BTN_INITIAL, BTN_INSTRUCTION, BTN_RUNNOW, BTN_UPDATE, BTN_CANCEL);
+   BTN_STATE    = (BTN_INITIAL, BTN_INSTRUCTION, BTN_RUNNOW, BTN_UPDATE, BTN_CANCEL, BTN_SHOW);
 
    REC_IniRecord = record
       BackupBlock           : integer;
@@ -281,7 +331,6 @@ public  { public declarations }
    SMSPassword     : string;     // SMS Subscription Password
    HostName        : string;     // Current Host Name
    DBPrefix        : string;     // Current Database Prefix
-//   SMSProviderName : string;     // NAme of SMS service provider
    BackupViewer    : string;     // Full path to the viewer that will be invoked to view the last successful backup
 end;
 
@@ -673,9 +722,7 @@ begin
 
    DoSave            := false;
    CanUpdate         := true;
-   btnCancel.Enabled := false;
-   btnUpdate.Enabled := false;
-   btnRunNow.Enabled := true;
+   Set_Buttons(ord(BTN_SHOW));
    btnOpenLB.Enabled := false;
 
 //--- Shutdown the Database for now - we will open it again when a Backup starts
@@ -835,114 +882,17 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// User clicked on the Close button
+// Action to take when the User wants to close the Application
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnCloseClick(Sender: TObject);
+procedure TFLPMSBackup. FileCloseExecute( Sender: TObject);
 begin
    Close;
 end;
 
 //------------------------------------------------------------------------------
-// User clicked on the Configure button
+// Action to take when the User Cancels an Update
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnSMSConfigClick(Sender: TObject);
-begin
-
-   FLPMSBackup.Hide;
-
-   FLPMSBackupSMSConfig := TFLPMSBackupSMSConfig.Create(Application);
-
-//--- Set the values to be used in the config utility
-
-   FLPMSBackupSMSConfig.SMSProvider  := KeepSMSProvider;
-   FLPMSBackupSMSConfig.BackupBlock  := KeepBackupBlock;
-   FLPMSBackupSMSConfig.SMSUser      := SMSUserID;
-   FLPMSBackupSMSConfig.SMSPassword  := SMSPassword;
-   FLPMSBackupSMSConfig.DBPrefix     := DBPrefix;
-   FLPMSBackupSMSConfig.MultiCompany := MultiCompany;
-   FLPMSBackupSMSConfig.BackupViewer := BackupViewer;
-
-   FLPMSBackupSMSConfig.ShowModal;
-   FLPMSBackupSMSConfig.Destroy;
-
-   FLPMSBackup.Show;
-
-   if (DoSave = true) then begin
-
-      btnUpdateClick(Sender);
-
-      sqlQry1.Close;
-      sqlCon.Close;
-
-      sqlCon.HostName := HostName;
-      sqlCon.UserName := DBPrefix + '_LD';
-      sqlCon.Password := 'LD01';
-      sqlCon.DatabaseName := DBPrefix + '_LPMS';
-      sqlQry1.DataBase := sqlCon;
-
-      try
-         sqlCon.Connected := true;
-      except on E : Exception do
-         begin
-            LastMsg := E.Message;
-            Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
-            Application.Terminate;
-            Exit;
-         end;
-      end;
-
-      if (GetBasicInfo() = false) then begin
-         Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
-         Application.Terminate;
-         Exit;
-      end;
-
-      SymCpy      := sqlQry1.FieldByName('CpyName').AsString;
-      SymHost     := HostName;
-      KeepVersion := sqlQry1.FieldByName('Version').AsString;
-
-      if (KeepSMSProvider = 0) then begin
-         edtSMSNumber.Enabled := false;
-         rbSMSSuccess.Enabled := false;
-         rbSMSFailure.Enabled := false;
-         rbSMSNever.Enabled   := false;
-         rbSMSAlways.Enabled  := false;
-         DispLogMsg('SMS Messaging is inactive');
-      end else begin
-         edtSMSNumber.Enabled := true;
-         rbSMSSuccess.Enabled := true;
-         rbSMSFailure.Enabled := true;
-         rbSMSNever.Enabled   := true;
-         rbSMSAlways.Enabled  := true;
-
-         if (edtSMSNumber.Text <> '') then begin
-            if (rbSMSAlways.Checked = true) then
-               DispLogMsg('SMS Message will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure)')
-            else if (rbSMSSuccess.Checked = true) then
-               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup')
-            else if (rbSMSFailure.Checked = true) then
-               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails')
-            else
-               DispLogMsg('SMS Messages will never be sent');
-         end else
-            DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
-      end;
-
-      DispLogMsg('Backups will be taken for "' + SymCpy + '" on "' + HostName + '[' + DBPrefix + ']"');
-      DispLogMsg('Database version is "' + KeepVersion + '"');
-
-      sbStatus.Panels.Items[2].Text := ' Waiting...';
-      sbStatus.Panels.Items[3].Text := ' ' + HostName + '[' + DBPrefix + ']';
-      sbStatus.Panels.Items[4].Text := IntToStr(KeepBackupBlock) + ' ';
-
-   end;
-
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Cancel button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnCancelClick(Sender: TObject);
+procedure TFLPMSBackup. EditCancelExecute( Sender: TObject);
 begin
 
    if DoSave = true then begin
@@ -965,8 +915,8 @@ begin
    rbSMSNever.Checked   := SMSNever;
    rbSMSAlways.Checked  := SMSAlways;
 
-   btnUpdate.Enabled := false;
-   btnCancel.Enabled := false;
+   EditCancel.Enabled := False;
+   EditUpdate.Enabled := False;
 
    DoSave := false;
    CanUpdate := true;
@@ -975,40 +925,9 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// User clicked on the Run Now button
+// Action to take when the User wants to do an Update
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnRunNowClick(Sender: TObject);
-var
-   ListNum : integer;
-
-begin
-
-   ListNum := GetInstruction();
-
-   Set_Hint(ord(HINT_RUNNING));
-
-//--- Mark the instruction as RunNow
-
-   Instr_List[ListNum].Status := ord(STAT_RUNNOW);
-
-//--- Set the satte of the buttons
-
-   Set_Buttons(ord(BTN_RUNNOW));
-
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Minimise button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnMinimiseClick(Sender: TObject);
-begin
-      FLPMSBackup.Hide;
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Update button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnUpdateClick(Sender: TObject);
+procedure TFLPMSBackup. EditUpdateExecute( Sender: TObject);
 var
    Interval  : integer;
 
@@ -1090,6 +1009,105 @@ begin
    lblL04.Caption := BackupMsg;
 
    DoSave := false;
+
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the user clicks on Run Now
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. ActionsRunNowExecute( Sender: TObject);
+var
+   ListNum : integer;
+
+begin
+
+   ListNum := GetInstruction();
+
+   Set_Hint(ord(HINT_RUNNING));
+
+//--- Mark the instruction as RunNow
+
+   Instr_List[ListNum].Status := ord(STAT_RUNNOW);
+
+//--- Set the satte of the buttons
+
+   Set_Buttons(ord(BTN_RUNNOW));
+
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the user wants to go to the First Line in a log display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. ActionsFirstExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the user wants to go to the Next Line in a log display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. ActionsNextExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the user wants to go to the Previous Line in a log
+// display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. ActionsPreviousExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the user wants to go to the Last Line in a log display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. ActionsLastExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to start a search in a Log display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. SearchFindExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to continue a search in a Log display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. SearchFindAgainExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to show the About dialog
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. HelpAboutExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// A User customisable field changed
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. edtInstrNameCChange( Sender: TObject);
+begin
+
+   if CanUpdate = False then
+      Exit;
+
+   DoSave                := True;
+   EditCancel.Enabled    := True;
+   EditUpdate.Enabled    := True;
+   ActionsRunNow.Enabled := False;
+
+   sbStatus.Panels.Items[2].Text := ' Modified';
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1098,18 +1116,6 @@ end;
 procedure TFLPMSBackup.cbxTypeChange(Sender: TObject);
 var
    idx : integer;
-
-{
-const
-
-   WeekArray : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
-               'Wednesday', 'Thursday', 'Friday', 'Saturday');
-   HourArray : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
-               '06', '07', '08', '09', '10', '11', '12', '13', '14', '15',
-               '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
-               '26', '27', '28', '29', '30', '31');
-   MinArray  : array[1..4]  of string = ('00', '15', '30', '45');
-}
 
 begin
 
@@ -1206,40 +1212,226 @@ begin
    cbxT03.ItemIndex := 0;
    CanUpdate := true;
 
-   edtTemplateChange(Sender);
+   edtInstrNameCChange(Sender);
 
 end;
 
 //------------------------------------------------------------------------------
-// A field on the screen changed
+// User clicked on the SMS Test button
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.edtTemplateChange(Sender: TObject);
+procedure TFLPMSBackup.btnSMSTestClick(Sender: TObject);
+var
+   PosStart, PosEnd                         : integer;
+   URL, Params, Answer, Credits, Req_Result : string;
+   Response                                 : TMemoryStream;
+
 begin
 
-   if (CanUpdate = false) then
+//--- Check whether enough information was given to attempt a SMS Test
+
+   if cbSMSProviderC.ItemIndex = 0 then
       Exit;
 
-   DoSave := true;
-   btnUpdate.Enabled := true;
-   btnCancel.Enabled := true;
-   btnRunNow.Enabled := false;
+   if edtSMSUserC.Text = '' then
+      Exit;
 
-   sbStatus.Panels.Items[2].Text := ' Modified';
+   if edtSMSPassC.Text = '' then
+      Exit;
+
+   Response := TMemoryStream.Create;
+
+//--- Construct the RPC based on the selected interface
+
+   case cbSMSProviderC.ItemIndex of
+
+      1: begin
+         URL := 'http://www.mymobileapi.com/api5/http5.aspx';
+         Params   := 'Type=credits&username=' + edtSMSUserC.Text + '&password=' + edtSMSPassC.Text;
+      end;
+
+      2: begin
+         URL    := 'http://bulksms.2way.co.za/eapi/user/get_credits/1/1.1';
+         Params := 'username=' + edtSMSUserC.Text + '&password=' + edtSMSPassC.Text;
+      end;
+
+      3: begin
+         URL    := 'http://www.winsms.co.za/api/credits.ASP';
+         Params := 'User=' + edtSMSUserC.Text + '&Password=' + edtSMSPassC.Text;
+      end;
+
+   end;
+
+//--- Do the HTTP Post/Get operation
+
+   try
+      SMSDone := HTTPpostURL(URL, Params, Response);
+   finally
+   end;
+
+//--- Extract the result from the HTTP Post/Get operation
+
+   SetString(Answer, PAnsiChar(Response.Memory), Response.Size);
+
+   Response.Free;
+
+   case cbSMSProviderC.ItemIndex of
+
+      1: begin
+
+         PosStart   := AnsiPos('<result>',Answer);
+         PosEnd     := AnsiPos('</result>',Answer);
+         Req_Result := Copy(Answer,PosStart + 8,PosEnd - (PosStart + 8));
+
+         if lowercase(Req_Result) = 'true' then begin
+
+            PosStart := AnsiPos('<credits>',Answer);
+            PosEnd   := AnsiPos('</credits>',Answer);
+            Credits  := Copy(Answer,PosStart + 9,PosEnd - (PosStart + 9));
+            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
+
+         end else
+            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
+
+      end;
+
+      2: begin
+
+         Req_Result := Copy(Answer,1,1);
+
+         if (Req_Result = '0') then begin
+
+            PosStart := AnsiPos('.', Answer);
+            Credits  := Copy(Answer,3,PosStart);
+            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
+
+         end else
+            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
+
+      end;
+
+      3: begin
+
+         Req_Result := Copy(Answer,9,999999);
+
+         if (lowercase(Req_Result) = 'fail') then
+            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING))
+         else begin
+
+            Credits  := Req_Result;
+            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
+
+         end;
+
+      end;
+
+   end;
 
 end;
 
 //------------------------------------------------------------------------------
-// The DBPrefix or Hostname changed
+// User clicked on the Configure button
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.edtDBPrefixChange(Sender: TObject);
+procedure TFLPMSBackup.btnSMSConfigClick(Sender: TObject);
 begin
 
-   if CanUpdate = false then
-      Exit;
+   FLPMSBackup.Hide;
 
-   sbStatus.Panels.Items[2].Text := ' Modified';
-   edtTemplateChange(Sender);
+   FLPMSBackupSMSConfig := TFLPMSBackupSMSConfig.Create(Application);
 
+//--- Set the values to be used in the config utility
+
+   FLPMSBackupSMSConfig.SMSProvider  := KeepSMSProvider;
+   FLPMSBackupSMSConfig.BackupBlock  := KeepBackupBlock;
+   FLPMSBackupSMSConfig.SMSUser      := SMSUserID;
+   FLPMSBackupSMSConfig.SMSPassword  := SMSPassword;
+   FLPMSBackupSMSConfig.DBPrefix     := DBPrefix;
+   FLPMSBackupSMSConfig.MultiCompany := MultiCompany;
+   FLPMSBackupSMSConfig.BackupViewer := BackupViewer;
+
+   FLPMSBackupSMSConfig.ShowModal;
+   FLPMSBackupSMSConfig.Destroy;
+
+   FLPMSBackup.Show;
+
+   if (DoSave = true) then begin
+
+      EditUpdateExecute(Sender);
+//      btnUpdateClick(Sender);
+
+      sqlQry1.Close;
+      sqlCon.Close;
+
+      sqlCon.HostName := HostName;
+      sqlCon.UserName := DBPrefix + '_LD';
+      sqlCon.Password := 'LD01';
+      sqlCon.DatabaseName := DBPrefix + '_LPMS';
+      sqlQry1.DataBase := sqlCon;
+
+      try
+         sqlCon.Connected := true;
+      except on E : Exception do
+         begin
+            LastMsg := E.Message;
+            Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
+            Application.Terminate;
+            Exit;
+         end;
+      end;
+
+      if (GetBasicInfo() = false) then begin
+         Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
+         Application.Terminate;
+         Exit;
+      end;
+
+      SymCpy      := sqlQry1.FieldByName('CpyName').AsString;
+      SymHost     := HostName;
+      KeepVersion := sqlQry1.FieldByName('Version').AsString;
+
+      if (KeepSMSProvider = 0) then begin
+         edtSMSNumber.Enabled := false;
+         rbSMSSuccess.Enabled := false;
+         rbSMSFailure.Enabled := false;
+         rbSMSNever.Enabled   := false;
+         rbSMSAlways.Enabled  := false;
+         DispLogMsg('SMS Messaging is inactive');
+      end else begin
+         edtSMSNumber.Enabled := true;
+         rbSMSSuccess.Enabled := true;
+         rbSMSFailure.Enabled := true;
+         rbSMSNever.Enabled   := true;
+         rbSMSAlways.Enabled  := true;
+
+         if (edtSMSNumber.Text <> '') then begin
+            if (rbSMSAlways.Checked = true) then
+               DispLogMsg('SMS Message will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure)')
+            else if (rbSMSSuccess.Checked = true) then
+               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup')
+            else if (rbSMSFailure.Checked = true) then
+               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails')
+            else
+               DispLogMsg('SMS Messages will never be sent');
+         end else
+            DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
+      end;
+
+      DispLogMsg('Backups will be taken for "' + SymCpy + '" on "' + HostName + '[' + DBPrefix + ']"');
+      DispLogMsg('Database version is "' + KeepVersion + '"');
+
+      sbStatus.Panels.Items[2].Text := ' Waiting...';
+      sbStatus.Panels.Items[3].Text := ' ' + HostName + '[' + DBPrefix + ']';
+      sbStatus.Panels.Items[4].Text := IntToStr(KeepBackupBlock) + ' ';
+
+   end;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the Minimise button
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.btnMinimiseClick(Sender: TObject);
+begin
+      FLPMSBackup.Hide;
 end;
 
 //------------------------------------------------------------------------------
@@ -1463,22 +1655,27 @@ end;
 procedure TFLPMSBackup.Set_Buttons(State: integer);
 begin
 
-   btnRunNow.Enabled   := False;
-   btnCancel.Enabled   := False;
-   btnUpdate.Enabled   := False;
-   btnMinimise.Enabled := False;
-   btnClose.Enabled    := False;
+   ActionsRunNow.Enabled := False;
+   EditCancel.Enabled    := False;
+   EditUpdate.Enabled    := False;
+   btnMinimise.Enabled   := False;
+   FileClose.Enabled     := False;
 
    case State of
+
       ord(BTN_INITIAL): begin
+
          btnMinimise.Enabled := True;
-         btnClose.Enabled    := True;
+         FileClose.Enabled   := True;
+
       end;
 
       ord(BTN_INSTRUCTION): begin
-         btnRunNow.Enabled   := True;
-         btnMinimise.Enabled := True;
-         btnClose.Enabled    := True;
+
+         ActionsRunNow.Enabled := True;
+         btnMinimise.Enabled   := True;
+         FileClose.Enabled     := True;
+
       end;
 
       ord(BTN_RUNNOW): begin
@@ -1486,20 +1683,32 @@ begin
       end;
 
       ord(BTN_UPDATE): begin
-         btnCancel.Enabled   := True;
-         btnUpdate.Enabled   := True;
+
+         EditCancel.Enabled  := True;
+         EditUpdate.Enabled  := True;
+
       end;
 
       ord(BTN_CANCEL): begin
+
          if tvInstructions.Selected.Level = 0 then begin
+
             btnMinimise.Enabled := True;
-            btnClose.Enabled    := True;
+            FileClose.Enabled   := True;
+
          end else begin
-            btnRunNow.Enabled   := True;
-            btnMinimise.Enabled := True;
-            btnClose.Enabled    := True;
+
+            ActionsRunNow.Enabled := True;
+            btnMinimise.Enabled   := True;
+            FileClose.Enabled     := True;
          end;
+
       end;
+
+      ord(BTN_SHOW): begin
+         ActionsRunNow.Enabled := True;
+      end;
+
    end;
 
 end;
@@ -1942,8 +2151,8 @@ begin
 
 //--- Clear and delete the Lists that were used
 
-   TableNames.Destroy;
-   FieldNames.Destroy;
+   TableNames.Free;
+   FieldNames.Free;
 
 //--- Close the connection to the Database
 
@@ -2155,7 +2364,7 @@ begin
    end;
 
    Res := send_xml.Text;
-   send_xml.Destroy;
+   send_xml.Free;
    Result := Res;
 
 end;
@@ -2214,7 +2423,7 @@ begin
 //--- Extract the result from the HTTP Post/Get operation
 
    SetString(Answer, PAnsiChar(Response.Memory), Response.Size);
-   Response.Destroy;
+   Response.Free;
 
    SMSDone := false;
 
@@ -2686,8 +2895,8 @@ begin
 
    ActiveName := '';
 
-   CfgInstr.Destroy;
-   InstrTokens.Destroy;
+   CfgInstr.Free;
+   InstrTokens.Free;
 
 end;
 
@@ -2762,11 +2971,11 @@ begin
          DispLogMsg(LogTokens[0], LogTokens[1], LogTokens[2], LogTokens[3]);
          inc(NumLines);
 
-         LogTokens.Destroy;
+         LogTokens.Free;
 
       end;
 
-      LogLines.Destroy;
+      LogLines.Free;
 
    end;
 
@@ -2804,7 +3013,7 @@ begin
    end;
 
    SaveList.SaveToFile(FileName);
-   SaveList.Destroy;
+   SaveList.Free;
 
 end;
 

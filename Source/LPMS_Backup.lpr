@@ -12,10 +12,10 @@ uses
 {$R *.res}
 
 begin
-  RequireDerivedFormResource := True;
+   RequireDerivedFormResource := True;
    Application. Title :='Backup Manager';
-  Application.Initialize;
-  Application.CreateForm(TFLPMSBackup, FLPMSBackup);
-  Application.Run;
+   Application.Initialize;
+   Application.CreateForm(TFLPMSBackup, FLPMSBackup);
+   Application.Run;
 end.
 
