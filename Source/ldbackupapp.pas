@@ -401,7 +401,6 @@ begin
    OSDelim := '\';
    OSName  := 'MS-Windows';
    sqlCon  := TMySQL56Connection.Create(nil);
-   LocalPath := GetDocumentsPath();
 {$ELSE}
    {$IFDEF LINUX}
       OSDelim := '/';
@@ -412,7 +411,6 @@ begin
          OSDelim := '/';
          OSName  := 'macOS';
          sqlCon  := TMySQL57Connection.Create(nil);
-         LocalPath := GetDocumentsPath();
       {$ENDIF}
    {$ENDIF}
 {$ENDIF}
@@ -425,7 +423,26 @@ begin
 //--- this exists. If it does not then we notify the user and terminate the
 //--- application
 
-   LocalPath := AppendPathDelim(GetUserDir + 'Backup_Manager');
+{$IFDEF WINDOWS}
+   LocalPath := AppendPathDelim(GetUserDir + 'Documents');
+   if DirectoryExists(LocalPath) = False then begin
+
+      LocalPath := AppendPathDelim(GetUserDir + 'My Documents');
+
+      if DirectoryExists(LocalPath) = False then begin
+
+         MessageDlg('Backup Manager','FATAL: Unable to locate home directory. ' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
+         Application.Terminate;
+
+         Exit;
+      end;
+
+   end;
+{$ELSE}
+   LocalPath := AppendPathDelim(GetUSerDir);
+{$ENDIF}
+
+   LocalPath := LocalPath + 'Backup_Manager' + OSDelim;
 
    if DirectoryExists(LocalPath) = False then begin
       MessageDlg('Backup Manager','FATAL: Unable to locate "' + LocalPath + '". ' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
