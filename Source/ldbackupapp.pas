@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // Date.......: 09 October 2012
 // System.....: LPMS Backup Manager
-// Platform...: Lazarus (Linux, Mac & Windows)
+// Platform...: Lazarus (Linux, macOS & Windows)
 // Author.....: Francois De Bruin Meyer (BlueCrane Software Development CC)
 //------------------------------------------------------------------------------
 // History....: 09 October 2012 - Create first version
@@ -22,10 +22,10 @@ interface
 // Uses clause
 //------------------------------------------------------------------------------
 uses
-  Classes, SysUtils, sqldb, mysql50conn, mysql57conn, mysql56conn, LCLType,
+  Classes, SysUtils, sqldb, mysql57conn, mysql56conn, LCLType,
   FileUtil, Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
   StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, strutils, INIFiles,
-  HTTPSend, Synacode, DateUtils;
+  HTTPSend, Synacode, DateUtils, LazFileUtils;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -345,6 +345,7 @@ var
    LogInstrType : integer = ord(TYPE_LOGALL); // Determines in which logs the message is displayed
    InstrSel     : string;                     // Contains the Text of the selected TreeView item
    ActiveName   : string;                     // Name of the Instruction scheduled by the Scheduler
+   LocalPath    : string;                     // Dir where Log, Config File and Back Instructions File are stored
 
    SMSDone      : boolean = False;            // True if SMS send was successful
 
@@ -400,6 +401,7 @@ begin
    OSDelim := '\';
    OSName  := 'MS-Windows';
    sqlCon  := TMySQL56Connection.Create(nil);
+   LocalPath := GetDocumentsPath();
 {$ELSE}
    {$IFDEF LINUX}
       OSDelim := '/';
@@ -410,6 +412,7 @@ begin
          OSDelim := '/';
          OSName  := 'macOS';
          sqlCon  := TMySQL57Connection.Create(nil);
+         LocalPath := GetDocumentsPath();
       {$ENDIF}
    {$ENDIF}
 {$ENDIF}
@@ -417,16 +420,29 @@ begin
    sqlTran.DataBase    := sqlCon;
    sqlQry1.Transaction := sqlTran;
 
+//--- We get the path to the user's home directory (this is platform
+//--  independent). We then add the 'Backup_Manager' folder then test whether
+//--- this exists. If it does not then we notify the user and terminate the
+//--- application
+
+   LocalPath := AppendPathDelim(GetUserDir + 'Backup_Manager');
+
+   if DirectoryExists(LocalPath) = False then begin
+      MessageDlg('Backup Manager','FATAL: Unable to locate "' + LocalPath + '". ' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
+      Application.Terminate;
+      Exit;
+   end;
+
 //--- Set up
 
    FLPMSBackup.Caption := 'Backup Manager';
-   CfgFile             := 'Backup Manager.cfg';
+   CfgFile             := LocalPath + 'Backup Manager.cfg';
 
    tvInstructions.Items.Clear;
    pnlP00b.Visible := True;
    pnlP00a.Visible := False;
 
-   BackupLogFile := 'Backup Manager Logfile.txt';
+   BackupLogFile := LocalPath + 'Backup Manager Logfile.txt';
 
 //--- Open and load the contents of the Log File
 
@@ -700,8 +716,6 @@ begin
    rbSMSFailure.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSFailure;
    rbSMSNever.Checked   := Instr_List[ListNum].Instr_Rec.BackupSMSNever;
    rbSMSAlways.Checked  := Instr_List[ListNum].Instr_Rec.BackupSMSAlways;
-
-//   SMSProviderName := 'the selected SMS service provider';
 
 //--- Connect to the database and get some basic information
 
@@ -1581,20 +1595,14 @@ begin
 //--- update the time display in the Status Bar. Similarly if we are at the
 //--- TreeView root
 
-   if (timTimer1.Enabled = False) or (tvInstructions.Selected.Level = 0) then begin
-
-//      timTimer2.Enabled := True;
+   if (timTimer1.Enabled = False) or (tvInstructions.Selected.Level = 0) then
       Exit;
-
-   end;
 
 //--- We don't display the countdown message if the Backup Mode is weekly
 
    if (cbxType.Text = 'Weekly') then begin
 
       lblL05.Caption := '';
-//      timTimer2.Enabled := True;
-
       Exit;
 
    end;
@@ -1611,7 +1619,6 @@ begin
 //--- Display the countdown message
 
    lblL05.Caption := 'Next Backup in: ' + FormatDateTime('hh:nn:ss',BackupTime - Time());
-//   timTimer2.Enabled := True;
 
 end;
 
@@ -2198,10 +2205,6 @@ const
 
 begin
 
-//--- Temporarily stop timer 2
-
-//   timtimer2.Enabled := False;
-
 //--- Set the Format Settings to override the system locale
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
@@ -2241,7 +2244,7 @@ begin
 
       1: begin                         // Daily
 
-         BackupTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1] + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT02 + 1]; { cbxT01.Text + cbxT02.Text }
+         BackupTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1] + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT02 + 1];
 
          if (BackupTime <= ThisTime) then begin
 
@@ -2309,10 +2312,6 @@ begin
    Instr_List[ThisInstr].NextTime := DispTime;
    Instr_List[ThisInstr].Status   := ord(STAT_WAITING);
    Instr_List[ThisInstr].Instr_Rec.BackupMsg := ThisBackupMsg;
-
-//--- Restart Timer 2
-
-//   timTimer2.Enabled := true;
 
 end;
 
@@ -2751,7 +2750,7 @@ begin
 
 //--- Load the contents of the ini File
 
-      RegString := Instr_List[idx1].Ini_File;
+      RegString := LocalPath + Instr_List[idx1].Ini_File;
 
 //--- Extract the information contained in the 'registry'
 
