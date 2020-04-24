@@ -3,7 +3,7 @@ object FLPMSBackup: TFLPMSBackup
   Height = 718
   Top = 158
   Width = 1242
-  ActiveControl = pnlP01
+  ActiveControl = pnlP00a2
   Caption = 'FLPMSBackup'
   ClientHeight = 697
   ClientWidth = 1242
@@ -84,7 +84,7 @@ object FLPMSBackup: TFLPMSBackup
         ClientHeight = 138
         ClientWidth = 1037
         TabOrder = 0
-        object TreeView1: TTreeView
+        object tvSmall: TTreeView
           Left = 0
           Height = 136
           Top = 2
@@ -93,6 +93,7 @@ object FLPMSBackup: TFLPMSBackup
           BorderStyle = bsNone
           Images = imgTree
           TabOrder = 0
+          OnEditing = tvSmallEditing
           Items.Data = {
             F9FFFFFF0200030000000100000003000000FFFFFFFFFFFFFFFF000000000000
             000000060000004D50413030310100000003000000FFFFFFFFFFFFFFFF000000
@@ -190,10 +191,11 @@ object FLPMSBackup: TFLPMSBackup
         Height = 571
         Top = 0
         Width = 1037
-        ActivePage = tsConfiguration
+        ActivePage = tsInstruction
         Align = alClient
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
+        OnChanging = pcInstructionsChanging
         object tsInstruction: TTabSheet
           Caption = 'Instruction'
           ClientHeight = 536
@@ -1420,6 +1422,7 @@ object FLPMSBackup: TFLPMSBackup
       Images = imgTree
       TabOrder = 0
       OnClick = tvInstructionsClick
+      OnEditing = tvInstructionsEditing
       Items.Data = {
         F9FFFFFF020001000000000000000100000004000000FFFFFFFF030000000000
         000001130000004261636B757020496E737472756374696F6E73020000000400
@@ -1588,6 +1591,14 @@ object FLPMSBackup: TFLPMSBackup
       Caption = 'About'
       ImageIndex = 10
       OnExecute = HelpAboutExecute
+    end
+    object FileNew: TAction
+      Category = 'File'
+      Caption = 'New'
+    end
+    object FileDelete: TAction
+      Category = 'File'
+      Caption = 'Delete'
     end
   end
   object sqlQry1: TSQLQuery
@@ -2069,6 +2080,18 @@ object FLPMSBackup: TFLPMSBackup
       object MenuItem5: TMenuItem
         Action = FileClose
         Caption = 'Close'
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem21: TMenuItem
+        Action = FileNew
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem22: TMenuItem
+        Action = FileDelete
       end
     end
     object MenuItem14: TMenuItem

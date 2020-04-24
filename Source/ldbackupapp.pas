@@ -35,6 +35,8 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+   FileDelete: TAction;
+   FileNew: TAction;
    btnSMSTest: TButton;
    btnViewer: TSpeedButton;
    cbSMSProviderC: TComboBox;
@@ -72,6 +74,10 @@ type
    Label3: TLabel;
    lblSMSPass: TLabel;
    lblSMSUser: TLabel;
+   MenuItem21: TMenuItem;
+   MenuItem22: TMenuItem;
+   N3: TMenuItem;
+   N1: TMenuItem;
    SearchFindAgain: TAction;
    SearchFind: TAction;
    EditUpdate: TAction;
@@ -190,7 +196,7 @@ type
     timTimer2: TTimer;
     timTimer1: TTimer;
     TrayIcon: TTrayIcon;
-    TreeView1: TTreeView;
+    tvSmall: TTreeView;
     tvInstructions: TTreeView;
 
     procedure ActionsFirstExecute( Sender: TObject);
@@ -212,6 +218,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure HelpAboutExecute( Sender: TObject);
+    procedure pcInstructionsChanging( Sender: TObject; var AllowChange: Boolean);
     procedure SearchFindAgainExecute( Sender: TObject);
     procedure SearchFindExecute( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
@@ -220,6 +227,8 @@ type
     procedure ToolsRestoreExecute(Sender: TObject);
     procedure TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure tvInstructionsClick(Sender: TObject);
+    procedure tvInstructionsEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+    procedure tvSmallEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 
 type
    TYPE_DISPLAY = (TYPE_LOGALL,         // Information message is displayed in the Overall Log only
@@ -714,9 +723,6 @@ var
 
 begin
 
-   pcInstructions.Pages[0].TabVisible := True;
-   pcInstructions.Pages[1].TabVisible := True;
-
 //--- Set the Format Settings to override the system locale
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
@@ -748,10 +754,10 @@ begin
 
    lvLogSel.Clear;
 
+   CanUpdate := false;
+
    cbxType.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupType;
    cbxTypeChange(Application);
-
-   CanUpdate := false;
 
 //--- Update the fields on the Instruction Page
 
@@ -860,8 +866,15 @@ end;
 // Function to open the last successfull backup file
 //---------------------------------------------------------------------------
 procedure TFLPMSBackup.btnOpenLBClick(Sender: TObject);
+var
+   ThisNum : integer;
+
 begin
-   ExecuteProcess(BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
+
+   ThisNum := GetInstruction();
+
+   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1159,9 +1172,6 @@ begin
    GetNextSlot(ThisInstr);
    lblL04.Caption := Instr_List[ThisInstr].Instr_Rec.BackupMsg;
 
-   pcInstructions.Pages[0].TabVisible := True;
-   pcInstructions.Pages[1].TabVisible := True;
-
    Set_Buttons(ord(BTN_INSTRUCTION));
 
    DoSave := false;
@@ -1260,15 +1270,43 @@ end;
 //------------------------------------------------------------------------------
 // Action to show the About dialog
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. HelpAboutExecute( Sender: TObject);
+procedure TFLPMSBackup. HelpAboutExecute(Sender: TObject);
 begin
    //
 end;
 
 //------------------------------------------------------------------------------
+// Block users from changing tabs when an update has alrerady being initiated
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. pcInstructionsChanging(Sender: TObject; var AllowChange: Boolean);
+begin
+
+   if EditUpdate.Enabled = True then
+      AllowChange := False;
+
+end;
+
+//------------------------------------------------------------------------------
+// Block an attempt to do an in-line edit of the items in the main TreeView
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. tvInstructionsEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+begin
+   AllowEdit := False;
+end;
+
+
+//------------------------------------------------------------------------------
+// Block an attempt to do an inline edit of the items in the small TreeView
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. tvSmallEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+begin
+   AllowEdit := False;
+end;
+
+//------------------------------------------------------------------------------
 // A User customisable field changed
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. edtInstrNameCChange( Sender: TObject);
+procedure TFLPMSBackup. edtInstrNameCChange(Sender: TObject);
 begin
 
    if CanUpdate = False then
@@ -1277,11 +1315,6 @@ begin
    DoSave := True;
    Set_Buttons(ord(BTN_UPDATE));
    sbStatus.Panels.Items[2].Text := ' Modified';
-
-   if pcInstructions.ActivePageIndex = 0 then
-      pcInstructions.Pages[1].TabVisible := False
-   else
-      pcInstructions.Pages[0].TabVisible := True;
 
 end;
 
