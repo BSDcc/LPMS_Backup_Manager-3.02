@@ -46,7 +46,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="2">
       <Unit0>
         <Filename Value="LPMS_Backup.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -59,25 +59,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ldBackupApp"/>
       </Unit1>
-      <Unit2>
-        <Filename Value="ldbackupsmsconfig.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="FLPMSBackupSMSConfig"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="ldBackupSMSConfig"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="ldbackupfirst.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="FLPMSBackupFirst"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="LPMS Backup.cfg"/>
-        <IsPartOfProject Value="True"/>
-      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
