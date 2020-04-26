@@ -36,8 +36,9 @@ type
 
   TFLPMSBackup = class(TForm)
    btnDBTest: TButton;
-   CheckBox1: TCheckBox;
-   CheckBox2: TCheckBox;
+   btnTemplate: TButton;
+   cbxDoSort: TCheckBox;
+   cbxDelete: TCheckBox;
    FileDelete: TAction;
    FileNew: TAction;
    btnSMSTest: TButton;
@@ -211,6 +212,8 @@ type
     procedure ActionsRunNowExecute( Sender: TObject);
     procedure btnDBTestClick( Sender: TObject);
     procedure btnSMSTestClick( Sender: TObject);
+    procedure btnTemplateClick( Sender: TObject);
+    procedure cbxDoSortChange( Sender: TObject);
     procedure EditCancelExecute( Sender: TObject);
     procedure btnMinimiseClick(Sender: TObject);
     procedure btnOpenLBClick(Sender: TObject);
@@ -305,7 +308,7 @@ type
       Status                : integer;
    end;
 
-   Array_Instructions = array of Rec_Instructions;
+   Array_Instructions = array of REC_Instructions;
 
 private { private declarations }
 
@@ -313,6 +316,7 @@ private { private declarations }
    CanUpdate       : boolean;     // Used to override setting of DoSave
    SMSDone         : boolean;     // True if SMS send was successful
    DoSave          : boolean;     // Tracks whether a Save is requried
+   DoNotConnect    : boolean;     // Prevents a DB connection when a previously inactive Backup Instruction is made active
    RecTotal        : integer;     // Holds unformatted rec count after backup
    NumInstr        : integer;     // Number of backup instructions in the Configuration File
    SaveInstr       : integer;     // Holds instruction index when an Update started - used in case of a Cancel
@@ -337,6 +341,7 @@ private { private declarations }
    EndTime         : TDateTime;   // End time of the current Backup
    IniFile         : TINIFile;    // IniFile holding defaults
    InstrTokens     : TStrings;    // Holds the List of Backup Instruction names
+   BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
    Instr_List      : Array_Instructions; // Array of in-memory Backup instructions
    UpdateRec       : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
 
@@ -607,12 +612,17 @@ begin
 
          if Instr_List[idx1].Instruction = ThisNode.Text then begin
 
-//***
-//--- TO DO - Add a switch to indicate whether inactive instructions should be
-//--- left out from the Config file
-//***
+            if cbxDelete.Checked = True then begin
 
-            CfgStr := CfgStr + ThisNode.Text + '|';
+               if Instr_List[idx1].Active = True then
+                  CfgStr := CfgStr + ThisNode.Text + '|';
+
+            end else begin
+
+               CfgStr := CfgStr + ThisNode.Text + '|';
+
+            end;
+
 
 //--- Don't write to the 'Registry' for inactive instructions
 
@@ -737,7 +747,16 @@ begin
 
       ShowInstruction();
 
-      Set_Buttons(ord(BTN_INSTRUCTION));
+      if DoNotConnect = True then begin
+
+         DoNotConnect := False;
+         Set_Buttons(ord(BTN_UPDATE));
+
+      end else begin
+
+         Set_Buttons(ord(BTN_INSTRUCTION));
+
+      end;
 
    end;
 end;
@@ -747,9 +766,12 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.ShowInstruction();
 var
-   ListNum : integer;
+   ListNum      : integer;
 
 begin
+
+   DoNotConnect := False;
+   lvLogSel.Clear;
 
 //--- Set the Format Settings to override the system locale
 
@@ -770,11 +792,23 @@ begin
 
          Exit;
 
-      end;
+      end else begin
 
-//***
-//*** TO DO - Code to do a Config
-//***
+         Instr_List[ListNum].Active := True;
+         DoNotConnect := True;
+
+         timTimer1.Enabled := False;
+         LogInstrType      := ord(TYPE_BOTH);
+         ActiveName        := Instr_List[ListNum].Instruction;
+         DispLogMsg('Status of Backup Instruction ''' + ActiveName + ''' changed from Inactive to Active');
+         ActiveName        := '';
+         timTimer1.Enabled := True;
+
+         tvInstructions.Selected.ImageIndex := 1;
+
+         pcInstructions.ActivePage := tsConfiguration;
+
+      end;
 
    end;
 
@@ -782,9 +816,7 @@ begin
 //--- also stop the Scheduler and the Timer that updates the Time and the
 //--- 'Next Backup' time
 
-   lvLogSel.Clear;
-
-   CanUpdate := false;
+   CanUpdate := False;
 
    cbxType.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupType;
    cbxTypeChange(Application);
@@ -821,17 +853,23 @@ begin
    edtSMSUserC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSUser;
    edtSMSPassC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSPass;
 
-//--- Connect to the database and get some basic information
+//--- Connect to the database and get some basic information unless
+//--- DoNotConnect = True in which case we are dealing aith a previously
+//--- inactive instruction and the DB connecton parameters may not exist
 
-   timTimer1.Enabled := False;
-   LogInstrType      := ord(TYPE_LOGSEL);
-   ActiveName        := Instr_List[ListNum].Instruction;
+   if DoNotConnect = False then begin
 
-   DBConnect(Instr_List[ListNum].Instr_Rec.BackupHostName, Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix, Instr_List[ListNum].Instr_Rec.BackupDBUser, Instr_List[ListNum].Instr_Rec.BackupDBPass);
+      timTimer1.Enabled := False;
+      LogInstrType      := ord(TYPE_LOGSEL);
+      ActiveName        := Instr_List[ListNum].Instruction;
 
-   LogInstrType      := ord(TYPE_BOTH);
-   ActiveName        := '';
-   timTimer1.Enabled := True;
+      DBConnect(Instr_List[ListNum].Instr_Rec.BackupHostName, Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix, Instr_List[ListNum].Instr_Rec.BackupDBUser, Instr_List[ListNum].Instr_Rec.BackupDBPass);
+
+      LogInstrType      := ord(TYPE_BOTH);
+      ActiveName        := '';
+      timTimer1.Enabled := True;
+
+   end;
 
 //--- Update the Statusbar
 
@@ -847,6 +885,13 @@ begin
 
    sqlQry1.Close;
    sqlCon.Close;
+
+//--- If DoNotConnect = True then we are dealing with a previously inactive
+//--- instruction. Set the Update flag to force the User tot review the
+//--- instruction details.
+
+   if DoNotConnect = True then
+      edtInstrNameCChange(Application);
 
 //--- Restart the Scheduler and the Timer
 
@@ -1440,6 +1485,10 @@ begin
 
    DoSave := false;
 
+   sbStatus.Panels.Items[2].Text := ' Waiting...';
+   sbStatus.Panels.Items[3].Text := ' ' + Instr_List[ThisInstr].Instr_Rec.BackupHostName + '[' + Instr_List[ThisInstr].Instr_Rec.BackupDBPrefix + Instr_List[ThisInstr].Instr_Rec.BackupDBSuffix + ']';
+   sbStatus.Panels.Items[4].Text := IntToStr(Instr_List[ThisInstr].Instr_Rec.BackupBlock) + ' ';
+
 //--- Resume the Scheduler and the Timer that was stopped when an Update was
 //--- initiated
 
@@ -1549,6 +1598,17 @@ end;
 procedure TFLPMSBackup. HelpAboutExecute(Sender: TObject);
 begin
    //
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the checkox to sort treeview items
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. cbxDoSortChange( Sender: TObject);
+begin
+
+   if cbxDoSort.Checked = True then
+      tvInstructions.AlphaSort;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1706,6 +1766,43 @@ begin
 
    if CanUpdate = True then
       edtInstrNameCChange(Sender);
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the button to set up a backup instruction template
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. btnTemplateClick( Sender: TObject);
+begin
+
+   BackupTemplate.Active := False;
+   BackupTemplate.Ini_File := '';
+   BackupTemplate.Instruction := '';
+   BackupTemplate.NextDate := '';
+   BackupTemplate.NextTime := '';
+   BackupTemplate.Instr_Rec.BackupBlock := 5000;
+   BackupTemplate.Instr_Rec.BackupSMSProvider := 1;
+   BackupTemplate.Instr_Rec.BackupType := 1;
+   BackupTemplate.Instr_Rec.BackupT01 := 7;
+   BackupTemplate.Instr_Rec.BackupT02 := 0;
+   BackupTemplate.Instr_Rec.BackupT03 := 0;
+   BackupTemplate.Instr_Rec.BackupSMSAlways := False;
+   BackupTemplate.Instr_Rec.BackupSMSFailure := False;
+   BackupTemplate.Instr_Rec.BackupSMSNever := True;
+   BackupTemplate.Instr_Rec.BackupSMSSuccess := False;
+   BackupTemplate.Instr_Rec.BackupDBPass := '';
+   BackupTemplate.Instr_Rec.BackupDBPrefix := '';
+   BackupTemplate.Instr_Rec.BackupDBSuffix := '';
+   BackupTemplate.Instr_Rec.BackupDBUser := '';
+   BackupTemplate.Instr_Rec.BackupHostName := '127.0.0.1';
+   BackupTemplate.Instr_Rec.BackupLocation := '';
+   BackupTemplate.Instr_Rec.BackupMsg := '';
+   BackupTemplate.Instr_Rec.BackupSMSNumber := '';
+   BackupTemplate.Instr_Rec.BackupSMSPass := '';
+   BackupTemplate.Instr_Rec.BackupSMSUser := 'mpa';
+   BackupTemplate.Instr_Rec.BackupTemplate := '&Date@&Time - &BackupType Backup of &Instruction on &HostName';
+   BackupTemplate.Instr_Rec.BackupViewer := '/usr/bin/gedit';
+   BackupTemplate.Instr_Rec.BackupSMSProviderName := '';
 
 end;
 
@@ -3090,11 +3187,11 @@ end;
 //---------------------------------------------------------------------------
 procedure TFLPMSBackup.OpenCfg(FileName: string);
 var
-   idx1       : integer;
-   FirstChild : boolean;
-   ThisLine   : string;
-   CfgInstr   : TStringList;
-   ThisNode   : TTreeNode;
+   idx1        : integer;
+   FirstChild  : boolean;
+   ThisLine    : string;
+   CfgInstr    : TStringList;
+   ThisNode    : TTreeNode;
 
 begin
 
@@ -3104,7 +3201,7 @@ begin
    FormatSettings.DateSeparator     := '/';
    FormatSettings.ThousandSeparator := ',';
 
-   NumInstr := 0;
+   NumInstr    := 0;
 
    if (FileExists(FileName) = true) then begin
 
@@ -3167,27 +3264,31 @@ begin
 
       if (FileExists(RegString) = false) then begin
 
-         Instr_List[idx1].Instr_Rec.BackupBlock       := 5000;
-         Instr_List[idx1].Instr_Rec.BackupSMSProvider := 0;
-         Instr_List[idx1].Instr_Rec.BackupType        := 0;
-         Instr_List[idx1].Instr_Rec.BackupT01         := 0;
-         Instr_List[idx1].Instr_Rec.BackupT02         := 0;
-         Instr_List[idx1].Instr_Rec.BackupT03         := 0;
-         Instr_List[idx1].Instr_Rec.BackupSMSAlways   := False;
-         Instr_List[idx1].Instr_Rec.BackupSMSFailure  := False;
-         Instr_List[idx1].Instr_Rec.BackupSMSNever    := True;
-         Instr_List[idx1].Instr_Rec.BackupSMSSuccess  := False;
-         Instr_List[idx1].Instr_Rec.BackupDBPass      := '';
-         Instr_List[idx1].Instr_Rec.BackupDBPrefix    := InstrTokens[idx1];
-         Instr_List[idx1].Instr_Rec.BackupDBSuffix    := '';
-         Instr_List[idx1].Instr_Rec.BackupDBUser      := '';
-         Instr_List[idx1].Instr_Rec.BackupHostName    := '127.0.0.1';
-         Instr_List[idx1].Instr_Rec.BackupLocation    := '~';
-         Instr_List[idx1].Instr_Rec.BackupSMSNumber   := '';
-         Instr_List[idx1].Instr_Rec.BackupSMSPass     := '';
-         Instr_List[idx1].Instr_Rec.BackupSMSUser     := '';
-         Instr_List[idx1].Instr_Rec.BackupTemplate    := '&Date@&Time - &BackupType Backup (&CpyName on &HostName)';
-         Instr_List[idx1].Instr_Rec.BackupViewer      := '';
+         btnTemplateClick(Application);
+
+         Instr_List[idx1].Instr_Rec.BackupBlock           := BackupTemplate.Instr_Rec.BackupBlock;
+         Instr_List[idx1].Instr_Rec.BackupSMSProvider     := BackupTemplate.Instr_Rec.BackupSMSProvider;
+         Instr_List[idx1].Instr_Rec.BackupType            := BackupTemplate.Instr_Rec.BackupType;
+         Instr_List[idx1].Instr_Rec.BackupT01             := BackupTemplate.Instr_Rec.BackupT01;
+         Instr_List[idx1].Instr_Rec.BackupT02             := BackupTemplate.Instr_Rec.BackupT02;
+         Instr_List[idx1].Instr_Rec.BackupT03             := BackupTemplate.Instr_Rec.BackupT03;
+         Instr_List[idx1].Instr_Rec.BackupSMSAlways       := BackupTemplate.Instr_Rec.BackupSMSAlways;
+         Instr_List[idx1].Instr_Rec.BackupSMSFailure      := BackupTemplate.Instr_Rec.BackupSMSFailure;
+         Instr_List[idx1].Instr_Rec.BackupSMSNever        := BackupTemplate.Instr_Rec.BackupSMSNever;
+         Instr_List[idx1].Instr_Rec.BackupSMSSuccess      := BackupTemplate.Instr_Rec.BackupSMSSuccess;
+         Instr_List[idx1].Instr_Rec.BackupDBPass          := BackupTemplate.Instr_Rec.BackupDBPass;
+         Instr_List[idx1].Instr_Rec.BackupDBPrefix        := BackupTemplate.Instr_Rec.BackupDBPrefix;
+         Instr_List[idx1].Instr_Rec.BackupDBSuffix        := BackupTemplate.Instr_Rec.BackupDBSuffix;
+         Instr_List[idx1].Instr_Rec.BackupDBUser          := BackupTemplate.Instr_Rec.BackupDBUser;
+         Instr_List[idx1].Instr_Rec.BackupHostName        := BackupTemplate.Instr_Rec.BackupHostName;
+         Instr_List[idx1].Instr_Rec.BackupLocation        := BackupTemplate.Instr_Rec.BackupLocation;
+         Instr_List[idx1].Instr_Rec.BackupMsg             := BackupTemplate.Instr_Rec.BackupMsg;
+         Instr_List[idx1].Instr_Rec.BackupSMSNumber       := BackupTemplate.Instr_Rec.BackupSMSNumber;
+         Instr_List[idx1].Instr_Rec.BackupSMSPass         := BackupTemplate.Instr_Rec.BackupSMSPass;
+         Instr_List[idx1].Instr_Rec.BackupSMSUser         := BackupTemplate.Instr_Rec.BackupSMSUser;
+         Instr_List[idx1].Instr_Rec.BackupTemplate        := BackupTemplate.Instr_Rec.BackupTemplate;
+         Instr_List[idx1].Instr_Rec.BackupViewer          := BackupTemplate.Instr_Rec.BackupViewer;
+         Instr_List[idx1].Instr_Rec.BackupSMSProviderName := BackupTemplate.Instr_Rec.BackupSMSProviderName;
 
          Instr_List[idx1].Active := False;
          Instr_List[idx1].Status := ord(STAT_INACTIVE);
@@ -3301,7 +3402,8 @@ begin
 
    end;
 
-   tvInstructions.AlphaSort;
+   if cbxDoSort.Checked = True then
+      tvInstructions.AlphaSort;
 
    DispLogMsg('+++ End of Backup Instructuctions');
 
