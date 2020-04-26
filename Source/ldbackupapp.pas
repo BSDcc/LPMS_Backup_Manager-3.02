@@ -35,6 +35,9 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+   btnDBTest: TButton;
+   CheckBox1: TCheckBox;
+   CheckBox2: TCheckBox;
    FileDelete: TAction;
    FileNew: TAction;
    btnSMSTest: TButton;
@@ -76,8 +79,11 @@ type
    lblSMSUser: TLabel;
    MenuItem21: TMenuItem;
    MenuItem22: TMenuItem;
+   MenuItem23: TMenuItem;
    N3: TMenuItem;
    N1: TMenuItem;
+   pnl00b1b: TPanel;
+   pnl00b1a: TPanel;
    SearchFindAgain: TAction;
    SearchFind: TAction;
    EditUpdate: TAction;
@@ -104,8 +110,6 @@ type
    MenuItem18: TMenuItem;
    MenuItem19: TMenuItem;
    MenuItem20: TMenuItem;
-   MenuItem6: TMenuItem;
-   MenuItem7: TMenuItem;
    MenuItem8: TMenuItem;
    N2: TMenuItem;
    MenuItem9: TMenuItem;
@@ -120,6 +124,9 @@ type
    pnl00b2: TPanel;
    pnl00b1: TPanel;
    speBlockSizeC: TSpinEdit;
+   ToolButton17: TToolButton;
+   ToolButton18: TToolButton;
+   ToolButton19: TToolButton;
    tsInstruction: TTabSheet;
    tsConfiguration: TTabSheet;
    ToolBar1: TToolBar;
@@ -139,8 +146,7 @@ type
    ToolButton7: TToolButton;
    ToolButton8: TToolButton;
    ToolButton9: TToolButton;
-   ToolsTools: TMenuItem;
-   ToolsMinimise: TAction;
+   ActionsMinimise: TAction;
     Bevel2: TBevel;
     btnOpenLB: TSpeedButton;
     edtLastBackup: TEdit;
@@ -158,7 +164,6 @@ type
     rbSMSAlways: TRadioButton;
     jvBrowse: TSelectDirectoryDialog;
     splSplit01: TSplitter;
-    ToolsRestore: TAction;
     btnCancel: TButton;
     btnClose: TButton;
     btnRunNow: TButton;
@@ -204,26 +209,27 @@ type
     procedure ActionsNextExecute( Sender: TObject);
     procedure ActionsPreviousExecute( Sender: TObject);
     procedure ActionsRunNowExecute( Sender: TObject);
+    procedure btnDBTestClick( Sender: TObject);
     procedure btnSMSTestClick( Sender: TObject);
     procedure EditCancelExecute( Sender: TObject);
     procedure btnMinimiseClick(Sender: TObject);
     procedure btnOpenLBClick(Sender: TObject);
-    procedure btnSMSConfigClick(Sender: TObject);
     procedure cbxTypeChange(Sender: TObject);
     procedure EditUpdateExecute( Sender: TObject);
     procedure edtInstrNameCChange( Sender: TObject);
     procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
     procedure edtLocationButtonClick(Sender: TObject);
     procedure FileCloseExecute( Sender: TObject);
+    procedure FileDeleteExecute( Sender: TObject);
+    procedure FileNewExecute( Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure HelpAboutExecute( Sender: TObject);
-    procedure pcInstructionsChanging( Sender: TObject; var AllowChange: Boolean);
     procedure SearchFindAgainExecute( Sender: TObject);
     procedure SearchFindExecute( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
     procedure timTimer1Timer(Sender: TObject);
-    procedure ToolsMinimiseExecute( Sender: TObject);
+    procedure ActionsMinimiseExecute( Sender: TObject);
     procedure ToolsRestoreExecute(Sender: TObject);
     procedure TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure tvInstructionsClick(Sender: TObject);
@@ -302,39 +308,67 @@ type
    Array_Instructions = array of Rec_Instructions;
 
 private { private declarations }
+
    LimitActive     : boolean;     // Indicates whether LIMIT is used when reading SQL records
    CanUpdate       : boolean;     // Used to override setting of DoSave
-   SMSSuccess      : boolean;     // Send SMS on Success only
-   SMSFailure      : boolean;     // Send SMS on Failure only
-   SMSNever        : boolean;     // Don't send SMS ever
-   SMSAlways       : boolean;     // Always send and SMS egardless of success or failure
+   SMSDone         : boolean;     // True if SMS send was successful
+   DoSave          : boolean;     // Tracks whether a Save is requried
    RecTotal        : integer;     // Holds unformatted rec count after backup
-   BackupType      : integer;     // Type of backup to be taken
-   BackupT01       : integer;     // Value for ComboBox 01
-   BackupT02       : integer;     // Value for ComboBox 02
-   BackupT03       : integer;     // Value for ComboBox 03
    NumInstr        : integer;     // Number of backup instructions in the Configuration File
+   SaveInstr       : integer;     // Holds instruction index when an Update started - used in case of a Cancel
+   ActiveInstr     : integer;     // Set by the Timer to indicate which backup instruction popped
+   LogInstrType    : integer;     // Determines in which logs the message is displayed
    RecTotalF       : string;      // Holds formated rec count after backup
    ThisMsgF        : string;      // Holds formatted message containing outcome of current backup
    OutFile         : string;      // Name of the Backup file that will be created
    RegString       : string;      // Holds the name of the ini file
    BackupLogFile   : string;      // Log file name
-   SMSNumber       : string;      // Number to send SMS messages to
-   SymCpy          : string;      // Symbolic Variable containing the Company name
-   SymHost         : string;      // Symbolic Variable containing the Host name
-   KeepVersion     : string;      // Holds the current DB version
+   KeepVersion     : string;      // Holds the current DB version if this is a LPMS DB
    LastMsg         : string;      // Last SQL error message
    OSDelim         : string;      // Holds '/' or '\' depending on the OS
    OSName          : string;      // Holds the name of the Platform we are running on
    CfgFile         : string;      // Name of the default Configuration File
    SMSResult       : string;      // Holds result returned by the SMS Provider
+   SaveName        : string;      // Holds instruction name when an Update started - used in case of a Cancel
+   InstrSel        : string;      // Contains the Text of the selected TreeView item
+   ActiveName      : string;      // Name of the Instruction scheduled by the Scheduler
+   LocalPath       : string;      // Dir where Log, Config File and Back Instructions File are stored
    StartTime       : TDateTime;   // Start time of the current Backup
    EndTime         : TDateTime;   // End time of the current Backup
    IniFile         : TINIFile;    // IniFile holding defaults
-   LogList         : TStringList; // Holds the Disassembled Log Message
    InstrTokens     : TStrings;    // Holds the List of Backup Instruction names
    Instr_List      : Array_Instructions; // Array of in-memory Backup instructions
    UpdateRec       : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
+
+{$ifdef WINDOWS}
+   sqlCon : TMySQL56Connection;  // Running on Winblows
+{$endif}
+
+{$ifdef LINUX}
+   sqlCon : TMySQL57Connection;  // Running on Linux
+{$endif}
+
+{$ifdef DARWIN}
+   sqlCon : TMySQL57Connection;  // Running on macOS
+{$endif}
+
+const
+
+   WeekArray   : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
+                                           'Wednesday', 'Thursday', 'Friday',
+                                           'Saturday');
+
+   HourArray   : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
+                                           '06', '07', '08', '09', '10', '11',
+                                           '12', '13', '14', '15', '16', '17',
+                                           '18', '19', '20', '21', '22', '23',
+                                           '24', '25', '26', '27', '28', '29',
+                                           '30', '31');
+
+   MinArray    : array[1..4] of string  = ('00', '15', '30', '45');
+
+   SMSProvider : array[1..4] of string  = ('Inactive', 'SMS Portal',
+                                          'BulkSMS', 'WinSMS');
 
    function  GetInstruction() : integer;
    procedure ShowInstruction();
@@ -359,15 +393,7 @@ private { private declarations }
    function  AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
 
 public  { public declarations }
-   DoSave          : boolean;    // Tracks whether a Save is requried
-   MultiCompany    : boolean;    // Indicates Multi Company or not
-   KeepSMSProvider : integer;    // Holds SMS provider index across calls to Config module
-   KeepBackupBlock : integer;    // Holds blocksize to read from MySQL across calls to Config module
-   SMSUSerID       : string;     // SMS Subscription UserID
-   SMSPassword     : string;     // SMS Subscription Password
-   HostName        : string;     // Current Host Name
-   DBPrefix        : string;     // Current Database Prefix
-   BackupViewer    : string;     // Full path to the viewer that will be invoked to view the last successful backup
+
 end;
 
 //------------------------------------------------------------------------------
@@ -376,46 +402,7 @@ end;
 var
    FLPMSBackup: TFLPMSBackup;
 
-   ActiveInstr  : integer;                    // Set by the Timer to indicate which backup instruction popped
-   InstrNum     : integer;                    // Holds the number of loaded instructions
-   LogInstrType : integer = ord(TYPE_LOGALL); // Determines in which logs the message is displayed
-   InstrSel     : string;                     // Contains the Text of the selected TreeView item
-   ActiveName   : string;                     // Name of the Instruction scheduled by the Scheduler
-   LocalPath    : string;                     // Dir where Log, Config File and Back Instructions File are stored
-
-   SMSDone      : boolean = False;            // True if SMS send was successful
-
-{$IFDEF WINDOWS}
-   sqlCon : TMySQL56Connection;               // Running on Winblows
-{$ELSE}
-   {$IFDEF LINUX}
-      sqlCon : TMySQL57Connection;            // Running on Linux
-   {$ELSE}
-      {$IFDEF DARWIN}
-         sqlCon : TMySQL57Connection;         // Running on macOS
-      {$ENDIF}
-   {$ENDIF}
-{$ENDIF}
-
-const
-
-   WeekArray   : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
-                 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-
-   HourArray   : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
-                 '06', '07', '08', '09', '10', '11', '12', '13', '14', '15',
-                 '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
-                 '26', '27', '28', '29', '30', '31');
-
-   MinArray    : array[1..4]  of string = ('00', '15', '30', '45');
-
-   SMSProvider : array[1..4] of string = ('Inactive', 'SMS Portal',
-                 'BulkSMS', 'WinSMS');
-
-
 implementation
-
-uses ldBackupSMSConfig;
 
 {$R *.lfm}
 
@@ -427,63 +414,105 @@ uses ldBackupSMSConfig;
 procedure TFLPMSBackup.FormActivate(Sender: TObject);
 begin
 
+   FLPMSBackup.Hide;
+
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
 
-{$IFDEF WINDOWS}
+{$ifdef WINDOWS}
    OSDelim := '\';
    OSName  := 'MS-Windows';
    sqlCon  := TMySQL56Connection.Create(nil);
-{$ELSE}
-   {$IFDEF LINUX}
-      OSDelim := '/';
-      OSName  := 'Linux';
-      sqlCon  := TMySQL57Connection.Create(nil);
-   {$ELSE}
-      {$IFDEF DARWIN}
-         OSDelim := '/';
-         OSName  := 'macOS';
-         sqlCon  := TMySQL57Connection.Create(nil);
-      {$ENDIF}
-   {$ENDIF}
-{$ENDIF}
+{$endif}
+
+{$ifdef LINUX}
+   OSDelim := '/';
+   OSName  := 'Linux';
+   sqlCon  := TMySQL57Connection.Create(nil);
+{$endif}
+
+{$ifdef DARWIN}
+   OSDelim := '/';
+   OSName  := 'macOS';
+   sqlCon  := TMySQL57Connection.Create(nil);
+{$endif}
 
    sqlTran.DataBase    := sqlCon;
    sqlQry1.Transaction := sqlTran;
 
 //--- We get the path to the user's home directory (this is platform
-//--  independent). We then add the 'Backup_Manager' folder then test whether
-//--- this exists. If it does not then we notify the user and terminate the
-//--- application
+//--  independent). Winblows is a problem due to a lack of naming conventions
+//--- across versions of Winblows. If it is not 'Documents' or 'My Documents'
+//--- then we give the User a change to select the home directory.
 
 {$IFDEF WINDOWS}
+
    LocalPath := AppendPathDelim(GetUserDir + 'Documents');
+
    if DirectoryExists(LocalPath) = False then begin
 
       LocalPath := AppendPathDelim(GetUserDir + 'My Documents');
 
       if DirectoryExists(LocalPath) = False then begin
 
-         MessageDlg('Backup Manager','FATAL: Unable to locate home directory. ' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
-         Application.Terminate;
+         if (MessageDlg('Backup Manager','WARNING: Unable to locate home directory. ' + #10 + #10 + 'Click [Yes] to locate the home directory, or [No] to terminate', mtWarn, [mbYes,mbNo], '') = rbNo) then begin;
 
-         Exit;
+            Application.Terminate;
+            Exit;
+
+         end;
+
+
+         if jvBrowse.Execute = False then begin
+
+            Application.Terminate;
+            Exit;
+
+         end;
+
       end;
 
    end;
-{$ELSE}
-   LocalPath := AppendPathDelim(GetUSerDir);
-{$ENDIF}
 
    LocalPath := LocalPath + 'Backup_Manager' + OSDelim;
 
+{$ELSE}
+
+   LocalPath := AppendPathDelim(GetUSerDir);
+   LocalPath := LocalPath + '.backup_manager' + OSDelim;
+
+{$ENDIF}
+
+//--- We now have what passes for a home directory with the working directory
+//--- Backup Manager added to it and tests whether this exists. If it does not
+//--- then we ask the User whether we should create it and do so if the User
+//--- agrees otherwise we terminate the Application
+
    if DirectoryExists(LocalPath) = False then begin
-      MessageDlg('Backup Manager','FATAL: Unable to locate "' + LocalPath + '". ' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
-      Application.Terminate;
-      Exit;
+
+      if (MessageDlg('Backup Manager','WARNING: Backup Manager directory does not exist' + #10 + #10 + 'Click [Yes] to create the directory, or [No] to terminate', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
+
+         Application.Terminate;
+         Exit;
+
+      end;
+
+      if CreateDir(LocalPath) = False then begin
+
+         MessageDlg('Backup Manager','FATAL: Unable to create Backup Manager directory.' + #10 + #10 + 'Backup Manager cannot continue and will be terminated.', mtError, [mbOk], '');
+         Application.Terminate;
+         Exit;
+
+      end;
+
    end;
 
+   FLPMSBackup.Show;
+
 //--- Set up
+
+   LogInstrType := ord(TYPE_LOGALL);
+   SMSDone      := False;
 
    FLPMSBackup.Caption := 'Backup Manager';
    CfgFile             := LocalPath + 'Backup Manager.cfg';
@@ -499,7 +528,6 @@ begin
    lvLogAll.Clear();
    lvLogSel.Clear();
 
-   LogList := TStringList.Create;
    OpenLog(BackupLogFile);
 
 //--- Open the Config file then build the in-memory list and the Treeview
@@ -644,9 +672,8 @@ begin
    DispLogMsg('*** Stopping Backup Manager');
    SaveLog(BackupLogFile);
 
-   LogList.Free;
-
    TrayIcon.Visible := false;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -668,12 +695,13 @@ begin
 
    for idx1 := 0 to NumInstr -1 do begin
 
-      if (Instr_List[idx1].Instruction = ThisInstr) then begin
+      if Instr_List[idx1].Instruction = ThisInstr then begin
 
          ListNum := idx1;
          break;
 
       end;
+
    end;
 
    Result := ListNum;
@@ -735,7 +763,7 @@ begin
 
    if Instr_List[ListNum].Active = False then begin
 
-      if (MessageDlg('Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo) then begin
+      if MessageDlg('Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo then begin
 
          tvInstructions.Items.Item[0].Selected := True;
          tvInstructionsClick(Application);
@@ -750,7 +778,9 @@ begin
 
    end;
 
-//--- Initialize the date/time dropdown boxes and the input fields
+//--- Initialize the date/time dropdown boxes and the input fields. This will
+//--- also stop the Scheduler and the Timer that updates the Time and the
+//--- 'Next Backup' time
 
    lvLogSel.Clear;
 
@@ -811,14 +841,17 @@ begin
    DoSave    := False;
    CanUpdate := True;
 
-//   Set_Buttons(ord(BTN_SHOW));
-
    btnOpenLB.Enabled := False;
 
 //--- Shutdown the Database for now - we will open it again when a Backup starts
 
    sqlQry1.Close;
    sqlCon.Close;
+
+//--- Restart the Scheduler and the Timer
+
+   timTimer1.Enabled := True;
+   timTimer2.Enabled := True;
 
 //--- Set up and display (via Timer 2) info about the next scheduled backup
 
@@ -843,10 +876,14 @@ begin
 //--- length (e.g "C:\A") before we can add the backslash
 
 {$IFDEF WINDOWS}
+
    if (Length(ThisDir) > 3) then
       ThisDir := ThisDir + OSDelim;
+
 {$ELSE}
+
    ThisDir := ThisDir + OSDelim;
+
 {$ENDIF}
 
    Value := ThisDir;
@@ -885,6 +922,7 @@ var
    idx1 : integer;
 
 begin
+
    sqlQry1.Close;
    sqlCon.Close;
 
@@ -895,13 +933,18 @@ begin
    sqlQry1.DataBase    := sqlCon;
 
    try
+
       sqlCon.Connected := true;
+
    except on E : Exception do
       begin
+
          LastMsg := E.Message;
          Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Please try connecting again'),'Backup Manager',(MB_OK + MB_ICONSTOP));
          Exit;
+
       end;
+
    end;
 
 //--- Get the currently selected Instruction's reference ID
@@ -913,9 +956,11 @@ begin
 
    if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
 
-      if (GetBasicInfo() = false) then begin
+      if GetBasicInfo() = false then begin
+
          Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Backup Manager will now terminate'),'Backup Manager',(MB_OK + MB_ICONSTOP));
          Application.Terminate;
+
       end;
 
       Instr_List[idx1].SymCpy     := sqlQry1.FieldByName('CpyName').AsString;
@@ -942,7 +987,7 @@ begin
 
 //--- Set up the rest of the information
 
-   if (Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0) then begin
+   if Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0 then begin
 
       edtSMSNumber.Enabled := false;
       rbSMSSuccess.Enabled := false;
@@ -959,17 +1004,28 @@ begin
       rbSMSNever.Enabled   := true;
       rbSMSAlways.Enabled  := true;
 
-      if (edtSMSNumber.Text <> '') then begin
-         if (rbSMSAlways.Checked = true) then
+      if edtSMSNumber.Text <> '' then begin
+
+         if rbSMSAlways.Checked = true then
+
             DispLogMsg('SMS will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure) using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
-         else if (rbSMSSuccess.Checked = true) then
+
+         else if rbSMSSuccess.Checked = true then
+
             DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
-         else if (rbSMSFailure.Checked = true) then
+
+         else if rbSMSFailure.Checked = true then
+
             DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+
          else
+
             DispLogMsg('SMS Messages will never be sent');
+
       end else
+
          DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
+
    end;
 
    sbStatus.Panels.Items[2].Text := ' Waiting...';
@@ -987,35 +1043,152 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// Action to take when the User wants to create a new Instruction
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. FileNewExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the User wants to Delete an Instruction
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. FileDeleteExecute( Sender: TObject);
+begin
+   //
+end;
+
+//------------------------------------------------------------------------------
 // Action to take when the User Cancels an Update
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. EditCancelExecute( Sender: TObject);
 begin
 
    if DoSave = true then begin
+
       if (MessageDlg('Backup Manager','WARNING: There are unsaved changes - click [Yes] to ignore the changes or [No] to return', mtWarning, mbYesNo, 0) =  mrNo) then begin
+
          Exit
+
       end;
+
    end;
 
    CanUpdate := false;
 
-   cbxType.ItemIndex    := BackupType;
-   cbxT01.ItemIndex     := BackupT01;
-   cbxT02.ItemIndex     := BackupT02;
-   cbxT03.ItemIndex     := BackupT03;
-   edtSMSNumber.Text    := SMSNumber;
-   rbSMSSuccess.Checked := SMSSuccess;
-   rbSMSFailure.Checked := SMSFailure;
-   rbSMSNever.Checked   := SMSNever;
-   rbSMSAlways.Checked  := SMSAlways;
+//--- Recover from the 'Registry' as it will only be updated after the Update
+//--- has been committed
 
-   EditCancel.Enabled := False;
-   EditUpdate.Enabled := False;
+   RegString := LocalPath + 'Backup Manager_' + SaveName + '.ini';
+
+//--- Extract the information contained in the 'registry'
+
+   IniFile := TINIFile.Create(RegString);
+
+   Instr_List[SaveInstr].Instr_Rec.BackupBlock       := IniFile.ReadInteger('Parameters','BackupBlock',5000);
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSProvider := IniFile.ReadInteger('Parameters','BackupSMSProvider',0);
+   Instr_List[SaveInstr].Instr_Rec.BackupType        := IniFile.ReadInteger('Parameters','BackupType',0);
+   Instr_List[SaveInstr].Instr_Rec.BackupT01         := IniFile.ReadInteger('Parameters','BackupT01',0);
+   Instr_List[SaveInstr].Instr_Rec.BackupT02         := IniFile.ReadInteger('Parameters','BackupT02',0);
+   Instr_List[SaveInstr].Instr_Rec.BackupT03         := IniFile.ReadInteger('Parameters','BackupT03',0);
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSAlways   := IniFile.ReadBool('Parameters','BackupSMSAlways',False);
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSFailure  := IniFile.ReadBool('Parameters','BackupSMSFailure',False);
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSNever    := IniFile.ReadBool('Parameters','BackupSMSNever',True);
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSSuccess  := IniFile.ReadBool('Parameters','BackupSMSSuccess',False);
+   Instr_List[SaveInstr].Instr_Rec.BackupDBPass      := IniFile.ReadString('Parameters','BackupDBPass','');
+   Instr_List[SaveInstr].Instr_Rec.BackupDBPrefix    := IniFile.ReadString('Parameters','BackupDBPrefix','');
+   Instr_List[SaveInstr].Instr_Rec.BackupDBSuffix    := IniFile.ReadString('Parameters','BackupDBSuffix','');
+   Instr_List[SaveInstr].Instr_Rec.BackupDBUser      := IniFile.ReadString('Parameters','BackupDBUser','');
+   Instr_List[SaveInstr].Instr_Rec.BackupHostName    := IniFile.ReadString('Parameters','BackupHostName','www.bluecrane.cc');
+   Instr_List[SaveInstr].Instr_Rec.BackupLocation    := IniFile.ReadString('Parameters','BackupLocation','~');
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSNumber   := IniFile.ReadString('Parameters','BackupSMSNumber','');
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSPass     := IniFile.ReadString('Parameters','BackupSMSPass','');
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSUser     := IniFile.ReadString('Parameters','BackupSMSUser','');
+   Instr_List[SaveInstr].Instr_Rec.BackupTemplate    := IniFile.ReadString('Parameters','BackupTemplate','&Date@&Time - &BackupType Backup (&CpyName on &HostName)');
+   Instr_List[SaveInstr].Instr_Rec.BackupViewer      := IniFile.ReadString('Parameters','BackupViewer','');
+
+   IniFile.Destroy;
+
+//--- If an Update has been triggered then only the Page on which the Update was
+//--- initiated will be visible
+
+   if tsInstruction.Visible = True then begin
+
+      cbxType.ItemIndex    := Instr_List[SaveInstr].Instr_Rec.BackupType;
+      cbxTypeChange(Sender);
+
+      cbxT01.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT01;
+      cbxT02.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT02;
+      cbxT03.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT03;
+
+      edtSMSNumber.Text    := Instr_List[SaveInstr].Instr_Rec.BackupSMSNumber;
+      rbSMSSuccess.Checked := Instr_List[SaveInstr].Instr_Rec.BackupSMSSuccess;
+      rbSMSFailure.Checked := Instr_List[SaveInstr].Instr_Rec.BackupSMSFailure;
+      rbSMSNever.Checked   := Instr_List[SaveInstr].Instr_Rec.BackupSMSNever;
+      rbSMSAlways.Checked  := Instr_List[SaveInstr].Instr_Rec.BackupSMSAlways;
+
+//--- If no SMS choice is selected then set rbSMSNever by default
+
+      if ((rbSMSSuccess.Checked = False) and (rbSMSFailure.Checked = False) and (rbSMSAlways.Checked = False) and (rbSMSNever.Checked = False)) then
+         rbSMSNever.Checked := True;
+
+   end else begin
+
+//--- Fix the TreeView name as this may have changed
+
+      UpdateRec.InstrName    := Instr_List[SaveInstr].Instruction;
+      UpdateRec.InstrNewName := SaveName;
+      UpdateRec.Request      := ord(TV_REPLACE);
+
+      AccessTreeView(UpdateRec);
+
+      Instr_List[saveInstr].Instruction := SaveName;
+
+//--- Fix the .ini file name as this may have changed
+
+      Instr_List[SaveInstr].Ini_File := 'Backup Manager_' + SaveName + '.ini';
+
+//--- Restore the rest of the fields
+
+      edtInstrNameC.Text       := Instr_List[SaveInstr].Instruction;
+      speBlockSizeC.Value      := Instr_List[SaveInstr].Instr_Rec.BackupBlock;
+      cbSMSProviderC.ItemIndex := Instr_List[SaveInstr].Instr_Rec.BackupSMSProvider;
+      edtDBPassC.Text          := Instr_List[SaveInstr].Instr_Rec.BackupDBPass;
+      edtDBPrefixC.Text        := Instr_List[SaveInstr].Instr_Rec.BackupDBPrefix;
+
+      if Instr_List[SaveInstr].Instr_Rec.BackupDBSuffix = '_LPMS' then
+         cbxDBSuffixC.Checked  := True
+      else
+         cbxDBSuffixC.Checked  := False;
+
+      edtDBUserC.Text          := Instr_List[SaveInstr].Instr_Rec.BackupDBUser;
+      edtHostNameC.Text        := Instr_List[SaveInstr].Instr_Rec.BackupHostName;
+      edtLocationC.Text        := Instr_List[SaveInstr].Instr_Rec.BackupLocation;
+      edtSMSPassC.Text         := Instr_List[SaveInstr].Instr_Rec.BackupSMSPass;
+      edtSMSUserC.Text         := Instr_List[SaveInstr].Instr_Rec.BackupSMSUser;
+      edtTemplateC.Text        := Instr_List[SaveInstr].Instr_Rec.BackupTemplate;
+      edtViewerC.Text          := Instr_List[SaveInstr].Instr_Rec.BackupViewer;
+      cbSMSProviderC.Text      := Instr_List[SaveInstr].Instr_Rec.BackupSMSProviderName;
+
+   end;
+
+   Set_Buttons(ord(BTN_INSTRUCTION));
+
+//--- Make both pages visible again
+
+   tsInstruction.TabVisible   := True;
+   tsConfiguration.TabVisible := True;
+
+//--- Reset the switches and information fields
 
    DoSave := false;
    CanUpdate := true;
    sbStatus.Panels.Items[2].Text := ' Waiting...';
+
+//--- Start the Scheduler and the timer again
+
+   timTimer1.Enabled := True;
+   timTimer2.Enabled := True;
 
 end;
 
@@ -1026,23 +1199,22 @@ procedure TFLPMSBackup. EditUpdateExecute( Sender: TObject);
 var
    ThisInstr, UpdateReq : integer;
    UpdateTV             : boolean = False;
-   ThisName             : string;
 
 begin
 
-//--- Get Key information about the Backup Instruction being changed
+//--- Set instruction index to the index that was saaved when the chnage was
+//--- initiated
 
-   ThisInstr := GetInstruction();
-   ThisName  := Instr_List[ThisInstr].Instruction;
+   ThisInstr := SaveInstr;
 
 //--- If a possible Update has been triggered then only the Page on which the
 //--- Update was initiated will be visible
 
-   if pcInstructions.Pages[0].Visible = True then begin
+   if tsInstruction.TabVisible = True then begin;
 
 //--- Check whether the required fields are valid
 
-      if edtSMSNumber.Text = '' then begin
+      if Trim(edtSMSNumber.Text) = '' then begin
 
          if ((rbSMSSuccess.Checked = False) and (rbSMSFailure.Checked = False) and (rbSMSAlways.Checked = False) and (rbSMSNever.Checked = False)) then
             rbSMSNever.Checked := True;
@@ -1053,36 +1225,118 @@ begin
 
 //--- Check whether the required fields are valid
 
-         if edtInstrNameC.Text = '' then begin
+      if Trim(edtInstrNameC.Text) = '' then begin
 
-            Application.MessageBox('Instruction Name is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
-            edtInstrNameC.SetFocus;
+         Application.MessageBox('''Instruction Name'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtInstrNameC.Text := '';
+         edtInstrNameC.SetFocus;
+         Exit;
+
+      end;
+
+      if Trim(edtDBPrefixC.Text) = '' then begin
+
+         Application.MessageBox('''Database'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtDBPrefixC.Text := '';
+         edtDBPrefixC.SetFocus;
+         Exit;
+
+      end;
+
+      if Trim(edtHostNameC.Text) = '' then begin
+
+         Application.MessageBox('''Host Name'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtHostNameC.Text := '';
+         edtHostNameC.SetFocus;
+         Exit;
+
+      end;
+
+      if Trim(edtDBUserC.Text) = '' then begin
+
+         Application.MessageBox('''User ID'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtDBUserC.Text := '';
+         edtDBUserC.SetFocus;
+         Exit;
+
+      end;
+         
+      if Trim(edtDBPassC.Text) = '' then begin
+
+         Application.MessageBox('''Password'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtDBPassC.Text := '';
+         edtDBPassC.SetFocus;
+         Exit;
+
+      end;
+
+      if Trim(edtTemplateC.Text) = '' then begin
+
+         Application.MessageBox('''Template'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtTemplateC.Text := '';
+         edtTemplateC.SetFocus;
+         Exit;
+
+      end;
+
+      if Trim(edtLocationC.Text) = '' then begin
+
+         Application.MessageBox('''Backup Location'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+         edtLocationC.Text := '';
+         edtLocationC.SetFocus;
+         Exit;
+
+      end;
+
+      if cbSMSProviderC.ItemIndex > 0 then begin
+
+         if Trim(edtSMSUserC.Text) = '' then begin
+
+            Application.MessageBox('''User ID'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+            edtSMSUserC.Text := '';
+            edtSMSUserC.SetFocus;
             Exit;
 
          end;
 
+         if Trim(edtSMSPassC.Text) = '' then begin
+
+            Application.MessageBox('''Password'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
+            edtSMSPassC.Text := '';
+            edtSMSPassC.SetFocus;
+            Exit;
+
+         end;
+
+      end else begin
+
+         edtSMSUserC.Text := '';
+         edtSMSPassC.Text := '';
+
+      end;
+
 //--- Check whether the Instruction Name has changed and if so then check if
 //--- the new name is a duplicate
 
-         if edtInstrNameC.Text <> Instr_List[ThisInstr].Instruction then begin
+      if edtInstrNameC.Text <> Instr_List[ThisInstr].Instruction then begin
 
-            UpdateRec.InstrName := edtInstrNameC.Text;
-            UpdateRec.Request   := ord(TV_DUPLICATE);
+         UpdateRec.InstrName := edtInstrNameC.Text;
+         UpdateRec.Request   := ord(TV_DUPLICATE);
 
-            if AccessTreeView(UpdateRec) = False then begin
+         if AccessTreeView(UpdateRec) = False then begin
 
-               Application.MessageBox(pchar('Updating "' + Instr_List[ThisInstr].Instruction + '" to "' + edtInstrNameC.Text + '" will create a duplicate - no duplicates allowed.' + #10 + #10 + 'Please choose another Instruction Name'),'Backup Manager', MB_ICONHAND + MB_OK);
-               edtInstrNameC.SetFocus;
-               Exit;
+            Application.MessageBox(pchar('Updating "' + Instr_List[ThisInstr].Instruction + '" to "' + edtInstrNameC.Text + '" will create a duplicate - no duplicates allowed.' + #10 + #10 + 'Please choose another Instruction Name'),'Backup Manager', MB_ICONHAND + MB_OK);
+            edtInstrNameC.SetFocus;
+            Exit;
 
-            end else begin
+         end else begin
 
-               UpdateTV  := True;
-               UpdateReq := ord(TV_REPLACE);
-
-            end;
+            UpdateTV  := True;
+            UpdateReq := ord(TV_REPLACE);
 
          end;
+
+      end;
 
    end;
 
@@ -1119,7 +1373,42 @@ begin
    Instr_List[ThisInstr].Instr_Rec.BackupViewer          := edtViewerC.Text;
    Instr_List[ThisInstr].Instr_Rec.BackupSMSProviderName := cbSMSProviderC.Text;
 
-//--- Update the 'Registry'
+//--- Update the TreeView if required
+
+   if UpdateTV = True then begin
+
+      case UpdateReq of
+
+         ord(TV_REPLACE): begin
+
+            UpdateRec.InstrName    := SaveName;
+            UpdateRec.InstrNewName := edtInstrNameC.Text;
+            UpdateRec.Request      := ord(TV_REPLACE);
+
+            AccessTreeView(UpdateRec);
+
+         end;
+
+      end;
+
+   end;
+
+   ActiveName := Instr_List[ThisInstr].Instruction;
+   DispLogMsg('Parameters changed - Resetting Scheduler for ' + Instr_List[ThisInstr].Instruction);
+   GetNextSlot(ThisInstr);
+   lblL04.Caption := Instr_List[ThisInstr].Instr_Rec.BackupMsg;
+
+//--- Make both Tabs visible again
+
+   CanUpdate := False;
+
+   tsInstruction.TabVisible   := True;
+   tsConfiguration.TabVisible := True;
+
+   CanUpdate := True;
+
+//--- Update the 'Registry'. We do this last so that we can recover from the
+//--- 'Registry' in case something goes wrong
 
    IniFile := TINIFile.Create(LocalPath + Instr_List[ThisInstr].Ini_File);
 
@@ -1147,34 +1436,15 @@ begin
 
    IniFile.Destroy;
 
-//--- Update the TreeView if required
-
-   if UpdateTV = True then begin
-
-      case UpdateReq of
-
-         ord(TV_REPLACE): begin
-
-            UpdateRec.InstrName    := ThisName;
-            UpdateRec.InstrNewName := edtInstrNameC.Text;
-            UpdateRec.Request      := ord(TV_REPLACE);
-
-            AccessTreeView(UpdateRec);
-
-         end;
-
-      end;
-
-   end;
-
-   ActiveName := Instr_List[ThisInstr].Instruction;
-   DispLogMsg('Parameters changed - Resetting Scheduler for ' + Instr_List[ThisInstr].Instruction);
-   GetNextSlot(ThisInstr);
-   lblL04.Caption := Instr_List[ThisInstr].Instr_Rec.BackupMsg;
-
    Set_Buttons(ord(BTN_INSTRUCTION));
 
    DoSave := false;
+
+//--- Resume the Scheduler and the Timer that was stopped when an Update was
+//--- initiated
+
+   timTimer1.Enabled := True;
+   timTimer2.Enabled := True;
 
 end;
 
@@ -1253,9 +1523,15 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the User selected 'Minimise'
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ToolsMinimiseExecute( Sender: TObject);
+procedure TFLPMSBackup. ActionsMinimiseExecute( Sender: TObject);
 begin
+
+{$ifdef Windows}
    FLPMSBackup.Hide;
+{$else}
+   Application.Minimize;
+{$endif}
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1276,24 +1552,12 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// Block users from changing tabs when an update has alrerady being initiated
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup. pcInstructionsChanging(Sender: TObject; var AllowChange: Boolean);
-begin
-
-   if EditUpdate.Enabled = True then
-      AllowChange := False;
-
-end;
-
-//------------------------------------------------------------------------------
 // Block an attempt to do an in-line edit of the items in the main TreeView
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. tvInstructionsEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 begin
    AllowEdit := False;
 end;
-
 
 //------------------------------------------------------------------------------
 // Block an attempt to do an inline edit of the items in the small TreeView
@@ -1312,6 +1576,18 @@ begin
    if CanUpdate = False then
       Exit;
 
+//--- Get Key information about the Backup Instruction being changed
+
+   SaveInstr := GetInstruction();
+   SaveName  := Instr_List[SaveInstr].Instruction;
+
+//--- Disable the Page that is not being updated to simplify the Update logic
+
+   if tsInstruction.Visible = True then
+      tsConfiguration.TabVisible := False
+   else
+      tsInstruction.TabVisible := False;
+
    DoSave := True;
    Set_Buttons(ord(BTN_UPDATE));
    sbStatus.Panels.Items[2].Text := ' Modified';
@@ -1327,6 +1603,14 @@ var
 
 begin
 
+//--- Temporarily stop the Scheduler and the Timer to update the 'Next Backup'
+//--- message to avoid wrong information being passed to these
+
+   timTimer1.Enabled := False;
+   timTimer2.Enabled := False;
+
+//--- Set the correct display fields based on the Backup Type
+
    lblL01.Visible := true;
    lblL02.Visible := true;
    lblL03.Visible := false;
@@ -1336,7 +1620,7 @@ begin
 
    if (cbxType.Text = 'Hourly') then begin
 
-      lblL01.Caption := 'Select Time:';
+      lblL01.Caption := 'Minute Mark:';
       cbxT01.Clear;
 
       for idx := 1 to 4 do
@@ -1418,7 +1702,61 @@ begin
    cbxT02.ItemIndex := 0;
    cbxT03.ItemIndex := 0;
 
-   edtInstrNameCChange(Sender);
+//--- Necessary to call only when CanUpdate has not been flagged yet
+
+   if CanUpdate = True then
+      edtInstrNameCChange(Sender);
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the button to test database connectivity
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. btnDBTestClick( Sender: TObject);
+var
+   Connected : boolean;
+
+begin
+
+//--- Temporarily stop the Scheduler
+
+   timTimer1.Enabled := False;
+
+//--- Try and connect to the database
+
+   sqlQry1.Close;
+   sqlCon.Close;
+
+   sqlCon.HostName     := edtHostNameC.Text;
+   sqlCon.UserName     := edtDBUserC.Text;
+   sqlCon.Password     := edtDBPassC.Text;
+   sqlCon.DatabaseName := edtDBPrefixC.Text;
+
+   if cbxDBSuffixC.Checked = True then
+      sqlCon.DatabaseName := sqlCon.DatabaseName + '_LPMS';
+
+   sqlQry1.DataBase := sqlCon;
+
+   Connected := True;
+
+   try
+
+      sqlCon.Connected := True;
+
+   except
+
+      Connected := False;
+
+   end;
+
+   if Connected = True then
+      Application.MessageBox(PChar('Connection to ''' + sqlCon.DatabaseName + ''' @ ''' + sqlCon.HostName + ''' successfully established.'),'Backup Manager',(MB_OK + MB_ICONINFORMATION))
+   else
+      Application.MessageBox(PChar('Connection to ''' + sqlCon.DatabaseName + ''' @ ''' + sqlCon.HostName + ''' failed!'),'Backup Manager',(MB_OK + MB_ICONSTOP));
+
+///--- Restart the Scheduler
+
+   timTimer1.Enabled := True;
 
 end;
 
@@ -1438,10 +1776,10 @@ begin
    if cbSMSProviderC.ItemIndex = 0 then
       Exit;
 
-   if edtSMSUserC.Text = '' then
+   if Trim(edtSMSUserC.Text) = '' then
       Exit;
 
-   if edtSMSPassC.Text = '' then
+   if Trim(edtSMSPassC.Text) = '' then
       Exit;
 
    Response := TMemoryStream.Create;
@@ -1529,104 +1867,6 @@ begin
          end;
 
       end;
-
-   end;
-
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Configure button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.btnSMSConfigClick(Sender: TObject);
-begin
-
-   FLPMSBackup.Hide;
-
-   FLPMSBackupSMSConfig := TFLPMSBackupSMSConfig.Create(Application);
-
-//--- Set the values to be used in the config utility
-
-   FLPMSBackupSMSConfig.SMSProvider  := KeepSMSProvider;
-   FLPMSBackupSMSConfig.BackupBlock  := KeepBackupBlock;
-   FLPMSBackupSMSConfig.SMSUser      := SMSUserID;
-   FLPMSBackupSMSConfig.SMSPassword  := SMSPassword;
-   FLPMSBackupSMSConfig.DBPrefix     := DBPrefix;
-   FLPMSBackupSMSConfig.MultiCompany := MultiCompany;
-   FLPMSBackupSMSConfig.BackupViewer := BackupViewer;
-
-   FLPMSBackupSMSConfig.ShowModal;
-   FLPMSBackupSMSConfig.Destroy;
-
-   FLPMSBackup.Show;
-
-   if (DoSave = true) then begin
-
-      EditUpdateExecute(Sender);
-//      btnUpdateClick(Sender);
-
-      sqlQry1.Close;
-      sqlCon.Close;
-
-      sqlCon.HostName := HostName;
-      sqlCon.UserName := DBPrefix + '_LD';
-      sqlCon.Password := 'LD01';
-      sqlCon.DatabaseName := DBPrefix + '_LPMS';
-      sqlQry1.DataBase := sqlCon;
-
-      try
-         sqlCon.Connected := true;
-      except on E : Exception do
-         begin
-            LastMsg := E.Message;
-            Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
-            Application.Terminate;
-            Exit;
-         end;
-      end;
-
-      if (GetBasicInfo() = false) then begin
-         Application.MessageBox(Pchar('FATAL: Unexpected database error: "' + LastMsg + '". Backup Manager will now terminate'),'LPMS - Backup Manager',(MB_OK + MB_ICONSTOP));
-         Application.Terminate;
-         Exit;
-      end;
-
-      SymCpy      := sqlQry1.FieldByName('CpyName').AsString;
-      SymHost     := HostName;
-      KeepVersion := sqlQry1.FieldByName('Version').AsString;
-
-      if (KeepSMSProvider = 0) then begin
-         edtSMSNumber.Enabled := false;
-         rbSMSSuccess.Enabled := false;
-         rbSMSFailure.Enabled := false;
-         rbSMSNever.Enabled   := false;
-         rbSMSAlways.Enabled  := false;
-         DispLogMsg('SMS Messaging is inactive');
-      end else begin
-         edtSMSNumber.Enabled := true;
-         rbSMSSuccess.Enabled := true;
-         rbSMSFailure.Enabled := true;
-         rbSMSNever.Enabled   := true;
-         rbSMSAlways.Enabled  := true;
-
-         if (edtSMSNumber.Text <> '') then begin
-            if (rbSMSAlways.Checked = true) then
-               DispLogMsg('SMS Message will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure)')
-            else if (rbSMSSuccess.Checked = true) then
-               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup')
-            else if (rbSMSFailure.Checked = true) then
-               DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails')
-            else
-               DispLogMsg('SMS Messages will never be sent');
-         end else
-            DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
-      end;
-
-      DispLogMsg('Backups will be taken for "' + SymCpy + '" on "' + HostName + '[' + DBPrefix + ']"');
-      DispLogMsg('Database version is "' + KeepVersion + '"');
-
-      sbStatus.Panels.Items[2].Text := ' Waiting...';
-      sbStatus.Panels.Items[3].Text := ' ' + HostName + '[' + DBPrefix + ']';
-      sbStatus.Panels.Items[4].Text := IntToStr(KeepBackupBlock) + ' ';
 
    end;
 
@@ -1729,7 +1969,7 @@ begin
 
                if (((rbSMSFailure.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[idx1].Instr_Rec.BackupSMSProvider <> 0)) then begin
 
-                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + SymHost + '(' + DBPrefix + ') {' + OSName + '}';
+                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + Instr_List[idx1].Instr_Rec.BackupHostName + '(' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + ') {' + OSName + '}';
                   SMSMessage  := Get_Send_XML(DispMessage);
                   SendSMS(SMSMessage);
 
@@ -1835,7 +2075,7 @@ begin
    else
       MsgPart := 'Currently running...';
 
-   TrayIcon.Hint := 'Backup Manager (' + DBPrefix + '): Right click for options' + #10 + 'Double click to restore Backup Manager' + #10 + MsgPart;
+   TrayIcon.Hint := 'Backup Manager: Right click for options' + #10 + 'Double click to restore Backup Manager' + #10 + MsgPart;
 
 end;
 
@@ -1848,14 +2088,14 @@ begin
    ActionsRunNow.Enabled := False;
    EditCancel.Enabled    := False;
    EditUpdate.Enabled    := False;
-   ToolsMinimise.Enabled := False;
+   ActionsMinimise.Enabled := False;
    FileClose.Enabled     := False;
 
    case State of
 
       ord(BTN_INITIAL): begin
 
-         ToolsMinimise.Enabled := True;
+         ActionsMinimise.Enabled := True;
          FileClose.Enabled     := True;
 
       end;
@@ -1863,7 +2103,7 @@ begin
       ord(BTN_INSTRUCTION): begin
 
          ActionsRunNow.Enabled := True;
-         ToolsMinimise.Enabled := True;
+         ActionsMinimise.Enabled := True;
          FileClose.Enabled     := True;
 
       end;
@@ -1883,13 +2123,13 @@ begin
 
          if tvInstructions.Selected.Level = 0 then begin
 
-            ToolsMinimise.Enabled := True;
+            ActionsMinimise.Enabled := True;
             FileClose.Enabled     := True;
 
          end else begin
 
             ActionsRunNow.Enabled := True;
-            ToolsMinimise.Enabled := True;
+            ActionsMinimise.Enabled := True;
             FileClose.Enabled     := True;
          end;
 
@@ -1898,7 +2138,7 @@ begin
 {
 ord(BTN_SHOW): begin
          ActionsRunNow.Enabled := True;
-         ToolsMinimise.Enabled := True;
+         ActionsMinimise.Enabled := True;
          FileClose.Enabled     := True;
       end;
 }
@@ -2196,7 +2436,7 @@ begin
             P3 := ' NOT NULL';
             P6 := ' AUTO_INCREMENT';
          end else begin
-            if (Fields_Rec^.Def = '') then
+            if (Trim(Fields_Rec^.Def) = '') then
                P5 := ''
             else begin
                if (Fields_Rec^.AlphaNum = 2) then
@@ -2215,7 +2455,7 @@ begin
 
       end;
 
-      if P4 = '' then
+      if Trim(P4) = '' then
          P4 := ') ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC';
 
       Res := Res + P4;
@@ -2376,10 +2616,11 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.GetNextSlot(ThisInstr: integer);
 var
-   idx1, val1, mins, hours, days, ThisDay, BackupDay   : integer;
-   ThisWeekDay, DispDate, DispTime, ThisDate, ThisTime : string;
-   BackupTime, ThisBackupMsg                           : string;
+   ThisDays, BackupDay, CurrentDay        : integer;
+   DispDate, DispTime, ThisDate, ThisTime : string;
+   BackupTime, ThisBackupMsg              : string;
 
+{
 const
    WeekDays : array[1..7]  of string = ('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 
@@ -2390,6 +2631,7 @@ const
                '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
                '26', '27', '28', '29', '30', '31');
    MinArray  : array[1..4]  of string = ('00', '15', '30', '45');
+}
 
 begin
 
@@ -2401,9 +2643,8 @@ begin
 
 //--- Set date and time format for this session
 
-   ThisDate    := FormatDateTime('yyyyMMdd',Now());
+   ThisDate    := FormatDateTime('yyyy/MM/dd',Now());
    ThisTime    := FormatDateTime('hhnn',Now());
-   ThisWeekDay := FormatDateTime('DDD',Now());
 
 //--- Generate a message to display the date and time of the next backup and
 //--- store the date and the time (HH:MM) in the in-memory list
@@ -2412,21 +2653,14 @@ begin
 
       0: begin                         // Hourly
 
-         BackupTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT01]; { cbxT01.Text }
+         BackupTime := Copy(ThisTime,1,2) + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1];
 
-         if (BackupTime <= Copy(ThisTime,3,2)) then begin
-            mins := ((StrToInt(BackupTime) - StrToInt(Copy(ThisTime,3,2))) + 60);
+         if BackupTime <= ThisTime then
+            DispTime := FormatDateTime('HH',IncMinute(Now(),60)) + ':' + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1]
+         else
+            DispTime   := Copy(BackupTime,1,2) + ':' + Copy(BackupTime,3,2);
 
-            val1 := StrToInt(Copy(ThisTime,1,2)) + 1;
-            DispTime := IntToStr(val1) + ':' + HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT01]; { cbxT01.Text }
-         end else begin
-            mins := StrToInt(Copy(BackupTime,1,2)) - StrToInt(Copy(ThisTime,3,2));
-
-            DispTime   := Copy(ThisTime,1,2) + ':' + Copy(BackupTime,1,2);
-         end;
-
-         DispDate := Copy(ThisDate,1,4) + '/' + Copy(ThisDate,5,2) + '/' + Copy(ThisDate,7,2);
-         ThisBackupMsg := 'Next Backup on ' + DispDate + ' at ' + DispTime;
+         DispDate := ThisDate;
 
       end;
 
@@ -2436,7 +2670,7 @@ begin
 
          if (BackupTime <= ThisTime) then begin
 
-            DispDate := FormatDateTime('yyyy/MM/dd',IncMinute(Now(),1440));
+            DispDate := FormatDateTime('yyyy/MM/dd',IncDay(Now(),1));
             DispTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1] + ':' + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT02 + 1];
 
          end else begin
@@ -2446,53 +2680,42 @@ begin
 
          end;
 
-         ThisBackupMsg := 'Next Backup on ' + DispDate + ' at ' + DispTime;
-
       end;
 
       2: begin                         // Weekly
 
-         BackupDay := Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1;
+//--- Get the day of the week on which the backup must be taken as a number
+//--- and the current day of the week as a number
 
-         for idx1 := 1 to 7 do begin
+         BackupDay  := Instr_List[ThisInstr].Instr_Rec.BackupT01 + 1;
+         CurrentDay := DayOfWeek(Now());
 
-            if (ThisWeekDay = WeekDays[idx1]) then begin
-               ThisDay := idx1;
-               Break;
-            end;
+//--- Check how many days to go until the backup day and set the next backup
+//--- date
 
-         end;
-
-         if (BackupDay < ThisDay) then
-            days := (BackupDay - ThisDay + 7)
+         if (BackupDay < CurrentDay) then
+            ThisDays := (BackupDay - CurrentDay + 7)
          else
-            days := (BackupDay - ThisDay);
+            ThisDays := (BackupDay - CurrentDay);
 
-         BackupTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT02] + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03];
+         DispDate   := FormatDateTime('yyyy/MM/dd',IncDay(Now(),ThisDays));
 
-         if (BackupTime <= ThisTime) then begin
+//--- If the weekly backup day is today then we need to work out whether the
+//--- time for the backup today has already gone and if so then adjust the next
+//--- backup date by a week
 
-            hours := (days * 24) + ((StrToInt(Copy(BackupTime,1,2)) - StrToInt(Copy(ThisTime,1,2))) + 23);
-            mins  := (hours * 60) - ((StrToInt(Copy(ThisTime,3,2)) - StrToInt(MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03])) - 60);
+         BackupTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT02 + 1] + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03 + 1];
 
-            DispDate := WeekArray[Instr_List[ThisInstr].Instr_Rec.BackupT01];
-            DispTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT02] + ':' + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03];
+         if (DispDate = ThisDate) and (BackupTime <= ThisTime) then
+            DispDate := FormatDateTime('yyyy/MM/dd',IncDay(StrToDate(DispDate),7));
 
-         end else begin
-
-            hours := (days *24 ) + (StrToInt(Copy(ThisTime,1,2)) - StrToInt(Copy(BackupTime,1,2))) * -1;
-            mins  := (hours * 60) + StrToInt(MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03]) - StrToInt(Copy(ThisTime,3,2));
-
-            DispDate := WeekArray[Instr_List[ThisInstr].Instr_Rec.BackupT01];
-            DispTime := Copy(BackupTime,1,2) + ':' + Copy(BackupTime,3,2);
-
-         end;
-
-         ThisBackupMsg := 'Next Backup on ' + DispDate + ' at ' + DispTime;
+         DispTime := HourArray[Instr_List[ThisInstr].Instr_Rec.BackupT02 + 1] + ':' + MinArray[Instr_List[ThisInstr].Instr_Rec.BackupT03 + 1];
 
       end;
 
    end;
+
+   ThisBackupMsg := 'Next Backup on ' + DispDate + ' at ' + DispTime;
 
 //--- Update the instruction's data in the in-memory list
 
@@ -2546,8 +2769,8 @@ begin
          send_xml.Add('</senddata>');
       end;
 
-      2: send_xml.Add(SMS + '&msisdn=' + '27' + Copy(SMSNumber,2,99));
-      3: send_xml.Add(SMS + '&numbers=' + '27' + Copy(SMSNumber,2,99));
+      2: send_xml.Add(SMS + '&msisdn=' + '27' + Copy(Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber,2,99));
+      3: send_xml.Add(SMS + '&numbers=' + '27' + Copy(Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber,2,99));
    end;
 
    Res := send_xml.Text;
@@ -3078,12 +3301,21 @@ begin
 
    end;
 
+   tvInstructions.AlphaSort;
+
    DispLogMsg('+++ End of Backup Instructuctions');
 
    ActiveName := '';
 
-   CfgInstr.Free;
-   InstrTokens.Free;
+   try
+      CfgInstr.Free;
+   except
+   end;
+
+   try
+      InstrTokens.Free;
+   except
+   end;
 
 end;
 
