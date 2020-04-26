@@ -703,7 +703,7 @@ begin
    ThisInstr := tvInstructions.Selected.Text;
    InstrSel  := ThisInstr;
 
-   for idx1 := 0 to NumInstr -1 do begin
+   for idx1 := 0 to NumInstr - 1 do begin
 
       if Instr_List[idx1].Instruction = ThisInstr then begin
 
@@ -787,6 +787,7 @@ begin
 
       if MessageDlg('Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo then begin
 
+         tvInstructions.Selected.ImageIndex := 0;
          tvInstructions.Items.Item[0].Selected := True;
          tvInstructionsClick(Application);
 
@@ -1091,8 +1092,68 @@ end;
 // Action to take when the User wants to create a new Instruction
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. FileNewExecute( Sender: TObject);
+Var
+   ThisInstr : integer;
+   ThisNode  : TTreeNode;
+
 begin
-   //
+
+//--- Insert a new entry in the TreeView
+
+   ThisNode := tvInstructions.Items.GetFirstNode;
+   ThisNode := tvInstructions.Items.AddChild(ThisNode,'New Instruction');
+
+   ThisNode.ImageIndex    := 1;
+   ThisNode.SelectedIndex := 3;
+
+   ThisNode.Selected := True;
+
+   lvLogSel.Clear;
+
+//--- TEMP
+
+   btnTemplateClick(Sender);
+
+//--- Prepare the new entry with the defaults contained in the Template
+
+   ThisInstr := Length(Instr_List);
+   SetLength(Instr_List,ThisInstr + 1);
+   inc(NumInstr);
+
+   Instr_List[ThisInstr].Instruction := 'New Instruction';
+   Instr_List[ThisInstr].Ini_File    := 'Backup Manager_New Instruction.ini';
+   Instr_List[ThisInstr].NextDate    := '2099/12/31';
+   Instr_List[ThisInstr].NextTime    := '23:59:59';
+
+   Instr_List[ThisInstr].Instr_Rec.BackupBlock           := BackupTemplate.Instr_Rec.BackupBlock;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSProvider     := BackupTemplate.Instr_Rec.BackupSMSProvider;
+   Instr_List[ThisInstr].Instr_Rec.BackupType            := BackupTemplate.Instr_Rec.BackupType;
+   Instr_List[ThisInstr].Instr_Rec.BackupT01             := BackupTemplate.Instr_Rec.BackupT01;
+   Instr_List[ThisInstr].Instr_Rec.BackupT02             := BackupTemplate.Instr_Rec.BackupT02;
+   Instr_List[ThisInstr].Instr_Rec.BackupT03             := BackupTemplate.Instr_Rec.BackupT03;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSAlways       := BackupTemplate.Instr_Rec.BackupSMSAlways;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSFailure      := BackupTemplate.Instr_Rec.BackupSMSFailure;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSNever        := BackupTemplate.Instr_Rec.BackupSMSNever;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSSuccess      := BackupTemplate.Instr_Rec.BackupSMSSuccess;
+   Instr_List[ThisInstr].Instr_Rec.BackupDBPass          := BackupTemplate.Instr_Rec.BackupDBPass;
+   Instr_List[ThisInstr].Instr_Rec.BackupDBPrefix        := BackupTemplate.Instr_Rec.BackupDBPrefix;
+   Instr_List[ThisInstr].Instr_Rec.BackupDBSuffix        := BackupTemplate.Instr_Rec.BackupDBSuffix;
+   Instr_List[ThisInstr].Instr_Rec.BackupDBUser          := BackupTemplate.Instr_Rec.BackupDBUser;
+   Instr_List[ThisInstr].Instr_Rec.BackupHostName        := BackupTemplate.Instr_Rec.BackupHostName;
+   Instr_List[ThisInstr].Instr_Rec.BackupLocation        := BackupTemplate.Instr_Rec.BackupLocation;
+   Instr_List[ThisInstr].Instr_Rec.BackupMsg             := BackupTemplate.Instr_Rec.BackupMsg;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSNumber       := BackupTemplate.Instr_Rec.BackupSMSNumber;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSPass         := BackupTemplate.Instr_Rec.BackupSMSPass;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSUser         := BackupTemplate.Instr_Rec.BackupSMSUser;
+   Instr_List[ThisInstr].Instr_Rec.BackupTemplate        := BackupTemplate.Instr_Rec.BackupTemplate;
+   Instr_List[ThisInstr].Instr_Rec.BackupViewer          := BackupTemplate.Instr_Rec.BackupViewer;
+   Instr_List[ThisInstr].Instr_Rec.BackupSMSProviderName := BackupTemplate.Instr_Rec.BackupSMSProviderName;
+
+   Instr_List[ThisInstr].Active := False;
+   Instr_List[ThisInstr].Status := ord(STAT_INACTIVE);
+
+   tvInstructionsClick(Sender);
+
 end;
 
 //------------------------------------------------------------------------------

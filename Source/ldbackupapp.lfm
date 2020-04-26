@@ -919,27 +919,27 @@ object FLPMSBackup: TFLPMSBackup
           Action = FileClose
         end
         object ToolButton3: TToolButton
-          Left = 149
+          Left = 137
           Top = 0
           Action = EditCancel
         end
         object ToolButton4: TToolButton
-          Left = 117
+          Left = 105
           Top = 0
           Action = EditUpdate
         end
         object ToolButton5: TToolButton
-          Left = 285
+          Left = 249
           Top = 0
           Action = ActionsFirst
         end
         object ToolButton6: TToolButton
-          Left = 317
+          Left = 281
           Top = 0
           Action = ActionsNext
         end
         object ToolButton7: TToolButton
-          Left = 181
+          Left = 169
           Height = 32
           Top = 0
           Caption = 'ToolButton7'
@@ -952,51 +952,51 @@ object FLPMSBackup: TFLPMSBackup
           Style = tbsSeparator
         end
         object ToolButton8: TToolButton
-          Left = 381
+          Left = 345
           Top = 0
           Action = ActionsLast
         end
         object ToolButton9: TToolButton
-          Left = 349
+          Left = 313
           Top = 0
           Action = ActionsPrevious
         end
         object ToolButton10: TToolButton
-          Left = 413
+          Left = 377
           Height = 32
           Top = 0
           Caption = 'ToolButton10'
           Style = tbsSeparator
         end
         object ToolButton11: TToolButton
-          Left = 201
+          Left = 177
           Top = 0
           Action = SearchFind
         end
         object ToolButton12: TToolButton
-          Left = 233
+          Left = 209
           Top = 0
           Action = SearchFindAgain
         end
         object ToolButton13: TToolButton
-          Left = 265
+          Left = 241
           Height = 32
           Top = 0
           Caption = 'ToolButton13'
           Style = tbsSeparator
         end
         object ToolButton14: TToolButton
-          Left = 517
+          Left = 454
           Top = 0
           Action = HelpAbout
         end
         object ToolButton15: TToolButton
-          Left = 465
+          Left = 417
           Top = 0
           Action = ActionsRunNow
         end
         object ToolButton16: TToolButton
-          Left = 497
+          Left = 449
           Height = 32
           Top = 0
           Caption = 'ToolButton16'
@@ -1005,8 +1005,7 @@ object FLPMSBackup: TFLPMSBackup
         object ToolButton17: TToolButton
           Left = 33
           Top = 0
-          Caption = 'ToolButton17'
-          ImageIndex = 1
+          Action = FileNew
         end
         object ToolButton18: TToolButton
           Left = 65
@@ -1015,7 +1014,7 @@ object FLPMSBackup: TFLPMSBackup
           ImageIndex = 2
         end
         object ToolButton19: TToolButton
-          Left = 433
+          Left = 385
           Top = 0
           Action = ActionsMinimise
         end
