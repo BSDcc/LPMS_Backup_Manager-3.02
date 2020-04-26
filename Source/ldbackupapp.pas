@@ -213,6 +213,7 @@ type
     procedure btnDBTestClick( Sender: TObject);
     procedure btnSMSTestClick( Sender: TObject);
     procedure btnTemplateClick( Sender: TObject);
+    procedure btnViewerClick( Sender: TObject);
     procedure cbxDoSortChange( Sender: TObject);
     procedure EditCancelExecute( Sender: TObject);
     procedure btnMinimiseClick(Sender: TObject);
@@ -228,6 +229,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure HelpAboutExecute( Sender: TObject);
+    procedure pcInstructionsChange( Sender: TObject);
     procedure SearchFindAgainExecute( Sender: TObject);
     procedure SearchFindExecute( Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
@@ -255,11 +257,9 @@ type
    BTN_STATE    = (BTN_INITIAL,         // App startup or USer clicked on Root of the TreeView
                    BTN_INSTRUCTION,     // User clicked on an Instruction in the TreeView or a [Run Now] has completed
                    BTN_RUNNOW,          // User clicked on [Run Now]
-                   BTN_UPDATE,          // A User Editable field was changed
-                   BTN_CANCEL);         // After a Cancel was completed
+                   BTN_UPDATE);         // A User Editable field was changed
 
    TVIEW_REQ    = (TV_DUPLICATE,        // Request to check for a duplicate
-                   TV_INSERT,           // Request to insert a new Backup Instruction in the TreeView
                    TV_REPLACE,          // Request to replace/rename an existing Backup Instruction in the TreeView
                    TV_DELETE);          // Request to delete an existing Backup Instruction
 
@@ -1076,7 +1076,7 @@ begin
 
    sbStatus.Panels.Items[2].Text := ' Waiting...';
    sbStatus.Panels.Items[3].Text := ' ' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']';
-   sbStatus.Panels.Items[4].Text := IntToStr(Instr_List[idx1].Instr_Rec.BackupBlock) + ' ';
+   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[idx1].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
 
 end;
 
@@ -1160,8 +1160,39 @@ end;
 // Action to take when the User wants to Delete an Instruction
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. FileDeleteExecute( Sender: TObject);
+var
+   ThisInstr : integer;
+
 begin
-   //
+
+//--- Stop the Scheduler
+
+   timTimer1.Enabled := False;
+
+   ThisInstr := GetInstruction();
+
+   if (MessageDlg('Backup Manager','CAUTION: Your requested Backup Instruction ''' + Instr_List[ThisInstr].Instruction + ''' to be deleted. This action is irreversible and cannot be undone!' + #10 + #10 + 'Click [Yes] to proceed with the Delete request; or ' + #10 + 'Click [No] to return and keep the Backup Instruction.', mtWarning, mbYesNo, 0) =  mrNo) then begin
+
+      timTimer1.Enabled := True;
+      Exit
+
+   end;
+
+   Instr_List[ThisInstr].Active := False;
+   Instr_List[ThisInstr].Status := ord(STAT_INACTIVE);
+
+   UpdateRec.InstrName := tvInstructions.Selected.Text;
+   UpdateRec.Request   := ord(TV_DELETE);
+
+   AccessTreeView(UpdateRec);
+
+   if tvInstructions.Selected.Level = 0 then
+      Set_Buttons(ord(BTN_INITIAL))
+   else
+      Set_Buttons(ord(BTN_INSTRUCTION));
+
+   timTimer1.Enabled := True;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1548,7 +1579,7 @@ begin
 
    sbStatus.Panels.Items[2].Text := ' Waiting...';
    sbStatus.Panels.Items[3].Text := ' ' + Instr_List[ThisInstr].Instr_Rec.BackupHostName + '[' + Instr_List[ThisInstr].Instr_Rec.BackupDBPrefix + Instr_List[ThisInstr].Instr_Rec.BackupDBSuffix + ']';
-   sbStatus.Panels.Items[4].Text := IntToStr(Instr_List[ThisInstr].Instr_Rec.BackupBlock) + ' ';
+   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[ThisInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
 
 //--- Resume the Scheduler and the Timer that was stopped when an Update was
 //--- initiated
@@ -1659,6 +1690,14 @@ end;
 procedure TFLPMSBackup. HelpAboutExecute(Sender: TObject);
 begin
    //
+end;
+
+//------------------------------------------------------------------------------
+// User changed Pages in the Instruction display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. pcInstructionsChange( Sender: TObject);
+begin
+   Set_Buttons(ord(BTN_INSTRUCTION));
 end;
 
 //------------------------------------------------------------------------------
@@ -1864,6 +1903,21 @@ begin
    BackupTemplate.Instr_Rec.BackupTemplate := '&Date@&Time - &BackupType Backup of &Instruction on &HostName';
    BackupTemplate.Instr_Rec.BackupViewer := '/usr/bin/gedit';
    BackupTemplate.Instr_Rec.BackupSMSProviderName := '';
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the button to select the default viewer
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. btnViewerClick( Sender: TObject);
+begin
+
+   dlgOpen.InitialDir := '~';
+
+   if dlgOpen.Execute = False then
+      Exit;
+
+   edtViewerC.Text := dlgOpen.FileName;
 
 end;
 
@@ -2169,8 +2223,6 @@ var
 
 begin
 
-//   timTimer2.Enabled := False;
-
 //--- Set the Format Settings to override the system locale
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
@@ -2187,14 +2239,6 @@ begin
    if (timTimer1.Enabled = False) or (tvInstructions.Selected.Level = 0) then
       Exit;
 
-//--- We don't display the countdown message if the Backup Mode is weekly
-
-   if (cbxType.Text = 'Weekly') then begin
-
-      lblL05.Caption := '';
-      Exit;
-
-   end;
 
    ThisInstr := GetInstruction();
    BDate     := Instr_List[ThisInstr].NextDate;
@@ -2204,10 +2248,36 @@ begin
 
    BackupTime := StrToDate(BDate) + StrToTime(BTime);
 
+//--- If the Cycle is Hourly or Daily we simple display the time remaining.
+//--- If the Cycle is Weekly we don't display the countdown message if the time
+//--- remaining is more than 24 hours.
 
-//--- Display the countdown message
+   if cbxType.Text = 'Weekly' then begin
 
-   lblL05.Caption := 'Next Backup in: ' + FormatDateTime('hh:nn:ss',BackupTime - Time());
+      if DaysBetween(Now(),BackupTime) = 0 then begin
+
+         if BTime <= FormatDateTime('HH:mm',Now()) then begin
+
+            lblL05.Caption := 'Next Backup in: ' + FormatDateTime('hh:nn:ss',BackupTime - Time());
+
+         end else begin
+
+            lblL05.Caption := '';
+            Exit;
+
+         end
+      end else begin
+
+         lblL05.Caption := '';
+         Exit;
+
+      end;
+
+   end else begin
+
+      lblL05.Caption := 'Next Backup in: ' + FormatDateTime('hh:nn:ss',BackupTime - Time());
+
+   end;
 
 end;
 
@@ -2243,63 +2313,82 @@ end;
 procedure TFLPMSBackup.Set_Buttons(State: integer);
 begin
 
-   ActionsRunNow.Enabled := False;
-   EditCancel.Enabled    := False;
-   EditUpdate.Enabled    := False;
-   ActionsMinimise.Enabled := False;
-   FileClose.Enabled     := False;
+   FileClose.Enabled       := False;
+   FileNew.Enabled         := False;
+   FileDelete.Enabled      := False;
+   EditCancel.Enabled      := False;
+   EditUpdate.Enabled      := False;
+   SearchFind.Enabled      := False;
+   SearchFindAgain.Enabled := False;
+   ActionsFirst.Enabled    := False;
+   ActionsNext.Enabled     := False;
+   ActionsPrevious.Enabled := False;
+   ActionsLast.Enabled     := False;
+   ActionsRunNow.Enabled   := False;
+
+   ActionsMinimise.Enabled := True;
+   HelpAbout.Enabled       := True;
 
    case State of
 
       ord(BTN_INITIAL): begin
 
-         ActionsMinimise.Enabled := True;
-         FileClose.Enabled     := True;
+         FileClose.Enabled       := True;
+         FileNew.Enabled         := True;
+         SearchFind.Enabled      := True;
+         SearchFindAgain.Enabled := True;
+         ActionsFirst.Enabled    := True;
+         ActionsNext.Enabled     := True;
+         ActionsPrevious.Enabled := True;
+         ActionsLast.Enabled     := True;
 
       end;
 
       ord(BTN_INSTRUCTION): begin
 
-         ActionsRunNow.Enabled := True;
-         ActionsMinimise.Enabled := True;
-         FileClose.Enabled     := True;
+         FileClose.Enabled       := True;
+         FileNew.Enabled         := True;
+         FileDelete.Enabled      := True;
+
+         if pcInstructions.ActivePage = tsInstruction then begin
+
+            SearchFind.Enabled      := True;
+            SearchFindAgain.Enabled := True;
+            ActionsFirst.Enabled    := True;
+            ActionsNext.Enabled     := True;
+            ActionsPrevious.Enabled := True;
+            ActionsLast.Enabled     := True;
+
+         end;
+
+         ActionsRunNow.Enabled   := True;
 
       end;
 
       ord(BTN_RUNNOW): begin
-         ActionsRunNow.Enabled := False;
+         ActionsRunNow.Enabled   := False;
+         ActionsMinimise.Enabled := False;
       end;
 
       ord(BTN_UPDATE): begin
 
-         EditCancel.Enabled  := True;
-         EditUpdate.Enabled  := True;
-
-      end;
-
-      ord(BTN_CANCEL): begin
-
-         if tvInstructions.Selected.Level = 0 then begin
-
-            ActionsMinimise.Enabled := True;
-            FileClose.Enabled     := True;
-
-         end else begin
-
-            ActionsRunNow.Enabled := True;
-            ActionsMinimise.Enabled := True;
-            FileClose.Enabled     := True;
-         end;
+         EditCancel.Enabled      := True;
+         EditUpdate.Enabled      := True;
+         ActionsMinimise.Enabled := False;
 
       end;
 
 {
-ord(BTN_SHOW): begin
-         ActionsRunNow.Enabled := True;
-         ActionsMinimise.Enabled := True;
-         FileClose.Enabled     := True;
+      ord(BTN_CANCEL): begin
+
+         if tvInstructions.Selected.Level = 0 then
+            Set_Buttons(BTN_INITIAL)
+         else
+            Set_Buttons(BTN_Instruction);
+
       end;
 }
+
    end;
 
 end;
@@ -3677,8 +3766,8 @@ end;
 //---------------------------------------------------------------------------
 function TFLPMSBackup.AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
 var
-   Outcome    : boolean;
-   ThisNode   : TTreeNode;
+   Outcome            : boolean;
+   ThisNode, NextNode : TTreeNode;
 
 begin
    Outcome := True;
@@ -3712,6 +3801,36 @@ begin
             if ThisNode.Text = ThisReq.InstrName then begin
 
                ThisNode.Text := ThisReq.InstrNewName;
+               break;
+
+            end;
+
+            ThisNode := ThisNode.GetNextSibling;
+
+         end;
+
+      end;
+
+      ord(TV_DELETE): begin
+
+         while ThisNode <> nil do begin
+
+            if ThisNode.Text = ThisReq.InstrName then begin
+
+               NextNode := ThisNode.GetNextSibling;
+
+               if NextNode = nil then begin
+
+                  NextNode := ThisNode.GetPrevSibling;
+
+                  if NextNode = nil then
+                     NextNode := ThisNode.Parent;
+
+               end;
+
+               ThisNode.Delete;
+               tvInstructions.Selected := NextNode;
+
                break;
 
             end;
