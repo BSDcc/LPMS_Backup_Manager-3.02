@@ -460,7 +460,7 @@ begin
 
       if DirectoryExists(LocalPath) = False then begin
 
-         if (MessageDlg('Backup Manager','WARNING: Unable to locate home directory. ' + #10 + #10 + 'Click [Yes] to locate the home directory, or [No] to terminate', mtWarn, [mbYes,mbNo], '') = rbNo) then begin;
+         if (MessageDlg('Backup Manager','WARNING: Unable to locate home directory. ' + #10 + #10 + 'Click [Yes] to locate the home directory, or [No] to terminate', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
 
             Application.Terminate;
             Exit;
