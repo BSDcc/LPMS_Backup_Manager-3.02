@@ -35,6 +35,7 @@ type
   { TFLPMSBackup }
 
   TFLPMSBackup = class(TForm)
+  ActionsRestore: TAction;
    btnDBTest: TButton;
    btnTemplate: TButton;
    cbxDoSort: TCheckBox;
@@ -142,11 +143,11 @@ type
    ToolButton2: TToolButton;
    ToolButton3: TToolButton;
    ToolButton4: TToolButton;
-   ToolButton5: TToolButton;
-   ToolButton6: TToolButton;
+   btnFirst: TToolButton;
+   btnNext: TToolButton;
    ToolButton7: TToolButton;
-   ToolButton8: TToolButton;
-   ToolButton9: TToolButton;
+   btnLast: TToolButton;
+   btnPrev: TToolButton;
    ActionsMinimise: TAction;
     Bevel2: TBevel;
     btnOpenLB: TSpeedButton;
@@ -209,6 +210,7 @@ type
     procedure ActionsLastExecute( Sender: TObject);
     procedure ActionsNextExecute( Sender: TObject);
     procedure ActionsPreviousExecute( Sender: TObject);
+    procedure ActionsRestoreExecute(Sender: TObject);
     procedure ActionsRunNowExecute( Sender: TObject);
     procedure btnDBTestClick( Sender: TObject);
     procedure btnSMSTestClick( Sender: TObject);
@@ -377,6 +379,7 @@ const
 
    function  GetInstruction() : integer;
    procedure ShowInstruction();
+   procedure Navigate();
    procedure DBConnect(DBHost: string; DBName: string; DBUser: string; DBPass: string);
    procedure DispLogMsg(ThisDate: string; ThisTime: string; ThisInstr: string; ThisMsg: string);
    procedure DispLogMsg(RecCount: integer);
@@ -512,8 +515,6 @@ begin
 
    end;
 
-   FLPMSBackup.Show;
-
 //--- Set up
 
    LogInstrType := ord(TYPE_LOGALL);
@@ -542,6 +543,8 @@ begin
    tvInstructions.AutoExpand := True;
    tvInstructions.FullExpand;
 
+   FLPMSBackup.Show;
+
 //--- Start the Time display and Scheduler timers
 
    timTimer1.Enabled  := False;
@@ -562,6 +565,12 @@ begin
 //--- Set the state of the buttons on the main screen
 
    Set_Buttons(ord(BTN_INITIAL));
+
+   ActionsLastExecute(Sender);
+
+{$ifdef WINDOWS}
+   TrayIcon.Visible := True;
+{$endif}
 
 end;
 
@@ -682,7 +691,9 @@ begin
    DispLogMsg('*** Stopping Backup Manager');
    SaveLog(BackupLogFile);
 
-   TrayIcon.Visible := false;
+{$ifdef WINDOWS}
+   TrayIcon.Visible := False;
+{$endif}
 
 end;
 
@@ -757,6 +768,8 @@ begin
          Set_Buttons(ord(BTN_INSTRUCTION));
 
       end;
+
+      ActionsLastExecute(Application);
 
    end;
 end;
@@ -1633,7 +1646,21 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. ActionsFirstExecute( Sender: TObject);
 begin
-   //
+
+   if tvInstructions.Selected.Level = 0 then begin
+
+      lvLogAll.ItemIndex := 0;
+      lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+
+   end else begin
+
+      lvLogSel.ItemIndex := 0;
+      lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+
+   end;
+
+   Navigate();
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1641,7 +1668,21 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. ActionsNextExecute( Sender: TObject);
 begin
-   //
+
+   if tvInstructions.Selected.Level = 0 then begin
+
+      lvLogAll.ItemIndex := lvLogAll.ItemIndex + 1;
+      lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+
+   end else begin
+
+      lvLogSel.ItemIndex := lvLogSel.ItemIndex + 1;
+      lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+
+   end;
+
+   Navigate();
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1650,7 +1691,21 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. ActionsPreviousExecute( Sender: TObject);
 begin
-   //
+
+      if tvInstructions.Selected.Level = 0 then begin
+
+         lvLogAll.ItemIndex := lvLogAll.ItemIndex - 1;
+         lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+
+      end else begin
+
+         lvLogSel.ItemIndex := lvLogSel.ItemIndex - 1;
+         lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+
+      end;
+
+      Navigate();
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1658,7 +1713,21 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. ActionsLastExecute( Sender: TObject);
 begin
-   //
+
+      if tvInstructions.Selected.Level = 0 then begin
+
+         lvLogAll.ItemIndex := lvLogAll.Items.Count - 1;
+         lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+
+      end else begin
+
+         lvLogSel.ItemIndex := lvLogSel.Items.Count - 1;
+         lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+
+      end;
+
+      Navigate();
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1673,6 +1742,14 @@ begin
    Application.Minimize;
 {$endif}
 
+end;
+
+//------------------------------------------------------------------------------
+// Action to take when the User selected 'Restore'
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.ActionsRestoreExecute(Sender: TObject);
+begin
+   FLPMSBackup.Show;
 end;
 
 //------------------------------------------------------------------------------
@@ -1693,11 +1770,82 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// React to the navigation buttons
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.Navigate();
+begin
+
+   if tvInstructions.Selected.Level = 0 then begin
+
+      if lvLogAll.ItemIndex > 0 then begin
+
+         btnFirst.Enabled := True;
+         btnPrev.Enabled  := True;
+
+      end else begin
+
+         btnFirst.Enabled := False;
+         btnPrev.Enabled  := False;
+
+      end;
+
+      if lvLogAll.ItemIndex < (lvLogAll.Items.Count - 1) then begin
+
+         btnNext.Enabled := True;
+         btnLast.Enabled := True;
+
+      end else begin
+
+         btnNext.Enabled := False;
+         btnLast.Enabled := False;
+
+      end;
+
+      lvLogAll.Selected.MakeVisible(False);
+
+   end else begin
+
+      if lvLogSel.ItemIndex > 0 then begin
+
+         btnFirst.Enabled := True;
+         btnPrev.Enabled  := True;
+
+      end else begin
+
+         btnFirst.Enabled := False;
+         btnPrev.Enabled  := False;
+
+      end;
+
+      if lvLogSel.ItemIndex < (lvLogSel.Items.Count - 1) then begin
+
+         btnNext.Enabled := True;
+         btnLast.Enabled := True;
+
+      end else begin
+
+         btnNext.Enabled := False;
+         btnLast.Enabled := False;
+
+      end;
+
+      lvLogSel.Selected.MakeVisible(False);
+
+   end;
+
+end;
+
+//------------------------------------------------------------------------------
 // User changed Pages in the Instruction display
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. pcInstructionsChange( Sender: TObject);
 begin
+
    Set_Buttons(ord(BTN_INSTRUCTION));
+
+   if tsInstruction.Visible = True then
+      Navigate();
+
 end;
 
 //------------------------------------------------------------------------------
