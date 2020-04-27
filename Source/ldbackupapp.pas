@@ -22,8 +22,15 @@ interface
 // Uses clause
 //------------------------------------------------------------------------------
 uses
+
+{$ifdef DARWIN}
+  macOSAll, Folders, FileUtil,     // Running on macOS
+{$else}
+  FileUtil,                        // Running on Winblows or Linux
+{$endif}
+
   Classes, SysUtils, sqldb, mysql57conn, mysql56conn, LCLType,
-  FileUtil, Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
+  Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
   StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, strutils, INIFiles,
   HTTPSend, Synacode, DateUtils, LazFileUtils;
 
@@ -92,10 +99,10 @@ type
    EditCancel: TAction;
    Bevel1: TBevel;
    Bevel3: TBevel;
-   edtSMS: TEdit;
-   edtInstruction: TEdit;
+   edtConfigFile: TEdit;
+   edtHostName: TEdit;
    edtNextBackup: TEdit;
-   edtDBVersion: TEdit;
+   edtLocation: TEdit;
    imgLargeN: TImageList;
    lblDBVersion: TLabel;
    Label7: TLabel;
@@ -206,50 +213,50 @@ type
     tvSmall: TTreeView;
     tvInstructions: TTreeView;
 
-    procedure ActionsFirstExecute( Sender: TObject);
-    procedure ActionsLastExecute( Sender: TObject);
-    procedure ActionsNextExecute( Sender: TObject);
-    procedure ActionsPreviousExecute( Sender: TObject);
-    procedure ActionsRestoreExecute(Sender: TObject);
-    procedure ActionsRunNowExecute( Sender: TObject);
-    procedure btnDBTestClick( Sender: TObject);
-    procedure btnSMSTestClick( Sender: TObject);
-    procedure btnTemplateClick( Sender: TObject);
-    procedure btnViewerClick( Sender: TObject);
-    procedure cbxDoSortChange( Sender: TObject);
-    procedure EditCancelExecute( Sender: TObject);
-    procedure btnMinimiseClick(Sender: TObject);
-    procedure btnOpenLBClick(Sender: TObject);
-    procedure cbxTypeChange(Sender: TObject);
-    procedure EditUpdateExecute( Sender: TObject);
-    procedure edtInstrNameCChange( Sender: TObject);
-    procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
-    procedure edtLocationButtonClick(Sender: TObject);
-    procedure FileCloseExecute( Sender: TObject);
-    procedure FileDeleteExecute( Sender: TObject);
-    procedure FileNewExecute( Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure HelpAboutExecute( Sender: TObject);
-    procedure pcInstructionsChange( Sender: TObject);
-    procedure SearchFindAgainExecute( Sender: TObject);
-    procedure SearchFindExecute( Sender: TObject);
+    procedure FileCloseExecute(Sender: TObject);
+    procedure FileDeleteExecute(Sender: TObject);
+    procedure FileNewExecute(Sender: TObject);
+    procedure EditCancelExecute(Sender: TObject);
+    procedure EditUpdateExecute(Sender: TObject);
+    procedure SearchFindAgainExecute(Sender: TObject);
+    procedure SearchFindExecute(Sender: TObject);
+    procedure ActionsFirstExecute(Sender: TObject);
+    procedure ActionsLastExecute(Sender: TObject);
+    procedure ActionsNextExecute(Sender: TObject);
+    procedure ActionsPreviousExecute(Sender: TObject);
+    procedure ActionsMinimiseExecute(Sender: TObject);
+    procedure ActionsRestoreExecute(Sender: TObject);
+    procedure ActionsRunNowExecute(Sender: TObject);
+    procedure HelpAboutExecute(Sender: TObject);
+    procedure tvInstructionsClick(Sender: TObject);
+    procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
+    procedure edtLocationButtonClick(Sender: TObject);
+    procedure btnOpenLBClick(Sender: TObject);
+    procedure btnDBTestClick(Sender: TObject);
+    procedure btnSMSTestClick(Sender: TObject);
+    procedure btnTemplateClick(Sender: TObject);
+    procedure btnViewerClick(Sender: TObject);
+    procedure cbxDoSortChange(Sender: TObject);
+    procedure btnMinimiseClick(Sender: TObject);
+    procedure cbxTypeChange(Sender: TObject);
+    procedure edtInstrNameCChange(Sender: TObject);
+    procedure pcInstructionsChange(Sender: TObject);
     procedure timTimer2Timer(Sender: TObject);
     procedure timTimer1Timer(Sender: TObject);
-    procedure ActionsMinimiseExecute( Sender: TObject);
-    procedure ToolsRestoreExecute(Sender: TObject);
     procedure TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-    procedure tvInstructionsClick(Sender: TObject);
-    procedure tvInstructionsEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
-    procedure tvSmallEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+    procedure tvInstructionsEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+    procedure tvSmallClick( Sender: TObject);
+    procedure tvSmallEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 
 type
    TYPE_DISPLAY = (TYPE_LOGALL,         // Information message is displayed in the Overall Log only
                    TYPE_LOGSEL,         // Information message is displayed in the Instruction Log only
                    TYPE_BOTH);          // Information message is displaye din both Logs
 
-   HINT_OPTIONS = (HINT_WAITING,        //
-                   HINT_RUNNING);       //
+   HINT_OPTIONS = (HINT_WAITING,        // Hint shown in Winblows when the Application is minimised to the System Tray
+                   HINT_RUNNING);       // Hint shown in Winblows when the Applciation is minimised to the System Tray
 
    STAT_OPTIONS = (STAT_INACTIVE,       // Current Instruction will not be considered by the Scheduler
                    STAT_WAITING,        // Current Instruction is waiting to be scheduled on the designated time
@@ -698,405 +705,9 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// Function to return the in-memory list index of the visible instruction
-//------------------------------------------------------------------------------
-function TFLPMSBackup.GetInstruction() : integer;
-var
-   idx1, ListNum : integer;
-   ThisInstr     : string;
-
-begin
-
-   ListNum := -1;
-
-//--- Get the Instruction name so that we can find it in the in-memory list.
-
-   ThisInstr := tvInstructions.Selected.Text;
-   InstrSel  := ThisInstr;
-
-   for idx1 := 0 to NumInstr - 1 do begin
-
-      if Instr_List[idx1].Instruction = ThisInstr then begin
-
-         ListNum := idx1;
-         break;
-
-      end;
-
-   end;
-
-   Result := ListNum;
-
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on a node in the Instructions Treeview
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.tvInstructionsClick(Sender: TObject);
-begin
-
-   if DoSave = True then
-      Exit;
-
-   if tvInstructions.Selected.Level = 0 then begin
-
-      pnlP00b.Visible := True;
-      pnlP00a.Visible := False;
-
-      lblL04.Caption := '';
-      lblL05.Caption := '';
-
-      sbStatus.Panels.Items[3].Text := '';
-      sbStatus.Panels.Items[4].Text := '';
-
-      Set_Buttons(ord(BTN_INITIAL));
-
-   end else begin
-
-      pnlP00b.Visible := False;
-      pnlP00a.Visible := True;
-
-      ShowInstruction();
-
-      if DoNotConnect = True then begin
-
-         DoNotConnect := False;
-         Set_Buttons(ord(BTN_UPDATE));
-
-      end else begin
-
-         Set_Buttons(ord(BTN_INSTRUCTION));
-
-      end;
-
-      ActionsLastExecute(Application);
-
-   end;
-end;
-
-//------------------------------------------------------------------------------
-// Load instruction information from the Registry
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.ShowInstruction();
-var
-   ListNum      : integer;
-
-begin
-
-   DoNotConnect := False;
-   lvLogSel.Clear;
-
-//--- Set the Format Settings to override the system locale
-
-   FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
-   FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
-
-   ListNum := GetInstruction();
-
-//--- Check whether the selected instruction is active (a config file exists)
-
-   if Instr_List[ListNum].Active = False then begin
-
-      if MessageDlg('Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo then begin
-
-         tvInstructions.Selected.ImageIndex := 0;
-         tvInstructions.Items.Item[0].Selected := True;
-         tvInstructionsClick(Application);
-
-         Exit;
-
-      end else begin
-
-         Instr_List[ListNum].Active := True;
-         DoNotConnect := True;
-
-         timTimer1.Enabled := False;
-         LogInstrType      := ord(TYPE_BOTH);
-         ActiveName        := Instr_List[ListNum].Instruction;
-         DispLogMsg('Status of Backup Instruction ''' + ActiveName + ''' changed from Inactive to Active');
-         ActiveName        := '';
-         timTimer1.Enabled := True;
-
-         tvInstructions.Selected.ImageIndex := 1;
-
-         pcInstructions.ActivePage := tsConfiguration;
-
-      end;
-
-   end;
-
-//--- Initialize the date/time dropdown boxes and the input fields. This will
-//--- also stop the Scheduler and the Timer that updates the Time and the
-//--- 'Next Backup' time
-
-   CanUpdate := False;
-
-   cbxType.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupType;
-   cbxTypeChange(Application);
-
-//--- Update the fields on the Instruction Page
-
-   cbxT01.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT01;
-   cbxT02.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT02;
-   cbxT03.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT03;
-   edtSMSNumber.Text    := Instr_List[ListNum].Instr_Rec.BackupSMSNumber;
-   rbSMSSuccess.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSSuccess;
-   rbSMSFailure.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSFailure;
-   rbSMSNever.Checked   := Instr_List[ListNum].Instr_Rec.BackupSMSNever;
-   rbSMSAlways.Checked  := Instr_List[ListNum].Instr_Rec.BackupSMSAlways;
-
-//--- Populate the fields on the Configuration Page
-
-   edtInstrNameC.Text       := Instr_List[ListNum].Instruction;
-   edtDBPrefixC.Text        := Instr_List[ListNum].Instr_Rec.BackupDBPrefix;
-
-   if Instr_List[ListNum].Instr_Rec.BackupDBSuffix = '_LPMS' then
-      cbxDBSuffixC.Checked := True
-   else
-      cbxDBSuffixC.Checked := False;
-
-   edtDBUserC.Text          := Instr_List[ListNum].Instr_Rec.BackupDBUser;
-   edtDBPassC.Text          := Instr_List[ListNum].Instr_Rec.BackupDBPass;
-   edtHostNameC.Text        := Instr_List[ListNum].Instr_Rec.BackupHostName;
-   edtTemplateC.Text        := Instr_List[ListNum].Instr_Rec.BackupTemplate;
-   edtLocationC.Text        := Instr_List[ListNum].Instr_Rec.BackupLocation;
-   speBlockSizeC.Value      := Instr_List[ListNum].Instr_Rec.BackupBlock;
-   edtViewerC.Text          := Instr_List[ListNum].Instr_Rec.BackupViewer;
-   cbSMSProviderC.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupSMSProvider;
-   edtSMSUserC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSUser;
-   edtSMSPassC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSPass;
-
-//--- Connect to the database and get some basic information unless
-//--- DoNotConnect = True in which case we are dealing aith a previously
-//--- inactive instruction and the DB connecton parameters may not exist
-
-   if DoNotConnect = False then begin
-
-      timTimer1.Enabled := False;
-      LogInstrType      := ord(TYPE_LOGSEL);
-      ActiveName        := Instr_List[ListNum].Instruction;
-
-      DBConnect(Instr_List[ListNum].Instr_Rec.BackupHostName, Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix, Instr_List[ListNum].Instr_Rec.BackupDBUser, Instr_List[ListNum].Instr_Rec.BackupDBPass);
-
-      LogInstrType      := ord(TYPE_BOTH);
-      ActiveName        := '';
-      timTimer1.Enabled := True;
-
-   end;
-
-//--- Update the Statusbar
-
-   sbStatus.Panels.Items[3].Text := ' ' + Instr_List[ListNum].Instr_Rec.BackupHostName + '[' + Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix + ']';
-   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[ListNum].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
-
-   DoSave    := False;
-   CanUpdate := True;
-
-   btnOpenLB.Enabled := False;
-
-//--- Shutdown the Database for now - we will open it again when a Backup starts
-
-   sqlQry1.Close;
-   sqlCon.Close;
-
-//--- If DoNotConnect = True then we are dealing with a previously inactive
-//--- instruction. Set the Update flag to force the User tot review the
-//--- instruction details.
-
-   if DoNotConnect = True then
-      edtInstrNameCChange(Application);
-
-//--- Restart the Scheduler and the Timer
-
-   timTimer1.Enabled := True;
-   timTimer2.Enabled := True;
-
-//--- Set up and display (via Timer 2) info about the next scheduled backup
-
-   GetNextSlot(ListNum);
-   lblL04.Caption := Instr_List[ListNum].Instr_Rec.BackupMsg;
-
-end;
-
-//------------------------------------------------------------------------------
-// User selected a directory
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.edtLocationAcceptDirectory(Sender: TObject; var Value: String);
-var
-   ThisDir : string;
-
-begin
-
-   ThisDir := Value;
-
-//--- We need to add a final OS dependant delimiter (OSDelim) to the path.
-//--- If we are running on Winblows then the path must be at least 4 chars in
-//--- length (e.g "C:\A") before we can add the backslash
-
-{$IFDEF WINDOWS}
-
-   if (Length(ThisDir) > 3) then
-      ThisDir := ThisDir + OSDelim;
-
-{$ELSE}
-
-   ThisDir := ThisDir + OSDelim;
-
-{$ENDIF}
-
-   Value := ThisDir;
-   Instr_List[GetInstruction()].Instr_Rec.BackupLocation := ThisDir;
-
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the button to select a directory
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.edtLocationButtonClick(Sender: TObject);
-begin
-   edtLocationC.RootDir := Instr_List[GetInstruction()].Instr_Rec.BackupLocation;
-end;
-
-//---------------------------------------------------------------------------
-// Function to open the last successfull backup file
-//---------------------------------------------------------------------------
-procedure TFLPMSBackup.btnOpenLBClick(Sender: TObject);
-var
-   ThisNum : integer;
-
-begin
-
-   ThisNum := GetInstruction();
-
-   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
-
-end;
-
-//------------------------------------------------------------------------------
-// Procedure to connect to the Database and to get some basic information
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.DBConnect(DBHost: string; DBName: string; DBUser: string; DBPass: string);
-var
-   idx1 : integer;
-
-begin
-
-   sqlQry1.Close;
-   sqlCon.Close;
-
-   sqlCon.HostName     := DBHost;
-   sqlCon.UserName     := DBUser;
-   sqlCon.Password     := DBPass;
-   sqlCon.DatabaseName := DBName;
-   sqlQry1.DataBase    := sqlCon;
-
-   try
-
-      sqlCon.Connected := true;
-
-   except on E : Exception do
-      begin
-
-         LastMsg := E.Message;
-         Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Please try connecting again'),'Backup Manager',(MB_OK + MB_ICONSTOP));
-         Exit;
-
-      end;
-
-   end;
-
-//--- Get the currently selected Instruction's reference ID
-
-   idx1 := GetInstruction();
-
-//--- Treat LPMS databases as a special case by getting basic information from
-//--- the database
-
-   if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
-
-      if GetBasicInfo() = false then begin
-
-         Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Backup Manager will now terminate'),'Backup Manager',(MB_OK + MB_ICONSTOP));
-         Application.Terminate;
-
-      end;
-
-      Instr_List[idx1].SymCpy     := sqlQry1.FieldByName('CpyName').AsString;
-      Instr_List[idx1].SymVersion := sqlQry1.FieldByName('Version').AsString;
-
-   end else begin
-
-      Instr_List[idx1].SymCpy     := '';
-      Instr_List[idx1].SymVersion := '';
-
-   end;
-
-//--- Treat LPMS databases as a special case by displaying information about
-//--- the database version
-
-   if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
-
-      DispLogMsg('Backups will be taken for "' + Instr_List[idx1].SymCpy + '" on "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
-      DispLogMsg('Database version is "' + Instr_List[idx1].SymVersion + '"');
-
-   end else
-
-      DispLogMsg('Backups will be taken for "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
-
-//--- Set up the rest of the information
-
-   if Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0 then begin
-
-      edtSMSNumber.Enabled := false;
-      rbSMSSuccess.Enabled := false;
-      rbSMSFailure.Enabled := false;
-      rbSMSNever.Enabled   := false;
-      rbSMSAlways.Enabled  := false;
-      DispLogMsg('SMS Messaging for ' + Instr_List[idx1].Instruction + ' is inactive');
-
-   end else begin
-
-      edtSMSNumber.Enabled := true;
-      rbSMSSuccess.Enabled := true;
-      rbSMSFailure.Enabled := true;
-      rbSMSNever.Enabled   := true;
-      rbSMSAlways.Enabled  := true;
-
-      if edtSMSNumber.Text <> '' then begin
-
-         if rbSMSAlways.Checked = true then
-
-            DispLogMsg('SMS will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure) using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
-
-         else if rbSMSSuccess.Checked = true then
-
-            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
-
-         else if rbSMSFailure.Checked = true then
-
-            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
-
-         else
-
-            DispLogMsg('SMS Messages will never be sent');
-
-      end else
-
-         DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
-
-   end;
-
-   sbStatus.Panels.Items[2].Text := ' Waiting...';
-   sbStatus.Panels.Items[3].Text := ' ' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']';
-   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[idx1].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
-
-end;
-
-//------------------------------------------------------------------------------
 // Action to take when the User wants to close the Application
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. FileCloseExecute( Sender: TObject);
+procedure TFLPMSBackup.FileCloseExecute(Sender: TObject);
 begin
    Close;
 end;
@@ -1104,7 +715,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the User wants to create a new Instruction
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. FileNewExecute( Sender: TObject);
+procedure TFLPMSBackup.FileNewExecute(Sender: TObject);
 Var
    ThisInstr : integer;
    ThisNode  : TTreeNode;
@@ -1172,7 +783,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the User wants to Delete an Instruction
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. FileDeleteExecute( Sender: TObject);
+procedure TFLPMSBackup.FileDeleteExecute(Sender: TObject);
 var
    ThisInstr : integer;
 
@@ -1211,7 +822,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the User Cancels an Update
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. EditCancelExecute( Sender: TObject);
+procedure TFLPMSBackup.EditCancelExecute(Sender: TObject);
 begin
 
    if DoSave = true then begin
@@ -1345,7 +956,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the User wants to do an Update
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. EditUpdateExecute( Sender: TObject);
+procedure TFLPMSBackup.EditUpdateExecute(Sender: TObject);
 var
    ThisInstr, UpdateReq : integer;
    UpdateTV             : boolean = False;
@@ -1410,7 +1021,7 @@ begin
          Exit;
 
       end;
-         
+
       if Trim(edtDBPassC.Text) = '' then begin
 
          Application.MessageBox('''Password'' is a mandatory field - please provide','Backup Manager', MB_ICONHAND + MB_OK);
@@ -1605,7 +1216,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to start a search in a Log display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. SearchFindExecute( Sender: TObject);
+procedure TFLPMSBackup.SearchFindExecute(Sender: TObject);
 begin
    //
 end;
@@ -1613,7 +1224,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to continue a search in a Log display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. SearchFindAgainExecute( Sender: TObject);
+procedure TFLPMSBackup.SearchFindAgainExecute(Sender: TObject);
 begin
    //
 end;
@@ -1621,7 +1232,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the user clicks on Run Now
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsRunNowExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsRunNowExecute(Sender: TObject);
 var
    ListNum : integer;
 
@@ -1637,14 +1248,14 @@ begin
 
 //--- Set the state of the buttons
 
-   Set_Buttons(ord(BTN_RUNNOW));
+//   Set_Buttons(ord(BTN_RUNNOW));
 
 end;
 
 //------------------------------------------------------------------------------
 // Action to take when the user wants to go to the First Line in a log display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsFirstExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsFirstExecute(Sender: TObject);
 begin
 
    if tvInstructions.Selected.Level = 0 then begin
@@ -1666,7 +1277,7 @@ end;
 //------------------------------------------------------------------------------
 // Action to take when the user wants to go to the Next Line in a log display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsNextExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsNextExecute(Sender: TObject);
 begin
 
    if tvInstructions.Selected.Level = 0 then begin
@@ -1689,51 +1300,51 @@ end;
 // Action to take when the user wants to go to the Previous Line in a log
 // display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsPreviousExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsPreviousExecute(Sender: TObject);
 begin
 
-      if tvInstructions.Selected.Level = 0 then begin
+   if tvInstructions.Selected.Level = 0 then begin
 
-         lvLogAll.ItemIndex := lvLogAll.ItemIndex - 1;
-         lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+      lvLogAll.ItemIndex := lvLogAll.ItemIndex - 1;
+      lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
 
-      end else begin
+   end else begin
 
-         lvLogSel.ItemIndex := lvLogSel.ItemIndex - 1;
-         lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+      lvLogSel.ItemIndex := lvLogSel.ItemIndex - 1;
+      lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
 
-      end;
+   end;
 
-      Navigate();
+   Navigate();
 
 end;
 
 //------------------------------------------------------------------------------
 // Action to take when the user wants to go to the Last Line in a log display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsLastExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsLastExecute(Sender: TObject);
 begin
 
-      if tvInstructions.Selected.Level = 0 then begin
+   if tvInstructions.Selected.Level = 0 then begin
 
-         lvLogAll.ItemIndex := lvLogAll.Items.Count - 1;
-         lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
+      lvLogAll.ItemIndex := lvLogAll.Items.Count - 1;
+      lvLogAll.Items.Item[lvLogAll.ItemIndex].Focused;
 
-      end else begin
+   end else begin
 
-         lvLogSel.ItemIndex := lvLogSel.Items.Count - 1;
-         lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
+      lvLogSel.ItemIndex := lvLogSel.Items.Count - 1;
+      lvLogSel.Items.Item[lvLogSel.ItemIndex].Focused;
 
-      end;
+   end;
 
-      Navigate();
+   Navigate();
 
 end;
 
 //------------------------------------------------------------------------------
 // Action to take when the User selected 'Minimise'
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. ActionsMinimiseExecute( Sender: TObject);
+procedure TFLPMSBackup.ActionsMinimiseExecute(Sender: TObject);
 begin
 
 {$ifdef Windows}
@@ -1753,105 +1364,126 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-// Action to take when the User selected 'Restore' from the popup menu in the
-// Sytem Tray
-//------------------------------------------------------------------------------
-procedure TFLPMSBackup.ToolsRestoreExecute(Sender: TObject);
-begin
-   FLPMSBackup.Show;
-end;
-
-//------------------------------------------------------------------------------
 // Action to show the About dialog
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. HelpAboutExecute(Sender: TObject);
+procedure TFLPMSBackup.HelpAboutExecute(Sender: TObject);
 begin
    //
 end;
 
 //------------------------------------------------------------------------------
-// React to the navigation buttons
+// User clicked on a node in the Instructions Treeview
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.Navigate();
+procedure TFLPMSBackup.tvInstructionsClick(Sender: TObject);
 begin
+
+   if DoSave = True then
+      Exit;
 
    if tvInstructions.Selected.Level = 0 then begin
 
-      if lvLogAll.ItemIndex > 0 then begin
+      pnlP00b.Visible := True;
+      pnlP00a.Visible := False;
 
-         btnFirst.Enabled := True;
-         btnPrev.Enabled  := True;
+      lblL04.Caption := '';
+      lblL05.Caption := '';
 
-      end else begin
+      sbStatus.Panels.Items[3].Text := '';
+      sbStatus.Panels.Items[4].Text := '';
 
-         btnFirst.Enabled := False;
-         btnPrev.Enabled  := False;
-
-      end;
-
-      if lvLogAll.ItemIndex < (lvLogAll.Items.Count - 1) then begin
-
-         btnNext.Enabled := True;
-         btnLast.Enabled := True;
-
-      end else begin
-
-         btnNext.Enabled := False;
-         btnLast.Enabled := False;
-
-      end;
-
-      lvLogAll.Selected.MakeVisible(False);
+      Set_Buttons(ord(BTN_INITIAL));
 
    end else begin
 
-      if lvLogSel.ItemIndex > 0 then begin
+      pnlP00b.Visible := False;
+      pnlP00a.Visible := True;
 
-         btnFirst.Enabled := True;
-         btnPrev.Enabled  := True;
+      ShowInstruction();
 
-      end else begin
+      if DoNotConnect = True then begin
 
-         btnFirst.Enabled := False;
-         btnPrev.Enabled  := False;
-
-      end;
-
-      if lvLogSel.ItemIndex < (lvLogSel.Items.Count - 1) then begin
-
-         btnNext.Enabled := True;
-         btnLast.Enabled := True;
+         DoNotConnect := False;
+         Set_Buttons(ord(BTN_UPDATE));
 
       end else begin
 
-         btnNext.Enabled := False;
-         btnLast.Enabled := False;
+         Set_Buttons(ord(BTN_INSTRUCTION));
 
       end;
 
-      lvLogSel.Selected.MakeVisible(False);
+      ActionsLastExecute(Application);
 
    end;
+end;
+
+//------------------------------------------------------------------------------
+// User selected a directory
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtLocationAcceptDirectory(Sender: TObject; var Value: String);
+var
+   ThisDir : string;
+
+begin
+
+   ThisDir := Value;
+
+//--- We need to add a final OS dependant delimiter (OSDelim) to the path.
+//--- If we are running on Winblows then the path must be at least 4 chars in
+//--- length (e.g "C:\A") before we can add the backslash
+
+{$IFDEF WINDOWS}
+
+   if (Length(ThisDir) > 3) then
+      ThisDir := ThisDir + OSDelim;
+
+{$ELSE}
+
+   ThisDir := ThisDir + OSDelim;
+
+{$ENDIF}
+
+   Value := ThisDir;
+   Instr_List[GetInstruction()].Instr_Rec.BackupLocation := ThisDir;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the button to select a directory
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtLocationButtonClick(Sender: TObject);
+begin
+   edtLocationC.RootDir := Instr_List[GetInstruction()].Instr_Rec.BackupLocation;
+end;
+
+//---------------------------------------------------------------------------
+// Function to open the last successfull backup file
+//---------------------------------------------------------------------------
+procedure TFLPMSBackup.btnOpenLBClick(Sender: TObject);
+var
+   ThisNum : integer;
+
+begin
+
+   ThisNum := GetInstruction();
+
+   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
 
 end;
 
 //------------------------------------------------------------------------------
 // User changed Pages in the Instruction display
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. pcInstructionsChange( Sender: TObject);
+procedure TFLPMSBackup.pcInstructionsChange(Sender: TObject);
 begin
 
    Set_Buttons(ord(BTN_INSTRUCTION));
-
-   if tsInstruction.Visible = True then
-      Navigate();
 
 end;
 
 //------------------------------------------------------------------------------
 // User clicked on the checkox to sort treeview items
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. cbxDoSortChange( Sender: TObject);
+procedure TFLPMSBackup.cbxDoSortChange(Sender: TObject);
 begin
 
    if cbxDoSort.Checked = True then
@@ -1862,15 +1494,44 @@ end;
 //------------------------------------------------------------------------------
 // Block an attempt to do an in-line edit of the items in the main TreeView
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. tvInstructionsEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+procedure TFLPMSBackup.tvInstructionsEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 begin
    AllowEdit := False;
 end;
 
 //------------------------------------------------------------------------------
+// User clicked on an item in the small TreeView
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.tvSmallClick(Sender: TObject);
+var
+   idx1      : integer;
+   ThisInstr : string;
+
+begin
+
+   ThisInstr := tvSmall.Selected.Text;
+
+   for idx1 := 0 to NumInstr - 1 do begin
+
+      if Instr_List[idx1].Instruction = ThisInstr then begin
+
+         edtConfigFile.Text  := Instr_List[idx1].Ini_File;
+         edtHostName.Text    := Instr_List[idx1].Instr_Rec.BackupHostName;
+         edtNextBackup.Text  := 'Next Backup on ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime;
+
+         if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then
+            edtLocation.Text := Instr_List[idx1].Instr_Rec.BackupLocation;
+
+      end;
+
+   end;
+
+end;
+
+//------------------------------------------------------------------------------
 // Block an attempt to do an inline edit of the items in the small TreeView
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. tvSmallEditing( Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+procedure TFLPMSBackup.tvSmallEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 begin
    AllowEdit := False;
 end;
@@ -1878,7 +1539,7 @@ end;
 //------------------------------------------------------------------------------
 // A User customisable field changed
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. edtInstrNameCChange(Sender: TObject);
+procedure TFLPMSBackup.edtInstrNameCChange(Sender: TObject);
 begin
 
    if CanUpdate = False then
@@ -2020,7 +1681,7 @@ end;
 //------------------------------------------------------------------------------
 // User clicked on the button to set up a backup instruction template
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. btnTemplateClick( Sender: TObject);
+procedure TFLPMSBackup.btnTemplateClick(Sender: TObject);
 begin
 
    BackupTemplate.Active := False;
@@ -2057,7 +1718,7 @@ end;
 //------------------------------------------------------------------------------
 // User clicked on the button to select the default viewer
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. btnViewerClick( Sender: TObject);
+procedure TFLPMSBackup.btnViewerClick(Sender: TObject);
 begin
 
    dlgOpen.InitialDir := '~';
@@ -2072,7 +1733,7 @@ end;
 //------------------------------------------------------------------------------
 // User clicked on the button to test database connectivity
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup. btnDBTestClick( Sender: TObject);
+procedure TFLPMSBackup.btnDBTestClick(Sender: TObject);
 var
    Connected : boolean;
 
@@ -2246,7 +1907,7 @@ end;
 procedure TFLPMSBackup.timTimer1Timer(Sender: TObject);
 var
    idx1                               : integer;
-   RunBackup, RunNow                  : boolean;
+   RunBackup, JustRan                 : boolean;
    SMSMessage, DispMessage            : string;
    ThisDate, Thistime                 : string;
 
@@ -2256,14 +1917,14 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
 //--- Prevent the Scheduler from popping while a Backup is active and disable
 //--- the [Run Now] button
 
    timTimer1.Enabled := False;
    RunBackup         := False;
-   RunNow            := False;
+   JustRan           := False;
 
 //--- Run through the instructions and check whether there are any backups that
 //--- must run now
@@ -2282,11 +1943,35 @@ begin
                if ((Instr_List[idx1].NextDate = ThisDate) and (Instr_List[idx1].NextTime = ThisTime)) then begin
 
                   RunBackup   := True;
+                  JustRan     := True;
                   ActiveInstr := idx1;
                   ActiveName  := Instr_List[idx1].Instruction;
 
                   DispLogMsg('--- Backup scheduled for ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime + ' started [Scheduler]');
                   Instr_List[idx1].Status := ord(STAT_SCHEDULED);
+
+                  Set_Buttons(ord(BTN_RUNNOW));
+
+               end;
+
+//--- Check for backups that were missed due to another backup running at the
+//--- same time - Status will still be STAT_WAITING
+
+               if Instr_List[idx1].Status = ord(STAT_WAITING) then begin
+
+                  if ((Instr_List[idx1].NextDate <= ThisDate) and (Instr_List[idx1].NextTime <= ThisTime)) then begin
+
+                     RunBackup   := True;
+                     JustRan     := True;
+                     ActiveInstr := idx1;
+                     ActiveName  := Instr_List[idx1].Instruction;
+
+                     DispLogMsg('--- Backup scheduled for ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime + ' started [Scheduler]');
+                     Instr_List[idx1].Status := ord(STAT_SCHEDULED);
+
+                     Set_Buttons(ord(BTN_RUNNOW));
+
+                  end;
 
                end;
 
@@ -2295,13 +1980,15 @@ begin
             ord(STAT_RUNNOW)   : begin   // User elected to run an instruction immediately
 
                RunBackup   := True;
-               RunNow      := True;
+               JustRan     := True;
                ActiveInstr := idx1;
                ActiveName  := Instr_List[idx1].Instruction;
 
                DispLogMsg('Received an instruction to immediately run the next backup');
                DispLogMsg('--- Backup scheduled for ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime + ' started on ' + FormatDateTime('yyyy/MM/dd',Now()) + ' at ' + FormatDateTime('hh:nn',Now()) + ' - [Run Now]');
                Instr_List[idx1].Status := ord(STAT_SCHEDULED);
+
+               Set_Buttons(ord(BTN_RUNNOW));
 
             end;
 
@@ -2320,6 +2007,7 @@ begin
          if RunBackup = True then begin
 
             RunBackup := False;
+
             sbStatus.Panels.Items[2].Text := ' Running...';
             sbStatus.Refresh;
 
@@ -2350,8 +2038,16 @@ begin
 
    end;
 
-   if RunNow = True then
-      Set_Buttons(ord(BTN_INSTRUCTION));
+//--- JustRan will be set if we received a RunNow or a Backup was scheduled
+
+   if JustRan = True then begin
+
+      if tvInstructions.Selected.Level = 0 then
+         Set_Buttons(ord(BTN_INITIAL))
+      else
+         Set_Buttons(ord(BTN_INSTRUCTION));
+
+   end;
 
 //--- Restart the Scheduler
 
@@ -2375,7 +2071,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    sbStatus.Panels.Items[6].Text := FormatDateTime('HH:mm:ss',Now());
    sbStatus.Refresh;
@@ -2386,7 +2082,6 @@ begin
 
    if (timTimer1.Enabled = False) or (tvInstructions.Selected.Level = 0) then
       Exit;
-
 
    ThisInstr := GetInstruction();
    BDate     := Instr_List[ThisInstr].NextDate;
@@ -2435,6 +2130,373 @@ end;
 procedure TFLPMSBackup.TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
    Set_Hint(ord(HINT_WAITING));
+end;
+
+//------------------------------------------------------------------------------
+// Function to return the in-memory list index of the visible instruction
+//------------------------------------------------------------------------------
+function TFLPMSBackup.GetInstruction() : integer;
+var
+   idx1, ListNum : integer;
+   ThisInstr     : string;
+
+begin
+
+   ListNum := -1;
+
+//--- Get the Instruction name so that we can find it in the in-memory list.
+
+   ThisInstr := tvInstructions.Selected.Text;
+   InstrSel  := ThisInstr;
+
+   for idx1 := 0 to NumInstr - 1 do begin
+
+      if Instr_List[idx1].Instruction = ThisInstr then begin
+
+         ListNum := idx1;
+         break;
+
+      end;
+
+   end;
+
+   Result := ListNum;
+
+end;
+
+//------------------------------------------------------------------------------
+// Load instruction information from the Registry
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.ShowInstruction();
+var
+   ListNum      : integer;
+
+begin
+
+   DoNotConnect := False;
+   lvLogSel.Clear;
+
+//--- Set the Format Settings to override the system locale
+
+   FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
+   FormatSettings.DateSeparator     := '/';
+   FormatSettings.ThousandSeparator := ' ';
+
+   ListNum := GetInstruction();
+
+//--- Check whether the selected instruction is active (a config file exists)
+
+   if Instr_List[ListNum].Active = False then begin
+
+      if MessageDlg('Backup Manager','WARNING: The selected Backup Instruction is not configured!' + #10 + #10 + 'Click [Yes] to configure or [No] to return.', mtWarning, mbYesNo, 0) =  mrNo then begin
+
+         tvInstructions.Selected.ImageIndex := 0;
+         tvInstructions.Items.Item[0].Selected := True;
+         tvInstructionsClick(Application);
+
+         Exit;
+
+      end else begin
+
+         Instr_List[ListNum].Active := True;
+         DoNotConnect := True;
+
+         timTimer1.Enabled := False;
+         LogInstrType      := ord(TYPE_BOTH);
+         ActiveName        := Instr_List[ListNum].Instruction;
+         DispLogMsg('Status of Backup Instruction ''' + ActiveName + ''' changed from Inactive to Active');
+         ActiveName        := '';
+         timTimer1.Enabled := True;
+
+         tvInstructions.Selected.ImageIndex := 1;
+
+         pcInstructions.ActivePage := tsConfiguration;
+
+      end;
+
+   end;
+
+//--- Initialize the date/time dropdown boxes and the input fields. This will
+//--- also stop the Scheduler and the Timer that updates the Time and the
+//--- 'Next Backup' time
+
+   CanUpdate := False;
+
+   cbxType.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupType;
+   cbxTypeChange(Application);
+
+//--- Update the fields on the Instruction Page
+
+   cbxT01.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT01;
+   cbxT02.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT02;
+   cbxT03.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT03;
+   edtSMSNumber.Text    := Instr_List[ListNum].Instr_Rec.BackupSMSNumber;
+   rbSMSSuccess.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSSuccess;
+   rbSMSFailure.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSFailure;
+   rbSMSNever.Checked   := Instr_List[ListNum].Instr_Rec.BackupSMSNever;
+   rbSMSAlways.Checked  := Instr_List[ListNum].Instr_Rec.BackupSMSAlways;
+
+//--- Populate the fields on the Configuration Page
+
+   edtInstrNameC.Text       := Instr_List[ListNum].Instruction;
+   edtDBPrefixC.Text        := Instr_List[ListNum].Instr_Rec.BackupDBPrefix;
+
+   if Instr_List[ListNum].Instr_Rec.BackupDBSuffix = '_LPMS' then
+      cbxDBSuffixC.Checked := True
+   else
+      cbxDBSuffixC.Checked := False;
+
+   edtDBUserC.Text          := Instr_List[ListNum].Instr_Rec.BackupDBUser;
+   edtDBPassC.Text          := Instr_List[ListNum].Instr_Rec.BackupDBPass;
+   edtHostNameC.Text        := Instr_List[ListNum].Instr_Rec.BackupHostName;
+   edtTemplateC.Text        := Instr_List[ListNum].Instr_Rec.BackupTemplate;
+   edtLocationC.Text        := Instr_List[ListNum].Instr_Rec.BackupLocation;
+   speBlockSizeC.Value      := Instr_List[ListNum].Instr_Rec.BackupBlock;
+   edtViewerC.Text          := Instr_List[ListNum].Instr_Rec.BackupViewer;
+   cbSMSProviderC.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupSMSProvider;
+   edtSMSUserC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSUser;
+   edtSMSPassC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSPass;
+
+//--- Connect to the database and get some basic information unless
+//--- DoNotConnect = True in which case we are dealing aith a previously
+//--- inactive instruction and the DB connecton parameters may not exist
+
+   if DoNotConnect = False then begin
+
+      timTimer1.Enabled := False;
+      LogInstrType      := ord(TYPE_LOGSEL);
+      ActiveName        := Instr_List[ListNum].Instruction;
+
+      DBConnect(Instr_List[ListNum].Instr_Rec.BackupHostName, Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix, Instr_List[ListNum].Instr_Rec.BackupDBUser, Instr_List[ListNum].Instr_Rec.BackupDBPass);
+
+      LogInstrType      := ord(TYPE_BOTH);
+      ActiveName        := '';
+      timTimer1.Enabled := True;
+
+   end;
+
+//--- Update the Statusbar
+
+   sbStatus.Panels.Items[3].Text := ' ' + Instr_List[ListNum].Instr_Rec.BackupHostName + '[' + Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix + ']';
+   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[ListNum].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
+
+   DoSave    := False;
+   CanUpdate := True;
+
+   btnOpenLB.Enabled := False;
+
+//--- Shutdown the Database for now - we will open it again when a Backup starts
+
+   sqlQry1.Close;
+   sqlCon.Close;
+
+//--- If DoNotConnect = True then we are dealing with a previously inactive
+//--- instruction. Set the Update flag to force the User tot review the
+//--- instruction details.
+
+   if DoNotConnect = True then
+      edtInstrNameCChange(Application);
+
+//--- Restart the Scheduler and the Timer
+
+   timTimer1.Enabled := True;
+   timTimer2.Enabled := True;
+
+//--- Set up and display (via Timer 2) info about the next scheduled backup
+
+   GetNextSlot(ListNum);
+   lblL04.Caption := Instr_List[ListNum].Instr_Rec.BackupMsg;
+
+end;
+
+//------------------------------------------------------------------------------
+// Procedure to connect to the Database and to get some basic information
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.DBConnect(DBHost: string; DBName: string; DBUser: string; DBPass: string);
+var
+   idx1 : integer;
+
+begin
+
+   sqlQry1.Close;
+   sqlCon.Close;
+
+   sqlCon.HostName     := DBHost;
+   sqlCon.UserName     := DBUser;
+   sqlCon.Password     := DBPass;
+   sqlCon.DatabaseName := DBName;
+   sqlQry1.DataBase    := sqlCon;
+
+   try
+
+      sqlCon.Connected := true;
+
+   except on E : Exception do
+      begin
+
+         LastMsg := E.Message;
+         Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Please try connecting again'),'Backup Manager',(MB_OK + MB_ICONSTOP));
+         Exit;
+
+      end;
+
+   end;
+
+//--- Get the currently selected Instruction's reference ID
+
+   idx1 := GetInstruction();
+
+//--- Treat LPMS databases as a special case by getting basic information from
+//--- the database
+
+   if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
+
+      if GetBasicInfo() = false then begin
+
+         Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Backup Manager will now terminate'),'Backup Manager',(MB_OK + MB_ICONSTOP));
+         Application.Terminate;
+
+      end;
+
+      Instr_List[idx1].SymCpy     := sqlQry1.FieldByName('CpyName').AsString;
+      Instr_List[idx1].SymVersion := sqlQry1.FieldByName('Version').AsString;
+
+   end else begin
+
+      Instr_List[idx1].SymCpy     := '';
+      Instr_List[idx1].SymVersion := '';
+
+   end;
+
+//--- Treat LPMS databases as a special case by displaying information about
+//--- the database version
+
+   if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
+
+      DispLogMsg('Backups will be taken for "' + Instr_List[idx1].SymCpy + '" on "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
+      DispLogMsg('Database version is "' + Instr_List[idx1].SymVersion + '"');
+
+   end else
+
+      DispLogMsg('Backups will be taken for "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
+
+//--- Set up the rest of the information
+
+   if Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0 then begin
+
+      edtSMSNumber.Enabled := false;
+      rbSMSSuccess.Enabled := false;
+      rbSMSFailure.Enabled := false;
+      rbSMSNever.Enabled   := false;
+      rbSMSAlways.Enabled  := false;
+      DispLogMsg('SMS Messaging for ' + Instr_List[idx1].Instruction + ' is inactive');
+
+   end else begin
+
+      edtSMSNumber.Enabled := true;
+      rbSMSSuccess.Enabled := true;
+      rbSMSFailure.Enabled := true;
+      rbSMSNever.Enabled   := true;
+      rbSMSAlways.Enabled  := true;
+
+      if edtSMSNumber.Text <> '' then begin
+
+         if rbSMSAlways.Checked = true then
+
+            DispLogMsg('SMS will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure) using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+
+         else if rbSMSSuccess.Checked = true then
+
+            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+
+         else if rbSMSFailure.Checked = true then
+
+            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+
+         else
+
+            DispLogMsg('SMS Messages will never be sent');
+
+      end else
+
+         DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
+
+   end;
+
+   sbStatus.Panels.Items[2].Text := ' Waiting...';
+   sbStatus.Panels.Items[3].Text := ' ' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']';
+   sbStatus.Panels.Items[4].Text := FloatToStrF(Instr_List[idx1].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' ';
+
+end;
+
+//------------------------------------------------------------------------------
+// React to the navigation buttons
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.Navigate();
+begin
+
+
+   if tvInstructions.Selected.Level = 0 then begin
+
+      if lvLogAll.ItemIndex > 0 then begin
+
+         btnFirst.Enabled := True;
+         btnPrev.Enabled  := True;
+
+      end else begin
+
+         btnFirst.Enabled := False;
+         btnPrev.Enabled  := False;
+
+      end;
+
+      if lvLogAll.ItemIndex < (lvLogAll.Items.Count - 1) then begin
+
+         btnNext.Enabled := True;
+         btnLast.Enabled := True;
+
+      end else begin
+
+         btnNext.Enabled := False;
+         btnLast.Enabled := False;
+
+      end;
+
+      lvLogAll.Selected.MakeVisible(False);
+
+   end else begin
+
+      if pcInstructions.ActivePage = tsConfiguration then
+         Exit;
+
+      if lvLogSel.ItemIndex > 0 then begin
+
+         btnFirst.Enabled := True;
+         btnPrev.Enabled  := True;
+
+      end else begin
+
+         btnFirst.Enabled := False;
+         btnPrev.Enabled  := False;
+
+      end;
+
+      if lvLogSel.ItemIndex < (lvLogSel.Items.Count - 1) then begin
+
+         btnNext.Enabled := True;
+         btnLast.Enabled := True;
+
+      end else begin
+
+         btnNext.Enabled := False;
+         btnLast.Enabled := False;
+
+      end;
+
+      lvLogSel.Selected.MakeVisible(False);
+
+   end;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -2526,18 +2588,12 @@ begin
 
       end;
 
-{
-      ord(BTN_CANCEL): begin
-
-         if tvInstructions.Selected.Level = 0 then
-            Set_Buttons(BTN_INITIAL)
-         else
-            Set_Buttons(BTN_Instruction);
-
-      end;
-}
-
    end;
+
+//--- In the Run Now state we do not switch on any of the navigation buttons
+
+   if State <> ord(BTN_RUNNOW) then
+      Navigate();
 
 end;
 
@@ -2556,7 +2612,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    ThisTime := FormatDateTime('hh',Now()) + 'h' + FormatDateTime('nn',Now());
 
@@ -2673,7 +2729,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
 //--- Create the in memory lists
 
@@ -3034,7 +3090,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
 //--- Set date and time format for this session
 
@@ -3135,7 +3191,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    send_xml := TStringList.Create;
 
@@ -3291,7 +3347,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    ThisDate := FormatDateTime('yyyy/MM/dd',Now());
    ThisTime := FormatDateTime('hh:mm:ss.zzz',Now());
@@ -3485,11 +3541,11 @@ end;
 //---------------------------------------------------------------------------
 procedure TFLPMSBackup.OpenCfg(FileName: string);
 var
-   idx1        : integer;
-   FirstChild  : boolean;
-   ThisLine    : string;
-   CfgInstr    : TStringList;
-   ThisNode    : TTreeNode;
+   idx1                 : integer;
+   FirstChild           : boolean;
+   ThisLine             : string;
+   CfgInstr             : TStringList;
+   ThisNodeM, ThisNodeS : TTreeNode;
 
 begin
 
@@ -3497,7 +3553,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    NumInstr    := 0;
 
@@ -3525,13 +3581,13 @@ begin
 
    FirstChild := True;
 
-//--- Insert the root node
+//--- Insert the root node in the Main TreeView
 
-   ThisNode := tvInstructions.Items.Add(nil,'Backup Instructions');
-   ThisNode.ImageIndex    := 2;
-   ThisNode.SelectedIndex := 3;
+   ThisNodeM := tvInstructions.Items.Add(nil,'Backup Instructions');
+   ThisNodeM.ImageIndex    := 2;
+   ThisNodeM.SelectedIndex := 3;
 
-   tvInstructions.Selected := ThisNode;
+   tvInstructions.Selected := ThisNodeM;
 
    DispLogMsg('*** Starting Backup Manager');
 
@@ -3544,10 +3600,23 @@ begin
    for idx1 := 0 to NumInstr -1 do begin
 
       if (FirstChild = True) then begin
-         ThisNode   := tvInstructions.Items.AddChildFirst(ThisNode,InstrTokens.Strings[idx1]);
+
+         ThisNodeM := tvInstructions.Items.AddChildFirst(ThisNodeM,InstrTokens.Strings[idx1]);
+
+         ThisNodeS := tvSmall.Items.Add(nil,InstrTokens.Strings[idx1]);
+         ThisNodeS.ImageIndex    := 1;
+         ThisNodeS.SelectedIndex := 3;
+
          FirstChild := False;
-      end else
-         ThisNode   := tvInstructions.Items.Add(ThisNode,InstrTokens.Strings[idx1]);
+
+      end else begin
+
+         ThisNodeM := tvInstructions.Items.Add(ThisNodeM,InstrTokens.Strings[idx1]);
+         ThisNodeS := tvSmall.Items.Add(ThisNodeS,InstrTokens.Strings[idx1]);
+         ThisNodeS.ImageIndex    := 1;
+         ThisNodeS.SelectedIndex := 3;
+
+      end;
 
       Instr_List[idx1].Ini_File    := 'Backup Manager_' + InstrTokens.Strings[idx1] + '.ini';
       Instr_List[idx1].Instruction := InstrTokens.Strings[idx1];
@@ -3561,6 +3630,8 @@ begin
 //--- Extract the information contained in the 'registry'
 
       if (FileExists(RegString) = false) then begin
+
+         ThisNodeS.Delete;
 
          btnTemplateClick(Application);
 
@@ -3590,7 +3661,7 @@ begin
 
          Instr_List[idx1].Active := False;
          Instr_List[idx1].Status := ord(STAT_INACTIVE);
-         ThisNode.ImageIndex     := 0;
+         ThisNodeM.ImageIndex     := 0;
 
       end else begin
 
@@ -3625,7 +3696,7 @@ begin
 
          Instr_List[idx1].Active := True;
          Instr_List[idx1].Status := ord(STAT_WAITING);
-         ThisNode.ImageIndex     := 1;
+         ThisNodeM.ImageIndex     := 1;
 
 //--- Set the name of the SMS Service Provider
 
@@ -3653,11 +3724,11 @@ begin
          end;
       end;
 
-      ThisNode.SelectedIndex := 3;
+      ThisNodeM.SelectedIndex := 3;
 
       GetNextSlot(idx1);
 
-      tvInstructions.Selected := ThisNode;
+      tvInstructions.Selected := ThisNodeM;
       ActiveName := tvInstructions.Selected.Text;
 
       DispLogMsg('++++++ Instruction number ' + (IntToStr(idx1 + 1)) + ' - "' + Instr_List[idx1].Instruction + '":');
@@ -3772,7 +3843,7 @@ begin
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
    FormatSettings.DateSeparator     := '/';
-   FormatSettings.ThousandSeparator := ',';
+   FormatSettings.ThousandSeparator := ' ';
 
    if FileExists(FileName) = true then begin
 
