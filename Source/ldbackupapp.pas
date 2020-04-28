@@ -43,6 +43,9 @@ type
 
   TFLPMSBackup = class(TForm)
   ActionsRestore: TAction;
+  Bevel4: TBevel;
+  Bevel5: TBevel;
+  Bevel6: TBevel;
    btnDBTest: TButton;
    btnTemplate: TButton;
    cbxDoSort: TCheckBox;
@@ -91,6 +94,8 @@ type
    MenuItem23: TMenuItem;
    N3: TMenuItem;
    N1: TMenuItem;
+   pnl00b1b2: TPanel;
+   pnl00b1b1: TPanel;
    pnl00b1b: TPanel;
    pnl00b1a: TPanel;
    SearchFindAgain: TAction;
@@ -133,6 +138,7 @@ type
    pnl00b2: TPanel;
    pnl00b1: TPanel;
    speBlockSizeC: TSpinEdit;
+   Splitter1: TSplitter;
    ToolButton17: TToolButton;
    ToolButton18: TToolButton;
    ToolButton19: TToolButton;
@@ -406,6 +412,10 @@ const
    function  GetBasicInfo() : boolean;
    function  ReadTable(Table: string; LimitStart: integer; LimitEnd: integer) : boolean;
    function  AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
+   function  Encode(PlainStr: string) : string;
+   function  Decode(CodedStr: string) : string;
+
+
 
 public  { public declarations }
 
@@ -657,14 +667,14 @@ begin
             IniFile.WriteBool('Parameters','BackupSMSFailure',Instr_List[idx1].Instr_Rec.BackupSMSFailure);
             IniFile.WriteBool('Parameters','BackupSMSNever',Instr_List[idx1].Instr_Rec.BackupSMSNever);
             IniFile.WriteBool('Parameters','BackupSMSSuccess',Instr_List[idx1].Instr_Rec.BackupSMSSuccess);
-            IniFile.WriteString('Parameters','BackupDBPass',Instr_List[idx1].Instr_Rec.BackupDBPass);
+            IniFile.WriteString('Parameters','BackupDBPass',Encode(Instr_List[idx1].Instr_Rec.BackupDBPass));
             IniFile.WriteString('Parameters','BackupDBPrefix',Instr_List[idx1].Instr_Rec.BackupDBPrefix);
             IniFile.WriteString('Parameters','BackupDBSuffix',Instr_List[idx1].Instr_Rec.BackupDBSuffix);
             IniFile.WriteString('Parameters','BackupDBUser',Instr_List[idx1].Instr_Rec.BackupDBUser);
             IniFile.WriteString('Parameters','BackupHostName',Instr_List[idx1].Instr_Rec.BackupHostName);
             IniFile.WriteString('Parameters','BackupLocation',Instr_List[idx1].Instr_Rec.BackupLocation);
             IniFile.WriteString('Parameters','BackupSMSNumber',Instr_List[idx1].Instr_Rec.BackupSMSNumber);
-            IniFile.WriteString('Parameters','BackupSMSPass',Instr_List[idx1].Instr_Rec.BackupSMSPass);
+            IniFile.WriteString('Parameters','BackupSMSPass',Encode(Instr_List[idx1].Instr_Rec.BackupSMSPass));
             IniFile.WriteString('Parameters','BackupSMSUser',Instr_List[idx1].Instr_Rec.BackupSMSUser);
             IniFile.WriteString('Parameters','BackupTemplate',Instr_List[idx1].Instr_Rec.BackupTemplate);
             IniFile.WriteString('Parameters','BackupViewer',Instr_List[idx1].Instr_Rec.BackupViewer);
@@ -722,10 +732,20 @@ Var
 
 begin
 
-//--- Insert a new entry in the TreeView
+//--- Insert a new entry in the main TreeView
 
    ThisNode := tvInstructions.Items.GetFirstNode;
    ThisNode := tvInstructions.Items.AddChild(ThisNode,'New Instruction');
+
+   ThisNode.ImageIndex    := 1;
+   ThisNode.SelectedIndex := 3;
+
+   ThisNode.Selected := True;
+
+//--- Insert a new entry in the Small Treeview
+
+   ThisNode := tvSmall.Items.GetLastNode;
+   ThisNode := tvSmall.Items.Add(ThisNode,'New Instruction');
 
    ThisNode.ImageIndex    := 1;
    ThisNode.SelectedIndex := 3;
@@ -777,6 +797,7 @@ begin
    Instr_List[ThisInstr].Status := ord(STAT_INACTIVE);
 
    tvInstructionsClick(Sender);
+   tvSmallClick(Sender);
 
 end;
 
@@ -856,14 +877,14 @@ begin
    Instr_List[SaveInstr].Instr_Rec.BackupSMSFailure  := IniFile.ReadBool('Parameters','BackupSMSFailure',False);
    Instr_List[SaveInstr].Instr_Rec.BackupSMSNever    := IniFile.ReadBool('Parameters','BackupSMSNever',True);
    Instr_List[SaveInstr].Instr_Rec.BackupSMSSuccess  := IniFile.ReadBool('Parameters','BackupSMSSuccess',False);
-   Instr_List[SaveInstr].Instr_Rec.BackupDBPass      := IniFile.ReadString('Parameters','BackupDBPass','');
+   Instr_List[SaveInstr].Instr_Rec.BackupDBPass      := Decode(IniFile.ReadString('Parameters','BackupDBPass',''));
    Instr_List[SaveInstr].Instr_Rec.BackupDBPrefix    := IniFile.ReadString('Parameters','BackupDBPrefix','');
    Instr_List[SaveInstr].Instr_Rec.BackupDBSuffix    := IniFile.ReadString('Parameters','BackupDBSuffix','');
    Instr_List[SaveInstr].Instr_Rec.BackupDBUser      := IniFile.ReadString('Parameters','BackupDBUser','');
    Instr_List[SaveInstr].Instr_Rec.BackupHostName    := IniFile.ReadString('Parameters','BackupHostName','www.bluecrane.cc');
    Instr_List[SaveInstr].Instr_Rec.BackupLocation    := IniFile.ReadString('Parameters','BackupLocation','~');
    Instr_List[SaveInstr].Instr_Rec.BackupSMSNumber   := IniFile.ReadString('Parameters','BackupSMSNumber','');
-   Instr_List[SaveInstr].Instr_Rec.BackupSMSPass     := IniFile.ReadString('Parameters','BackupSMSPass','');
+   Instr_List[SaveInstr].Instr_Rec.BackupSMSPass     := Decode(IniFile.ReadString('Parameters','BackupSMSPass',''));
    Instr_List[SaveInstr].Instr_Rec.BackupSMSUser     := IniFile.ReadString('Parameters','BackupSMSUser','');
    Instr_List[SaveInstr].Instr_Rec.BackupTemplate    := IniFile.ReadString('Parameters','BackupTemplate','&Date@&Time - &BackupType Backup (&CpyName on &HostName)');
    Instr_List[SaveInstr].Instr_Rec.BackupViewer      := IniFile.ReadString('Parameters','BackupViewer','');
@@ -1183,14 +1204,14 @@ begin
    IniFile.WriteBool('Parameters','BackupSMSFailure',Instr_List[ThisInstr].Instr_Rec.BackupSMSFailure);
    IniFile.WriteBool('Parameters','BackupSMSNever',Instr_List[ThisInstr].Instr_Rec.BackupSMSNever);
    IniFile.WriteBool('Parameters','BackupSMSSuccess',Instr_List[ThisInstr].Instr_Rec.BackupSMSSuccess);
-   IniFile.WriteString('Parameters','BackupDBPass',Instr_List[ThisInstr].Instr_Rec.BackupDBPass);
+   IniFile.WriteString('Parameters','BackupDBPass',Encode(Instr_List[ThisInstr].Instr_Rec.BackupDBPass));
    IniFile.WriteString('Parameters','BackupDBPrefix',Instr_List[ThisInstr].Instr_Rec.BackupDBPrefix);
    IniFile.WriteString('Parameters','BackupDBSuffix',Instr_List[ThisInstr].Instr_Rec.BackupDBSuffix);
    IniFile.WriteString('Parameters','BackupDBUser',Instr_List[ThisInstr].Instr_Rec.BackupDBUser);
    IniFile.WriteString('Parameters','BackupHostName',Instr_List[ThisInstr].Instr_Rec.BackupHostName);
    IniFile.WriteString('Parameters','BackupLocation',Instr_List[ThisInstr].Instr_Rec.BackupLocation);
    IniFile.WriteString('Parameters','BackupSMSNumber',Instr_List[ThisInstr].Instr_Rec.BackupSMSNumber);
-   IniFile.WriteString('Parameters','BackupSMSPass',Instr_List[ThisInstr].Instr_Rec.BackupSMSPass);
+   IniFile.WriteString('Parameters','BackupSMSPass',Encode(Instr_List[ThisInstr].Instr_Rec.BackupSMSPass));
    IniFile.WriteString('Parameters','BackupSMSUser',Instr_List[ThisInstr].Instr_Rec.BackupSMSUser);
    IniFile.WriteString('Parameters','BackupTemplate',Instr_List[ThisInstr].Instr_Rec.BackupTemplate);
    IniFile.WriteString('Parameters','BackupViewer',Instr_List[ThisInstr].Instr_Rec.BackupViewer);
@@ -1486,8 +1507,12 @@ end;
 procedure TFLPMSBackup.cbxDoSortChange(Sender: TObject);
 begin
 
-   if cbxDoSort.Checked = True then
+   if cbxDoSort.Checked = True then begin
+
       tvInstructions.AlphaSort;
+      tvSmall.AlphaSort;
+
+   end;
 
 end;
 
@@ -1515,12 +1540,10 @@ begin
 
       if Instr_List[idx1].Instruction = ThisInstr then begin
 
-         edtConfigFile.Text  := Instr_List[idx1].Ini_File;
-         edtHostName.Text    := Instr_List[idx1].Instr_Rec.BackupHostName;
-         edtNextBackup.Text  := 'Next Backup on ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime;
-
-         if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then
-            edtLocation.Text := Instr_List[idx1].Instr_Rec.BackupLocation;
+         edtConfigFile.Text := LocalPath + Instr_List[idx1].Ini_File;
+         edtHostName.Text   := Instr_List[idx1].Instr_Rec.BackupHostName;
+         edtNextBackup.Text := 'Next Backup on ' + Instr_List[idx1].NextDate + ' at ' + Instr_List[idx1].NextTime;
+         edtLocation.Text   := Instr_List[idx1].Instr_Rec.BackupLocation;
 
       end;
 
@@ -3677,14 +3700,14 @@ begin
          Instr_List[idx1].Instr_Rec.BackupSMSFailure  := IniFile.ReadBool('Parameters','BackupSMSFailure',False);
          Instr_List[idx1].Instr_Rec.BackupSMSNever    := IniFile.ReadBool('Parameters','BackupSMSNever',True);
          Instr_List[idx1].Instr_Rec.BackupSMSSuccess  := IniFile.ReadBool('Parameters','BackupSMSSuccess',False);
-         Instr_List[idx1].Instr_Rec.BackupDBPass      := IniFile.ReadString('Parameters','BackupDBPass','');
+         Instr_List[idx1].Instr_Rec.BackupDBPass      := Decode(IniFile.ReadString('Parameters','BackupDBPass',''));
          Instr_List[idx1].Instr_Rec.BackupDBPrefix    := IniFile.ReadString('Parameters','BackupDBPrefix','');
          Instr_List[idx1].Instr_Rec.BackupDBSuffix    := IniFile.ReadString('Parameters','BackupDBSuffix','');
          Instr_List[idx1].Instr_Rec.BackupDBUser      := IniFile.ReadString('Parameters','BackupDBUser','');
          Instr_List[idx1].Instr_Rec.BackupHostName    := IniFile.ReadString('Parameters','BackupHostName','www.bluecrane.cc');
          Instr_List[idx1].Instr_Rec.BackupLocation    := IniFile.ReadString('Parameters','BackupLocation','~');
          Instr_List[idx1].Instr_Rec.BackupSMSNumber   := IniFile.ReadString('Parameters','BackupSMSNumber','');
-         Instr_List[idx1].Instr_Rec.BackupSMSPass     := IniFile.ReadString('Parameters','BackupSMSPass','');
+         Instr_List[idx1].Instr_Rec.BackupSMSPass     := Decode(IniFile.ReadString('Parameters','BackupSMSPass',''));
          Instr_List[idx1].Instr_Rec.BackupSMSUser     := IniFile.ReadString('Parameters','BackupSMSUser','');
          Instr_List[idx1].Instr_Rec.BackupTemplate    := IniFile.ReadString('Parameters','BackupTemplate','&Date@&Time - &BackupType Backup (&CpyName on &HostName)');
          Instr_List[idx1].Instr_Rec.BackupViewer      := IniFile.ReadString('Parameters','BackupViewer','');
@@ -3985,29 +4008,30 @@ end;
 //---------------------------------------------------------------------------
 function TFLPMSBackup.AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
 var
-   Outcome            : boolean;
-   ThisNode, NextNode : TTreeNode;
+   Outcome                        : boolean;
+   ThisNodeL, ThisNodeS, NextNode : TTreeNode;
 
 begin
    Outcome := True;
 
-   ThisNode := tvInstructions.Items.GetFirstNode;
-   ThisNode := ThisNode.GetFirstChild;
+   ThisNodeS := tvSmall.Items.GetFirstNode;
+   ThisNodeL := tvInstructions.Items.GetFirstNode;
+   ThisNodeL := ThisNodeL.GetFirstChild;
 
    case ThisReq.Request of
 
       ord(TV_DUPLICATE): begin
 
-         while ThisNode <> nil do begin
+         while ThisNodeL <> nil do begin
 
-            if ThisNode.Text = ThisReq.InstrName then begin
+            if ThisNodeL.Text = ThisReq.InstrName then begin
 
                Outcome := False;
                break;
 
             end;
 
-            ThisNode := ThisNode.GetNextSibling;
+            ThisNodeL := ThisNodeL.GetNextSibling;
 
          end;
 
@@ -4015,16 +4039,29 @@ begin
 
       ord(TV_REPLACE): begin
 
-         while ThisNode <> nil do begin
+         while ThisNodeL <> nil do begin
 
-            if ThisNode.Text = ThisReq.InstrName then begin
+            if ThisNodeL.Text = ThisReq.InstrName then begin
 
-               ThisNode.Text := ThisReq.InstrNewName;
+               ThisNodeL.Text := ThisReq.InstrNewName;
                break;
 
             end;
 
-            ThisNode := ThisNode.GetNextSibling;
+            ThisNodeL := ThisNodeL.GetNextSibling;
+
+         end;
+
+         while ThisNodeS <> nil do begin
+
+            if ThisNodeS.Text = ThisReq.InstrName then begin
+
+               ThisNodeS.Text := ThisReq.InstrNewName;
+               break;
+
+            end;
+
+            ThisNodeS := ThisNodeS.GetNextSibling;
 
          end;
 
@@ -4032,29 +4069,54 @@ begin
 
       ord(TV_DELETE): begin
 
-         while ThisNode <> nil do begin
+         while ThisNodeL <> nil do begin
 
-            if ThisNode.Text = ThisReq.InstrName then begin
+            if ThisNodeL.Text = ThisReq.InstrName then begin
 
-               NextNode := ThisNode.GetNextSibling;
+               NextNode := ThisNodeL.GetNextSibling;
 
                if NextNode = nil then begin
 
-                  NextNode := ThisNode.GetPrevSibling;
+                  NextNode := ThisNodeL.GetPrevSibling;
 
                   if NextNode = nil then
-                     NextNode := ThisNode.Parent;
+                     NextNode := ThisNodeL.Parent;
 
                end;
 
-               ThisNode.Delete;
+               ThisNodeL.Delete;
                tvInstructions.Selected := NextNode;
 
                break;
 
             end;
 
-            ThisNode := ThisNode.GetNextSibling;
+            ThisNodeL := ThisNodeL.GetNextSibling;
+
+         end;
+
+         while ThisNodeS <> nil do begin
+
+            if ThisNodeS.Text = ThisReq.InstrName then begin
+
+               NextNode := ThisNodeS.GetNextSibling;
+
+               if NextNode = nil then begin
+
+                  NextNode := ThisNodeS.GetPrevSibling;
+
+               end;
+
+               ThisNodeS.Delete;
+
+               if NextNode <> nil then
+                  tvInstructions.Selected := NextNode;
+
+               break;
+
+            end;
+
+            ThisNodeS := ThisNodeS.GetNextSibling;
 
          end;
 
@@ -4063,6 +4125,98 @@ begin
    end;
 
    Result := Outcome;
+
+end;
+
+//------------------------------------------------------------------------------
+// Function to transform a displayable password into coded characters
+//------------------------------------------------------------------------------
+function TFLPMSBackup.Encode(PlainStr: string) : string;
+var
+   idx1   : integer;
+   S2     : string;
+   S1     : array[1..64] of char;
+   Hi, Lo : Word;
+
+begin
+
+   S1   := PlainStr;
+   S2   := '';
+   idx1 := 1;
+
+   while (S1[idx1] <> #0) do begin
+
+//--- Get copies of the current character
+
+      Hi := Word(S1[idx1]);
+      Lo := Word(S1[idx1]);
+
+//--- Move the 4 high bits to the right and mask out the four left bits
+
+      Hi := Hi shr 4;
+      Lo := Lo and %00001111;
+
+//--- Turn the Hi and Lo parts into displayable characters
+
+      Hi := Hi or %01000000;
+      Lo := Lo or %01000000;
+
+//--- Add them to the result string
+
+      S2 := S2 + char(Hi) + char(Lo);
+
+      inc(idx1);
+
+   end;
+
+   Result := S2;
+
+end;
+
+//------------------------------------------------------------------------------
+// Function to transform a coded password into displayable characters
+//------------------------------------------------------------------------------
+function TFLPMSBackup.Decode(CodedStr: string) : string;
+var
+   idx1         : integer;
+   S2           : string;
+   S1           : array[1..64] of char;
+   Hi1, Hi2, HL : Word;
+
+begin
+
+   S1   := CodedStr;
+   S2   := '';
+   idx1 := 1;
+
+   while (S1[idx1] <> #0) do begin
+
+//--- Get copies of the next 2 characters
+
+      Hi1 := Word(S1[idx1]);
+      Inc(idx1);
+      Hi2 := Word(S1[idx1]);
+      Inc(idx1);
+
+//--- Move the 4 low bits of the first to the left and mask the 4 low bits then
+//--- mask the 4 high bits of the second
+
+      Hi1 := Hi1 shl 4;
+      Hi1 := Hi1 and %11110000;
+      Hi2 := Hi2 and %00001111;
+
+//--- Merge the 2 characters
+
+      HL := Hi1 or Hi2;
+
+//--- Add it to the result string
+
+      S2 := S2 + char(HL);
+
+   end;
+
+   Result := S2;
+
 end;
 
 //------------------------------------------------------------------------------

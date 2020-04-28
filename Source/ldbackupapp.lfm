@@ -1,9 +1,9 @@
 object FLPMSBackup: TFLPMSBackup
-  Left = 411
+  Left = 302
   Height = 718
-  Top = 158
+  Top = 149
   Width = 1242
-  ActiveControl = pcInstructions
+  ActiveControl = pnlP01
   Caption = 'FLPMSBackup'
   ClientHeight = 697
   ClientWidth = 1242
@@ -668,11 +668,18 @@ object FLPMSBackup: TFLPMSBackup
           object btnTemplate: TButton
             Left = 10
             Height = 27
-            Top = 72
+            Top = 74
             Width = 75
             Caption = 'Template'
             OnClick = btnTemplateClick
             TabOrder = 2
+          end
+          object Bevel4: TBevel
+            Left = 248
+            Height = 138
+            Top = 0
+            Width = 2
+            Align = alRight
           end
         end
         object pnl00b1b: TPanel
@@ -685,88 +692,134 @@ object FLPMSBackup: TFLPMSBackup
           ClientHeight = 138
           ClientWidth = 787
           TabOrder = 1
-          object tvSmall: TTreeView
-            Left = 0
-            Height = 136
-            Top = 2
-            Width = 151
-            Align = alLeft
-            BorderStyle = bsNone
-            Images = imgTree
-            TabOrder = 0
-            OnClick = tvSmallClick
-            OnEditing = tvSmallEditing
-          end
-          object Label7: TLabel
-            Left = 170
-            Height = 17
-            Top = 12
-            Width = 61
-            Caption = 'Config File:'
-            ParentColor = False
-          end
-          object Label8: TLabel
-            Left = 170
-            Height = 17
-            Top = 44
-            Width = 66
-            Caption = 'Host Name:'
-            ParentColor = False
-          end
-          object Label9: TLabel
-            Left = 170
-            Height = 17
-            Top = 76
-            Width = 73
-            Caption = 'Next Backup:'
-            ParentColor = False
-          end
-          object lblDBVersion: TLabel
-            Left = 170
-            Height = 17
-            Top = 108
-            Width = 91
-            Caption = 'Output Location:'
-            ParentColor = False
-          end
-          object edtConfigFile: TEdit
-            Left = 285
-            Height = 27
-            Top = 8
-            Width = 490
-            Anchors = [akTop, akLeft, akRight]
-            TabOrder = 1
-          end
-          object edtHostName: TEdit
-            Left = 285
-            Height = 27
-            Top = 40
-            Width = 490
-            Anchors = [akTop, akLeft, akRight]
-            TabOrder = 2
-          end
-          object edtNextBackup: TEdit
-            Left = 285
-            Height = 27
-            Top = 72
-            Width = 490
-            Anchors = [akTop, akLeft, akRight]
-            TabOrder = 3
-          end
-          object edtLocation: TEdit
-            Left = 285
-            Height = 27
-            Top = 104
-            Width = 490
-            Anchors = [akTop, akLeft, akRight]
-            TabOrder = 4
-          end
           object Bevel3: TBevel
             Left = 0
             Height = 2
             Top = 0
             Width = 787
             Align = alTop
+          end
+          object pnl00b1b1: TPanel
+            Left = 0
+            Height = 136
+            Top = 2
+            Width = 152
+            Align = alLeft
+            BevelOuter = bvNone
+            ClientHeight = 136
+            ClientWidth = 152
+            TabOrder = 0
+            object tvSmall: TTreeView
+              Left = 0
+              Height = 136
+              Top = 0
+              Width = 150
+              Align = alClient
+              BorderStyle = bsNone
+              HideSelection = False
+              Images = imgTree
+              TabOrder = 0
+              OnClick = tvSmallClick
+              OnEditing = tvSmallEditing
+              Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+              TreeLinePenStyle = psDash
+            end
+            object Bevel6: TBevel
+              Left = 150
+              Height = 136
+              Top = 0
+              Width = 2
+              Align = alRight
+            end
+          end
+          object pnl00b1b2: TPanel
+            Left = 157
+            Height = 136
+            Top = 2
+            Width = 630
+            Align = alClient
+            BevelOuter = bvNone
+            ClientHeight = 136
+            ClientWidth = 630
+            TabOrder = 1
+            object Label7: TLabel
+              Left = 16
+              Height = 17
+              Top = 10
+              Width = 61
+              Caption = 'Config File:'
+              ParentColor = False
+            end
+            object Label8: TLabel
+              Left = 16
+              Height = 17
+              Top = 42
+              Width = 66
+              Caption = 'Host Name:'
+              ParentColor = False
+            end
+            object Label9: TLabel
+              Left = 16
+              Height = 17
+              Top = 74
+              Width = 73
+              Caption = 'Next Backup:'
+              ParentColor = False
+            end
+            object lblDBVersion: TLabel
+              Left = 16
+              Height = 17
+              Top = 106
+              Width = 91
+              Caption = 'Output Location:'
+              ParentColor = False
+            end
+            object edtConfigFile: TEdit
+              Left = 135
+              Height = 27
+              Top = 6
+              Width = 485
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 0
+            end
+            object edtHostName: TEdit
+              Left = 135
+              Height = 27
+              Top = 38
+              Width = 485
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 1
+            end
+            object edtNextBackup: TEdit
+              Left = 135
+              Height = 27
+              Top = 70
+              Width = 485
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 2
+            end
+            object edtLocation: TEdit
+              Left = 135
+              Height = 27
+              Top = 102
+              Width = 485
+              Anchors = [akTop, akLeft, akRight]
+              TabOrder = 3
+            end
+            object Bevel5: TBevel
+              Left = 0
+              Height = 136
+              Top = 0
+              Width = 2
+              Align = alLeft
+            end
+          end
+          object Splitter1: TSplitter
+            Left = 152
+            Height = 136
+            Top = 2
+            Width = 5
+            Beveled = True
           end
         end
       end
@@ -1487,11 +1540,12 @@ object FLPMSBackup: TFLPMSBackup
       Top = 0
       Width = 200
       Align = alClient
+      HideSelection = False
       Images = imgTree
-      SortType = stBoth
       TabOrder = 0
       OnClick = tvInstructionsClick
       OnEditing = tvInstructionsEditing
+      Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
       TreeLinePenStyle = psDash
     end
   end
@@ -1978,11 +2032,11 @@ object FLPMSBackup: TFLPMSBackup
     top = 510
     object MenuItem1: TMenuItem
       Action = ActionsMinimise
-      Default = True
       Hint = 'Minimise the Backup Manager dialog'
     end
     object MenuItem2: TMenuItem
       Action = ActionsRestore
+      Default = True
     end
     object MenuItem3: TMenuItem
       Caption = '-'
@@ -3233,7 +3287,7 @@ object FLPMSBackup: TFLPMSBackup
     left = 598
     top = 574
     Bitmap = {
-      4C690E0000001000000010000000FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      4C690F0000001000000010000000FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00001DEEFF092DFFFF0F35
       FFFF092DFFFF0528FFFF0224FFFF001DEEFF001CDEFF001AD5FF0018CAFF001A
@@ -3681,6 +3735,38 @@ object FLPMSBackup: TFLPMSBackup
       FF00C15E32FFDCAC95FFC7BAB7FFB4A4A1FFAA7966FFC15E32FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00C15E32FFC15E32FFC15E32FFC15E32FFFF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00004B00FF004B00FFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00004B00FF37D560FF2FCA57FF004B00FFFF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00004B00FF37D560FF3EEB73FF32DA65FF14972EFF004B00FFFF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00004B00FF07690FFF32DA65FF26C956FF07690FFF004B00FFFF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00004B00FF1FB748FF1CBA47FF004B00FFFF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00004B00FF077213FF16B038FF098116FF004B00FF004B00FFFF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00004B00FF056B0CFF088713FF068E0FFF016902FF0769
+      0FFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00004B00FF004B00FF004B00FF004B00FF004B
+      00FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00000082FF000082FF000082FF000082FF0000
+      82FF000082FF000082FF000082FF000082FF000082FF000082FFFF00FF00004B
+      00FF004B00FF004B00FF004B00FF000082FF001FFFFF0325FFFF092DFFFF1139
+      FFFF1A44FFFF234FFFFF2C58FFFF315EFFFF315EFFFF000082FFFF00FF00004B
+      00FF24B842FF24B842FF004B00FF000082FF001FFFFF0324FFFF082DFFFF0F37
+      FFFF1842FFFF234EFFFF2B57FFFF315EFFFF315EFFFF000082FFFF00FF00004B
+      00FF18A42EFF24B842FF004B00FF000082FF000082FF000082FF000082FF0000
+      82FF000082FF000082FF000082FF000082FF000082FF000082FFFF00FF00004B
+      00FF004B00FF004B00FF004B00FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00
     }
   end
