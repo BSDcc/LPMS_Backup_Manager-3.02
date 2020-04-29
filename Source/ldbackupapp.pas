@@ -544,7 +544,7 @@ begin
    SMSDone      := False;
 
    FLPMSBackup.Caption := 'Backup Manager';
-   CfgFile             := LocalPath + 'Backup_Manager.cfg';
+   CfgFile             := LocalPath + 'Backup_Manager.ini';
 
    tvInstructions.Items.Clear;
    pnlP00b.Visible := True;
@@ -604,7 +604,6 @@ procedure TFLPMSBackup.FormClose(Sender: TObject; var CloseAction: TCloseAction)
 var
    idx1     : integer;
    CfgStr   : string;
-   CfgInstr : TStringList;
    ThisNode : TTreeNode;
 
 begin
@@ -693,18 +692,44 @@ begin
       end;
 
       ThisNode := ThisNode.GetNextSibling;
+
    end;
 
 //--- Save the Configuration File
 
-   if CfgStr <> '' then begin
+//*** Remove
+   btnTemplateClick(Sender);
+//*** Remove
 
-      CfgInstr := TStringList.Create;
-      CfgInstr.Add(CfgStr);
+   IniFile := TINIFile.Create(CfgFile);
 
-      CfgInstr.SaveToFile(CfgFile);
+   IniFile.WriteString('Config','String',CfgStr);
+   IniFile.WriteBool('Parameters','Sort',cbxDoSort.Checked);
+   IniFile.WriteBool('Parameters','Discard',cbxDelete.Checked);
 
-   end;
+   IniFile.WriteInteger('Template','BackupBlock',BackupTemplate.Instr_Rec.BackupBlock);
+   IniFile.WriteInteger('Template','BackupSMSProvider',BackupTemplate.Instr_Rec.BackupSMSProvider);
+   IniFile.WriteInteger('Template','BackupType',BackupTemplate.Instr_Rec.BackupType);
+   IniFile.WriteInteger('Template','BackupT01',BackupTemplate.Instr_Rec.BackupT01);
+   IniFile.WriteInteger('Template','BackupT02',BackupTemplate.Instr_Rec.BackupT02);
+   IniFile.WriteInteger('Template','BackupT03',BackupTemplate.Instr_Rec.BackupT03);
+   IniFile.WriteBool('Template','BackupSMSAlways',BackupTemplate.Instr_Rec.BackupSMSAlways);
+   IniFile.WriteBool('Template','BackupSMSFailure',BackupTemplate.Instr_Rec.BackupSMSFailure);
+   IniFile.WriteBool('Template','BackupSMSNever',BackupTemplate.Instr_Rec.BackupSMSNever);
+   IniFile.WriteBool('Template','BackupSMSSuccess',BackupTemplate.Instr_Rec.BackupSMSSuccess);
+   IniFile.WriteString('Template','BackupDBPass',Encode(BackupTemplate.Instr_Rec.BackupDBPass));
+   IniFile.WriteString('Template','BackupDBPrefix',BackupTemplate.Instr_Rec.BackupDBPrefix);
+   IniFile.WriteString('Template','BackupDBSuffix',BackupTemplate.Instr_Rec.BackupDBSuffix);
+   IniFile.WriteString('Template','BackupDBUser',BackupTemplate.Instr_Rec.BackupDBUser);
+   IniFile.WriteString('Template','BackupHostName',BackupTemplate.Instr_Rec.BackupHostName);
+   IniFile.WriteString('Template','BackupLocation',BackupTemplate.Instr_Rec.BackupLocation);
+   IniFile.WriteString('Template','BackupSMSNumber',BackupTemplate.Instr_Rec.BackupSMSNumber);
+   IniFile.WriteString('Template','BackupSMSPass',Encode(BackupTemplate.Instr_Rec.BackupSMSPass));
+   IniFile.WriteString('Template','BackupSMSUser',BackupTemplate.Instr_Rec.BackupSMSUser);
+   IniFile.WriteString('Template','BackupTemplate',BackupTemplate.Instr_Rec.BackupTemplate);
+   IniFile.WriteString('Template','BackupViewer',BackupTemplate.Instr_Rec.BackupViewer);
+
+   IniFile.Destroy;
 
 //--- Close the data base
 
@@ -3572,7 +3597,7 @@ procedure TFLPMSBackup.OpenCfg(FileName: string);
 var
    idx1                 : integer;
    FirstChild           : boolean;
-   ThisLine             : string;
+   ThisLine, CfgStr     : string;
    CfgInstr             : TStringList;
    ThisNodeM, ThisNodeS : TTreeNode;
 
@@ -3586,16 +3611,48 @@ begin
 
    NumInstr    := 0;
 
-   if (FileExists(FileName) = true) then begin
-
 //--- Create the String Lists
 
-      CfgInstr    := TStringList.Create;
-      InstrTokens := TStringList.Create;
+   InstrTokens := TStringList.Create;
+   CfgInstr    := TStringList.Create;
+
+   if (FileExists(FileName) = true) then begin
+
+      IniFile := TINIFile.Create(FileName);
+
+      cfgStr := IniFile.ReadString('Config','String','New Instruction|');
+
+      cbxDoSort.Checked := IniFile.ReadBool('Parameters','Sort',False);
+      cbxDelete.Checked := IniFile.ReadBool('Parameters','Discard',False);
+
+
+      BackupTemplate.Instr_Rec.BackupBlock       := IniFile.ReadInteger('Template','BackupBlock',5000);
+      BackupTemplate.Instr_Rec.BackupSMSProvider := IniFile.ReadInteger('Template','BackupSMSProvider',0);
+      BackupTemplate.Instr_Rec.BackupType        := IniFile.ReadInteger('Template','BackupType',1);
+      BackupTemplate.Instr_Rec.BackupT01         := IniFile.ReadInteger('Template','BackupT01',7);
+      BackupTemplate.Instr_Rec.BackupT02         := IniFile.ReadInteger('Template','BackupT02',0);
+      BackupTemplate.Instr_Rec.BackupT03         := IniFile.ReadInteger('Template','BackupT03',0);
+      BackupTemplate.Instr_Rec.BackupSMSAlways   := IniFile.ReadBool('Template','BackupSMSAlways',False);
+      BackupTemplate.Instr_Rec.BackupSMSFailure  := IniFile.ReadBool('Template','BackupSMSFailure',False);
+      BackupTemplate.Instr_Rec.BackupSMSNever    := IniFile.ReadBool('Template','BackupSMSNever',True);
+      BackupTemplate.Instr_Rec.BackupSMSSuccess  := IniFile.ReadBool('Template','BackupSMSSuccess',False);
+      BackupTemplate.Instr_Rec.BackupDBPass      := Decode(IniFile.ReadString('Template','BackupDBPass',''));
+      BackupTemplate.Instr_Rec.BackupDBPrefix    := IniFile.ReadString('Template','BackupDBPrefix','');
+      BackupTemplate.Instr_Rec.BackupDBSuffix    := IniFile.ReadString('Template','BackupDBSuffix','');
+      BackupTemplate.Instr_Rec.BackupDBUser      := IniFile.ReadString('Template','BackupDBUser','');
+      BackupTemplate.Instr_Rec.BackupHostName    := IniFile.ReadString('Template','BackupHostName','127.0.0.1');
+      BackupTemplate.Instr_Rec.BackupLocation    := IniFile.ReadString('Template','BackupLocation','~');
+      BackupTemplate.Instr_Rec.BackupSMSNumber   := IniFile.ReadString('Template','BackupSMSNumber','');
+      BackupTemplate.Instr_Rec.BackupSMSPass     := Decode(IniFile.ReadString('Template','BackupSMSPass',''));
+      BackupTemplate.Instr_Rec.BackupSMSUser     := IniFile.ReadString('Template','BackupSMSUser','');
+      BackupTemplate.Instr_Rec.BackupTemplate    := IniFile.ReadString('Template','BackupTemplate','&Date@&Time - &BackupType Backup (&Instruction)');
+      BackupTemplate.Instr_Rec.BackupViewer      := IniFile.ReadString('Template','BackupViewer','');
+
+      IniFile.Destroy;
 
 //--- Load the Configuration file into memory and then extract the 1st Line
 
-      CfgInstr.LoadFromFile(FileName);
+      CfgInstr.Add(CfgStr);
       ThisLine := CfgInstr.Strings[0];
 
       ExtractStrings(['|'], [], PChar(ThisLine), InstrTokens);
@@ -3603,6 +3660,11 @@ begin
 //--- Save the number of instructions that were listed in the Configuration file
 
       NumInstr := InstrTokens.Count;
+
+   end else begin
+
+      InstrTokens.Add('New Instruction');
+      NumInstr := 1;
 
    end;
 
@@ -3807,14 +3869,14 @@ begin
 
    ActiveName := '';
 
-   if NumInstr > 0 then begin
+//   if NumInstr > 0 then begin
 
       try
          CfgInstr.Free;
       except
       end;
 
-   end;
+//   end;
 
    try
       InstrTokens.Free;
