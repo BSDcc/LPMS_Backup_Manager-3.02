@@ -31,7 +31,7 @@ uses
 
   Classes, SysUtils, sqldb, mysql57conn, mysql56conn, LCLType,
   Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
-  StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, strutils, INIFiles,
+  StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, usplashabout, strutils, INIFiles,
   HTTPSend, Synacode, DateUtils, LazFileUtils;
 
 //------------------------------------------------------------------------------
@@ -138,6 +138,7 @@ type
    pnl00b2: TPanel;
    pnl00b1: TPanel;
    speBlockSizeC: TSpinEdit;
+   saAbout: TSplashAbout;
    Splitter1: TSplitter;
    ToolButton17: TToolButton;
    ToolButton18: TToolButton;
@@ -538,13 +539,13 @@ begin
    SMSDone      := False;
 
    FLPMSBackup.Caption := 'Backup Manager';
-   CfgFile             := LocalPath + 'Backup Manager.cfg';
+   CfgFile             := LocalPath + 'Backup_Manager.cfg';
 
    tvInstructions.Items.Clear;
    pnlP00b.Visible := True;
    pnlP00a.Visible := False;
 
-   BackupLogFile := LocalPath + 'Backup Manager Logfile.txt';
+   BackupLogFile := LocalPath + 'Backup_Manager_Logfile.txt';
 
 //--- Open and load the contents of the Log File
 
@@ -765,7 +766,7 @@ begin
    inc(NumInstr);
 
    Instr_List[ThisInstr].Instruction := 'New Instruction';
-   Instr_List[ThisInstr].Ini_File    := 'Backup Manager_New Instruction.ini';
+   Instr_List[ThisInstr].Ini_File    := 'Backup_Manager_New Instruction.ini';
    Instr_List[ThisInstr].NextDate    := '2099/12/31';
    Instr_List[ThisInstr].NextTime    := '23:59:59';
 
@@ -861,7 +862,7 @@ begin
 //--- Recover from the 'Registry' as it will only be updated after the Update
 //--- has been committed
 
-   RegString := LocalPath + 'Backup Manager_' + SaveName + '.ini';
+   RegString := LocalPath + 'Backup_Manager_' + SaveName + '.ini';
 
 //--- Extract the information contained in the 'registry'
 
@@ -928,7 +929,7 @@ begin
 
 //--- Fix the .ini file name as this may have changed
 
-      Instr_List[SaveInstr].Ini_File := 'Backup Manager_' + SaveName + '.ini';
+      Instr_List[SaveInstr].Ini_File := 'Backup_Manager_' + SaveName + '.ini';
 
 //--- Restore the rest of the fields
 
@@ -1125,7 +1126,7 @@ begin
 //--- Update the Instruction's in-memory record
 
    Instr_List[ThisInstr].Instruction                     := edtInstrNameC.Text;
-   Instr_List[ThisInstr].Ini_File                        := 'Backup Manager_' + edtInstrNameC.Text + '.ini';
+   Instr_List[ThisInstr].Ini_File                        := 'Backup_Manager_' + edtInstrNameC.Text + '.ini';
    Instr_List[ThisInstr].Instr_Rec.BackupBlock           := speBlockSizeC.Value;
    Instr_List[ThisInstr].Instr_Rec.BackupSMSProvider     := cbSMSProviderC.ItemIndex;
    Instr_List[ThisInstr].Instr_Rec.BackupType            := cbxType.ItemIndex;
@@ -1389,7 +1390,7 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.HelpAboutExecute(Sender: TObject);
 begin
-   //
+   saAbout.ShowAbout;
 end;
 
 //------------------------------------------------------------------------------
@@ -3238,7 +3239,7 @@ begin
          send_xml.Add('</settings>');
          send_xml.Add('<entries>');
          send_xml.Add('<numto>' + Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber + '</numto>');
-         send_xml.Add('<customerid>LPMS Backup Manager</customerid>');
+         send_xml.Add('<customerid>Backup Manager</customerid>');
          send_xml.Add('</entries>');
          send_xml.Add('</senddata>');
       end;
@@ -3641,7 +3642,7 @@ begin
 
       end;
 
-      Instr_List[idx1].Ini_File    := 'Backup Manager_' + InstrTokens.Strings[idx1] + '.ini';
+      Instr_List[idx1].Ini_File    := 'Backup_Manager_' + InstrTokens.Strings[idx1] + '.ini';
       Instr_List[idx1].Instruction := InstrTokens.Strings[idx1];
       Instr_List[idx1].NextDate    := '2099/12/31';
       Instr_List[idx1].NextTime    := '23:59:59';
