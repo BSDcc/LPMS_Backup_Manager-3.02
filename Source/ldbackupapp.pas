@@ -23,16 +23,21 @@ interface
 //------------------------------------------------------------------------------
 uses
 
-{$ifdef DARWIN}
-  macOSAll, Folders, FileUtil,     // Running on macOS
-{$else}
-  FileUtil,                        // Running on Winblows or Linux
+{$ifdef DARWIN}                                    // Target is macOS
+  macOSAll, Folders, FileUtil, mysql57conn,
 {$endif}
 
-  Classes, SysUtils, sqldb, mysql57conn, mysql56conn, LCLType,
-  Forms, Controls, Graphics, Dialogs, ActnList, Menus, ComCtrls,
-  StdCtrls, Buttons, ExtCtrls, EditBtn, Spin, usplashabout, strutils, INIFiles,
-  HTTPSend, Synacode, DateUtils, LazFileUtils;
+{$ifdef LINUX}                                     // Target is Linux
+  FileUtil, mysql57conn,
+{$endif}
+
+{$ifdef WINDOWS}                                   // Target is Winblows
+  FileUtil, mysql56conn,
+{$endif}
+
+  Classes, SysUtils, sqldb, LCLType, Forms, Controls, Graphics, Dialogs,
+  ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn, Spin,
+  usplashabout, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -3802,9 +3807,13 @@ begin
 
    ActiveName := '';
 
-   try
-      CfgInstr.Free;
-   except
+   if NumInstr > 0 then begin
+
+      try
+         CfgInstr.Free;
+      except
+      end;
+
    end;
 
    try

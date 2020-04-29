@@ -5,7 +5,7 @@ object FLPMSBackup: TFLPMSBackup
   Width = 1242
   ActiveControl = pnlP01
   Caption = 'FLPMSBackup'
-  ClientHeight = 697
+  ClientHeight = 698
   ClientWidth = 1242
   Menu = mnuMain
   OnActivate = FormActivate
@@ -14,27 +14,27 @@ object FLPMSBackup: TFLPMSBackup
   LCLVersion = '2.0.6.0'
   object pnlP00: TPanel
     Left = 205
-    Height = 571
+    Height = 570
     Top = 57
     Width = 1037
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 571
+    ClientHeight = 570
     ClientWidth = 1037
     TabOrder = 3
     object pnlP00a: TPanel
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 571
+      ClientHeight = 570
       ClientWidth = 1037
       TabOrder = 0
       object pcInstructions: TPageControl
         Left = 0
-        Height = 571
+        Height = 570
         Top = 0
         Width = 1037
         ActivePage = tsInstruction
@@ -44,34 +44,34 @@ object FLPMSBackup: TFLPMSBackup
         OnChange = pcInstructionsChange
         object tsInstruction: TTabSheet
           Caption = 'Instruction'
-          ClientHeight = 536
-          ClientWidth = 1031
+          ClientHeight = 542
+          ClientWidth = 1029
           object pnlP00a2: TPanel
             Left = 0
-            Height = 134
+            Height = 140
             Top = 0
-            Width = 1031
+            Width = 1029
             Align = alTop
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
-            ClientHeight = 134
-            ClientWidth = 1031
+            ClientHeight = 140
+            ClientWidth = 1029
             TabOrder = 0
             object Label4: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 42
-              Width = 74
+              Width = 71
               Caption = 'Backup Type:'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxType: TComboBox
               Left = 150
-              Height = 27
+              Height = 23
               Top = 38
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 1
               Items.Strings = (
                 'Hourly'
@@ -84,19 +84,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL01: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 24
+              Width = 22
               Caption = 'T01:'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT01: TComboBox
               Left = 150
-              Height = 27
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -106,19 +106,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL02: TLabel
               Left = 334
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 21
+              Width = 19
               Caption = 'T02'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT02: TComboBox
               Left = 456
-              Height = 27
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -128,19 +128,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL03: TLabel
               Left = 658
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 21
+              Width = 19
               Caption = 'T03'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT03: TComboBox
               Left = 772
-              Height = 27
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -150,16 +150,16 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label6: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 106
-              Width = 77
+              Width = 73
               Caption = 'SMS Number:'
               ParentColor = False
               ParentShowHint = False
             end
             object edtSMSNumber: TEdit
               Left = 150
-              Height = 27
+              Height = 23
               Top = 102
               Width = 106
               OnChange = edtInstrNameCChange
@@ -168,36 +168,36 @@ object FLPMSBackup: TFLPMSBackup
             end
             object rbSMSSuccess: TRadioButton
               Left = 270
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 113
+              Width = 104
               Caption = 'SMS on Success'
               OnChange = edtInstrNameCChange
               TabOrder = 6
             end
             object rbSMSFailure: TRadioButton
               Left = 410
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 106
+              Width = 98
               Caption = 'SMS on Failure'
               OnChange = edtInstrNameCChange
               TabOrder = 7
             end
             object rbSMSNever: TRadioButton
               Left = 700
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 115
+              Width = 105
               Caption = 'Never send SMS'
               OnChange = edtInstrNameCChange
               TabOrder = 9
             end
             object rbSMSAlways: TRadioButton
               Left = 550
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 120
+              Width = 111
               Caption = 'Always send SMS'
               Checked = True
               OnChange = edtInstrNameCChange
@@ -206,16 +206,16 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLastBackup: TEdit
               Left = 150
-              Height = 27
+              Height = 23
               Top = 6
-              Width = 838
+              Width = 836
               Anchors = [akTop, akLeft, akRight]
               ParentShowHint = False
               ReadOnly = True
               TabOrder = 0
             end
             object btnOpenLB: TSpeedButton
-              Left = 992
+              Left = 990
               Height = 26
               Top = 6
               Width = 28
@@ -252,9 +252,9 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label5: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 10
-              Width = 70
+              Width = 66
               Caption = 'Last Backup:'
               ParentColor = False
               ParentShowHint = False
@@ -262,21 +262,21 @@ object FLPMSBackup: TFLPMSBackup
           end
           object pnlP00a3: TPanel
             Left = 0
-            Height = 402
+            Height = 408
             Top = 134
-            Width = 1031
+            Width = 1029
             Align = alBottom
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'pnlP00a3'
-            ClientHeight = 402
-            ClientWidth = 1031
+            ClientHeight = 408
+            ClientWidth = 1029
             TabOrder = 1
             object lvLogSel: TListView
               Left = 0
-              Height = 402
+              Height = 408
               Top = 0
-              Width = 1031
+              Width = 1029
               Align = alClient
               Columns = <              
                 item
@@ -294,7 +294,7 @@ object FLPMSBackup: TFLPMSBackup
                 item
                   AutoSize = True
                   Caption = 'Message'
-                  Width = 714
+                  Width = 61
                 end>
               GridLines = True
               HideSelection = False
@@ -488,7 +488,7 @@ object FLPMSBackup: TFLPMSBackup
             Height = 23
             Top = 258
             Width = 118
-            ItemHeight = 0
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               'Inactive'
@@ -619,13 +619,13 @@ object FLPMSBackup: TFLPMSBackup
     end
     object pnlP00b: TPanel
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 571
+      ClientHeight = 570
       ClientWidth = 1037
       TabOrder = 1
       object pnl00b1: TPanel
@@ -650,18 +650,18 @@ object FLPMSBackup: TFLPMSBackup
           TabOrder = 0
           object cbxDoSort: TCheckBox
             Left = 10
-            Height = 21
+            Height = 19
             Top = 12
-            Width = 182
+            Width = 170
             Caption = 'Sort Instructions in TreeView'
             OnChange = cbxDoSortChange
             TabOrder = 0
           end
           object cbxDelete: TCheckBox
             Left = 10
-            Height = 21
+            Height = 19
             Top = 44
-            Width = 213
+            Width = 200
             Caption = 'Discard invalid instructions on Exit'
             TabOrder = 1
           end
@@ -744,39 +744,39 @@ object FLPMSBackup: TFLPMSBackup
             TabOrder = 1
             object Label7: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 10
-              Width = 61
+              Width = 60
               Caption = 'Config File:'
               ParentColor = False
             end
             object Label8: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 42
-              Width = 66
+              Width = 63
               Caption = 'Host Name:'
               ParentColor = False
             end
             object Label9: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 73
+              Width = 69
               Caption = 'Next Backup:'
               ParentColor = False
             end
             object lblDBVersion: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 106
-              Width = 91
+              Width = 90
               Caption = 'Output Location:'
               ParentColor = False
             end
             object edtConfigFile: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 6
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -784,7 +784,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtHostName: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 38
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -792,7 +792,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtNextBackup: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 70
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -800,7 +800,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLocation: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 102
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -825,17 +825,17 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnl00b2: TPanel
         Left = 0
-        Height = 433
+        Height = 432
         Top = 138
         Width = 1037
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 433
+        ClientHeight = 432
         ClientWidth = 1037
         TabOrder = 1
         object lvLogAll: TListView
           Left = 0
-          Height = 433
+          Height = 432
           Top = 0
           Width = 1037
           Align = alClient
@@ -855,7 +855,7 @@ object FLPMSBackup: TFLPMSBackup
             item
               AutoSize = True
               Caption = 'Message'
-              Width = 720
+              Width = 61
             end>
           GridLines = True
           HideSelection = False
@@ -869,8 +869,8 @@ object FLPMSBackup: TFLPMSBackup
   end
   object sbStatus: TStatusBar
     Left = 0
-    Height = 21
-    Top = 676
+    Height = 23
+    Top = 675
     Width = 1242
     Panels = <    
       item
@@ -899,7 +899,7 @@ object FLPMSBackup: TFLPMSBackup
   end
   object splSplit01: TSplitter
     Left = 200
-    Height = 571
+    Height = 570
     Top = 57
     Width = 5
     Beveled = True
@@ -1525,18 +1525,18 @@ object FLPMSBackup: TFLPMSBackup
   end
   object pnlP02: TPanel
     Left = 0
-    Height = 571
+    Height = 570
     Top = 57
     Width = 200
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 571
+    ClientHeight = 570
     ClientWidth = 200
     TabOrder = 1
     object tvInstructions: TTreeView
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 200
       Align = alClient
@@ -1552,7 +1552,7 @@ object FLPMSBackup: TFLPMSBackup
   object pnlP03: TPanel
     Left = 0
     Height = 48
-    Top = 628
+    Top = 627
     Width = 1242
     Align = alBottom
     BevelOuter = bvNone
@@ -1608,8 +1608,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL04: TLabel
       Left = 12
-      Height = 17
-      Top = 6
+      Height = 15
+      Top = 8
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -1617,8 +1617,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL05: TLabel
       Left = 12
-      Height = 17
-      Top = 26
+      Height = 15
+      Top = 28
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -5808,7 +5808,7 @@ object FLPMSBackup: TFLPMSBackup
     PoweredBy.About.Description.Strings = (
       'Component that shows a Powered By graphic.'#10'Use method ShowPoweredByForm in your form.create()'#10'to use the component'
     )
-    PoweredBy.About.Title = 'PoweredBy component'
+    PoweredBy.About.Title = 'About About PoweredBy component'
     PoweredBy.About.Height = 280
     PoweredBy.About.Width = 400
     PoweredBy.About.Font.Color = clNavy

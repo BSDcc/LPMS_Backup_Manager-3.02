@@ -13,7 +13,7 @@ uses
 
 begin
    RequireDerivedFormResource := True;
-   Application. Title :='Backup Manager';
+  Application.Title:='Backup Manager';
    Application.Initialize;
    Application.CreateForm(TFLPMSBackup, FLPMSBackup);
    Application.Run;
