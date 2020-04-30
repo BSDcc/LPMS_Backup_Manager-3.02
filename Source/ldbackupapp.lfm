@@ -1,7 +1,7 @@
 object FLPMSBackup: TFLPMSBackup
-  Left = 257
+  Left = 122
   Height = 718
-  Top = 178
+  Top = 0
   Width = 1242
   ActiveControl = pnlP01
   Caption = 'FLPMSBackup'
@@ -22,6 +22,608 @@ object FLPMSBackup: TFLPMSBackup
     ClientHeight = 571
     ClientWidth = 1037
     TabOrder = 3
+    object pnlP00a: TPanel
+      Left = 0
+      Height = 571
+      Top = 0
+      Width = 1037
+      Align = alClient
+      BevelOuter = bvNone
+      ClientHeight = 571
+      ClientWidth = 1037
+      TabOrder = 0
+      object pcInstructions: TPageControl
+        Left = 0
+        Height = 571
+        Top = 0
+        Width = 1037
+        ActivePage = tsConfiguration
+        Align = alClient
+        TabIndex = 1
+        TabOrder = 0
+        OnChange = pcInstructionsChange
+        object tsInstruction: TTabSheet
+          Caption = 'Instruction'
+          ClientHeight = 536
+          ClientWidth = 1031
+          object pnlP00a2: TPanel
+            Left = 0
+            Height = 134
+            Top = 0
+            Width = 1031
+            Align = alTop
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            BevelOuter = bvNone
+            ClientHeight = 134
+            ClientWidth = 1031
+            TabOrder = 0
+            object Label4: TLabel
+              Left = 12
+              Height = 17
+              Top = 42
+              Width = 74
+              Caption = 'Backup Type:'
+              ParentColor = False
+              ParentShowHint = False
+            end
+            object cbxType: TComboBox
+              Left = 150
+              Height = 25
+              Top = 38
+              Width = 150
+              ItemHeight = 0
+              ItemIndex = 1
+              Items.Strings = (
+                'Hourly'
+                'Daily'
+                'Weekly'
+              )
+              OnChange = cbxTypeChange
+              Style = csDropDownList
+              TabOrder = 1
+              Text = 'Daily'
+            end
+            object lblL01: TLabel
+              Left = 12
+              Height = 17
+              Top = 74
+              Width = 24
+              Caption = 'T01:'
+              ParentColor = False
+              ParentShowHint = False
+            end
+            object cbxT01: TComboBox
+              Left = 150
+              Height = 25
+              Top = 70
+              Width = 150
+              ItemHeight = 0
+              ItemIndex = 0
+              Items.Strings = (
+                ''
+              )
+              OnChange = edtInstrNameCChange
+              Style = csDropDownList
+              TabOrder = 2
+            end
+            object lblL02: TLabel
+              Left = 334
+              Height = 17
+              Top = 74
+              Width = 21
+              Caption = 'T02'
+              ParentColor = False
+              ParentShowHint = False
+            end
+            object cbxT02: TComboBox
+              Left = 456
+              Height = 25
+              Top = 70
+              Width = 150
+              ItemHeight = 0
+              ItemIndex = 0
+              Items.Strings = (
+                ''
+              )
+              OnChange = edtInstrNameCChange
+              Style = csDropDownList
+              TabOrder = 3
+            end
+            object lblL03: TLabel
+              Left = 658
+              Height = 17
+              Top = 74
+              Width = 21
+              Caption = 'T03'
+              ParentColor = False
+              ParentShowHint = False
+            end
+            object cbxT03: TComboBox
+              Left = 772
+              Height = 25
+              Top = 70
+              Width = 150
+              ItemHeight = 0
+              ItemIndex = 0
+              Items.Strings = (
+                ''
+              )
+              OnChange = edtInstrNameCChange
+              Style = csDropDownList
+              TabOrder = 4
+            end
+            object Label6: TLabel
+              Left = 12
+              Height = 17
+              Top = 106
+              Width = 77
+              Caption = 'SMS Number:'
+              ParentColor = False
+              ParentShowHint = False
+            end
+            object edtSMSNumber: TEdit
+              Left = 150
+              Height = 27
+              Top = 102
+              Width = 106
+              OnChange = edtInstrNameCChange
+              ParentShowHint = False
+              TabOrder = 5
+            end
+            object rbSMSSuccess: TRadioButton
+              Left = 270
+              Height = 21
+              Top = 106
+              Width = 113
+              Caption = 'SMS on Success'
+              OnChange = edtInstrNameCChange
+              TabOrder = 6
+            end
+            object rbSMSFailure: TRadioButton
+              Left = 410
+              Height = 21
+              Top = 106
+              Width = 106
+              Caption = 'SMS on Failure'
+              OnChange = edtInstrNameCChange
+              TabOrder = 7
+            end
+            object rbSMSNever: TRadioButton
+              Left = 700
+              Height = 21
+              Top = 106
+              Width = 115
+              Caption = 'Never send SMS'
+              OnChange = edtInstrNameCChange
+              TabOrder = 9
+            end
+            object rbSMSAlways: TRadioButton
+              Left = 550
+              Height = 21
+              Top = 106
+              Width = 120
+              Caption = 'Always send SMS'
+              Checked = True
+              OnChange = edtInstrNameCChange
+              TabOrder = 8
+              TabStop = True
+            end
+            object edtLastBackup: TEdit
+              Left = 150
+              Height = 27
+              Top = 6
+              Width = 838
+              Anchors = [akTop, akLeft, akRight]
+              ParentShowHint = False
+              ReadOnly = True
+              TabOrder = 0
+            end
+            object btnOpenLB: TSpeedButton
+              Left = 992
+              Height = 26
+              Top = 6
+              Width = 28
+              Anchors = [akTop, akRight]
+              Glyph.Data = {
+                36030000424D3803000000000000360000002800000010000000100000000100
+                18000000000000000000120B0000120B00000000000000000000FF00FF0274AC
+                0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274
+                AC0274ACFF00FFFF00FF0274AC138AC457B7E06BCBF84BBFF74ABFF74ABFF74A
+                BFF74ABFF64ABFF74ABFF64BC0F72398CC0274ACFF00FFFF00FF0274AC33AAE0
+                2392C489D9FA54C7F854C7F753C7F854C7F754C7F854C7F854C7F853C7F7279D
+                CE6ACBE50274ACFF00FF0274AC57CAF80274AC99E3FB5ED1FA5ED1FA5ED1FA5E
+                D1FA5ED1FA5FD1FA5ED1F85ED1F82CA1CE99EDF70274ACFF00FF0274AC5ED3FA
+                0B81B782D5EF79E0FA6ADCFA69DCFB69DCFB6ADCFB69DCFB69DCFA6ADDFB2FA6
+                CF9FF0F70274ACFF00FF0274AC68DAFB2BA4D14AB2D797EBFC74E5FB74E5FB74
+                E5FC74E5FC74E5FB74E5FC046B0B33A9CFA3F4F752BBD70274AC0274AC70E3FB
+                5CD1EF1184B6FCFFFFB8F4FEBAF4FEBAF4FEBAF4FEB8F4FE046B0B25AA42046B
+                0BD4F7FACAF3F70274AC0274AC7AEBFE7AEBFC0A7FB50274AC0274AC0274AC02
+                74AC0274AC046B0B38CE6547E77F29B44A046B0B0274AC0274AC0274AC83F2FE
+                82F3FE82F3FE83F2FC83F3FE82F3FE83F2FE046B0B2DC0513FDC6E3ED86E46E5
+                7B28B04A046B0BFF00FF0274ACFEFEFE89FAFF89FAFE89FAFE8AF8FE8AFAFE04
+                6B0B046B0B046B0B046B0B3CD86A2EBF53046B0B046B0B046B0BFF00FF0274AC
+                FEFEFE8FFEFF8FFEFF8FFEFF0273A32BA4D12BA4D12BA4D1046B0B35D35E20A7
+                3A046B0BFF00FFFF00FFFF00FFFF00FF0274AC0274AC0274AC0274ACFF00FFFF
+                00FFFF00FFFF00FF046B0B28C24A046B0BFF00FFFF00FFFF00FFFF00FFFF00FF
+                FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B17A42B19A730046B
+                0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+                00FFFF00FF046B0B11A122046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+                FF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B046B0B046B0BFF00FFFF00
+                FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
+                6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              }
+              OnClick = btnOpenLBClick
+            end
+            object Label5: TLabel
+              Left = 12
+              Height = 17
+              Top = 10
+              Width = 70
+              Caption = 'Last Backup:'
+              ParentColor = False
+              ParentShowHint = False
+            end
+          end
+          object pnlP00a3: TPanel
+            Left = 0
+            Height = 402
+            Top = 134
+            Width = 1031
+            Align = alBottom
+            Anchors = [akTop, akLeft, akRight, akBottom]
+            BevelOuter = bvNone
+            Caption = 'pnlP00a3'
+            ClientHeight = 402
+            ClientWidth = 1031
+            TabOrder = 1
+            object lvLogSel: TListView
+              Left = 0
+              Height = 402
+              Top = 0
+              Width = 1031
+              Align = alClient
+              Columns = <              
+                item
+                  Caption = 'Date'
+                  Width = 100
+                end              
+                item
+                  Caption = 'Time'
+                  Width = 100
+                end              
+                item
+                  Caption = 'Instruction'
+                  Width = 100
+                end              
+                item
+                  AutoSize = True
+                  Caption = 'Message'
+                  Width = 714
+                end>
+              GridLines = True
+              HideSelection = False
+              ReadOnly = True
+              RowSelect = True
+              TabOrder = 0
+              ViewStyle = vsReport
+            end
+          end
+        end
+        object tsConfiguration: TTabSheet
+          Caption = 'Configuration'
+          ClientHeight = 536
+          ClientWidth = 1031
+          object Label10: TLabel
+            Left = 8
+            Height = 18
+            Top = 8
+            Width = 131
+            Caption = 'Backup Instruction:'
+            Font.Height = -13
+            Font.Style = [fsBold, fsUnderline]
+            ParentColor = False
+            ParentFont = False
+          end
+          object Label11: TLabel
+            Left = 16
+            Height = 17
+            Top = 40
+            Width = 100
+            Caption = 'Instruction Name:'
+            ParentColor = False
+          end
+          object edtInstrNameC: TEdit
+            Left = 160
+            Height = 27
+            Top = 36
+            Width = 272
+            OnChange = edtInstrNameCChange
+            TabOrder = 0
+          end
+          object Label12: TLabel
+            Left = 16
+            Height = 17
+            Top = 72
+            Width = 66
+            Caption = 'Host Name:'
+            ParentColor = False
+          end
+          object edtHostNameC: TEdit
+            Left = 160
+            Height = 27
+            Top = 68
+            Width = 272
+            OnChange = edtInstrNameCChange
+            TabOrder = 3
+          end
+          object Label13: TLabel
+            Left = 16
+            Height = 17
+            Top = 104
+            Width = 55
+            Caption = 'Template:'
+            ParentColor = False
+          end
+          object edtTemplateC: TEdit
+            Left = 160
+            Height = 27
+            Hint = 'Valid Symbolic Variables are: &Date, &Year, &Month, &Day, &Time, & Hour, &Minute, &CpyName, &Instruction, &HostName, &BackupType, &DBPrefix, &DBSuffix and &OSName'
+            Top = 100
+            Width = 862
+            Anchors = [akTop, akLeft, akRight]
+            OnChange = edtInstrNameCChange
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 6
+          end
+          object Label14: TLabel
+            Left = 16
+            Height = 17
+            Top = 136
+            Width = 94
+            Caption = 'Backup Location:'
+            ParentColor = False
+          end
+          object edtLocationC: TDirectoryEdit
+            Left = 160
+            Height = 27
+            Top = 132
+            Width = 862
+            OnAcceptDirectory = edtLocationAcceptDirectory
+            ShowHidden = False
+            ButtonWidth = 28
+            NumGlyphs = 1
+            Anchors = [akTop, akLeft, akRight]
+            MaxLength = 0
+            TabOrder = 7
+            OnButtonClick = edtLocationButtonClick
+            OnChange = edtInstrNameCChange
+          end
+          object Label15: TLabel
+            Left = 16
+            Height = 17
+            Top = 168
+            Width = 90
+            Caption = 'Read Block Size:'
+            ParentColor = False
+          end
+          object speBlockSizeC: TSpinEdit
+            Left = 160
+            Height = 27
+            Top = 164
+            Width = 118
+            MaxValue = 100000
+            MinValue = 1
+            OnChange = edtInstrNameCChange
+            TabOrder = 8
+            Value = 1
+          end
+          object Label16: TLabel
+            Left = 16
+            Height = 17
+            Top = 200
+            Width = 85
+            Caption = 'Backup Viewer:'
+            ParentColor = False
+          end
+          object edtViewerC: TEdit
+            Left = 160
+            Height = 27
+            Top = 196
+            Width = 831
+            Anchors = [akTop, akLeft, akRight]
+            OnChange = edtInstrNameCChange
+            TabOrder = 9
+          end
+          object btnViewer: TSpeedButton
+            Left = 994
+            Height = 26
+            Top = 196
+            Width = 28
+            Anchors = [akTop, akRight]
+            Glyph.Data = {
+              36030000424D3803000000000000360000002800000010000000100000000100
+              18000000000000000000120B0000120B00000000000000000000FF00FF0274AC
+              0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274
+              AC0274ACFF00FFFF00FF0274AC138AC457B7E06BCBF84BBFF74ABFF74ABFF74A
+              BFF74ABFF64ABFF74ABFF64BC0F72398CC0274ACFF00FFFF00FF0274AC33AAE0
+              2392C489D9FA54C7F854C7F753C7F854C7F754C7F854C7F854C7F853C7F7279D
+              CE6ACBE50274ACFF00FF0274AC57CAF80274AC99E3FB5ED1FA5ED1FA5ED1FA5E
+              D1FA5ED1FA5FD1FA5ED1F85ED1F82CA1CE99EDF70274ACFF00FF0274AC5ED3FA
+              0B81B782D5EF79E0FA6ADCFA69DCFB69DCFB6ADCFB69DCFB69DCFA6ADDFB2FA6
+              CF9FF0F70274ACFF00FF0274AC68DAFB2BA4D14AB2D797EBFC74E5FB74E5FB74
+              E5FC74E5FC74E5FB74E5FC046B0B33A9CFA3F4F752BBD70274AC0274AC70E3FB
+              5CD1EF1184B6FCFFFFB8F4FEBAF4FEBAF4FEBAF4FEB8F4FE046B0B25AA42046B
+              0BD4F7FACAF3F70274AC0274AC7AEBFE7AEBFC0A7FB50274AC0274AC0274AC02
+              74AC0274AC046B0B38CE6547E77F29B44A046B0B0274AC0274AC0274AC83F2FE
+              82F3FE82F3FE83F2FC83F3FE82F3FE83F2FE046B0B2DC0513FDC6E3ED86E46E5
+              7B28B04A046B0BFF00FF0274ACFEFEFE89FAFF89FAFE89FAFE8AF8FE8AFAFE04
+              6B0B046B0B046B0B046B0B3CD86A2EBF53046B0B046B0B046B0BFF00FF0274AC
+              FEFEFE8FFEFF8FFEFF8FFEFF0273A32BA4D12BA4D12BA4D1046B0B35D35E20A7
+              3A046B0BFF00FFFF00FFFF00FFFF00FF0274AC0274AC0274AC0274ACFF00FFFF
+              00FFFF00FFFF00FF046B0B28C24A046B0BFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B17A42B19A730046B
+              0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+              00FFFF00FF046B0B11A122046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+              FF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B046B0B046B0BFF00FFFF00
+              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
+              6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+            }
+            OnClick = btnViewerClick
+          end
+          object Label17: TLabel
+            Left = 8
+            Height = 18
+            Top = 230
+            Width = 88
+            Caption = 'SMS Provider:'
+            Font.Height = -13
+            Font.Style = [fsBold, fsUnderline]
+            ParentColor = False
+            ParentFont = False
+          end
+          object Label18: TLabel
+            Left = 16
+            Height = 17
+            Top = 262
+            Width = 87
+            Caption = 'Provider Name:'
+            ParentColor = False
+          end
+          object cbSMSProviderC: TComboBox
+            Left = 160
+            Height = 25
+            Top = 258
+            Width = 118
+            ItemHeight = 0
+            ItemIndex = 0
+            Items.Strings = (
+              'Inactive'
+              'SMS Portal'
+              'BulkSMS'
+              'WinSMS'
+            )
+            OnChange = edtInstrNameCChange
+            Style = csDropDownList
+            TabOrder = 10
+            Text = 'Inactive'
+          end
+          object lblSMSUser: TLabel
+            Left = 16
+            Height = 17
+            Top = 303
+            Width = 46
+            Caption = 'User ID:'
+            ParentColor = False
+          end
+          object edtSMSUserC: TEdit
+            Left = 160
+            Height = 27
+            Top = 290
+            Width = 221
+            OnChange = edtInstrNameCChange
+            TabOrder = 12
+          end
+          object lblSMSPass: TLabel
+            Left = 16
+            Height = 17
+            Top = 338
+            Width = 57
+            Caption = 'Password:'
+            ParentColor = False
+          end
+          object edtSMSPassC: TEdit
+            Left = 160
+            Height = 27
+            Top = 322
+            Width = 221
+            EchoMode = emPassword
+            OnChange = edtInstrNameCChange
+            PasswordChar = '*'
+            TabOrder = 13
+          end
+          object btnSMSTest: TButton
+            Left = 296
+            Height = 25
+            Hint = 'Click to test SMS Login Credentials'
+            Top = 258
+            Width = 85
+            Caption = 'Test'
+            OnClick = btnSMSTestClick
+            TabOrder = 11
+          end
+          object cbxDBSuffixC: TCheckBox
+            Left = 751
+            Height = 21
+            Top = 40
+            Width = 114
+            Caption = ' LPMS Database'
+            OnChange = edtInstrNameCChange
+            TabOrder = 2
+          end
+          object Label2: TLabel
+            Left = 466
+            Height = 17
+            Top = 72
+            Width = 46
+            Caption = 'User ID:'
+            ParentColor = False
+          end
+          object edtDBUserC: TEdit
+            Left = 560
+            Height = 27
+            Top = 68
+            Width = 160
+            OnChange = edtInstrNameCChange
+            TabOrder = 4
+          end
+          object Label3: TLabel
+            Left = 753
+            Height = 17
+            Top = 72
+            Width = 57
+            Caption = 'Password:'
+            ParentColor = False
+          end
+          object edtDBPassC: TEdit
+            Left = 864
+            Height = 27
+            Top = 68
+            Width = 160
+            EchoMode = emPassword
+            OnChange = edtInstrNameCChange
+            PasswordChar = '*'
+            TabOrder = 5
+          end
+          object Label19: TLabel
+            Left = 466
+            Height = 17
+            Top = 40
+            Width = 57
+            Caption = 'Database:'
+            ParentColor = False
+          end
+          object edtDBPrefixC: TEdit
+            Left = 560
+            Height = 27
+            Top = 36
+            Width = 160
+            OnChange = edtInstrNameCChange
+            TabOrder = 1
+          end
+          object btnDBTest: TButton
+            Left = 939
+            Height = 25
+            Hint = 'Click to test Database connectivity'
+            Top = 36
+            Width = 85
+            Caption = 'Test'
+            OnClick = btnDBTestClick
+            TabOrder = 14
+          end
+        end
+      end
+    end
     object pnlP00b: TPanel
       Left = 0
       Height = 571
@@ -56,7 +658,7 @@ object FLPMSBackup: TFLPMSBackup
           object cbxDoSort: TCheckBox
             Left = 10
             Height = 21
-            Top = 12
+            Top = 8
             Width = 182
             Caption = 'Sort Instructions in TreeView'
             OnChange = cbxDoSortChange
@@ -65,7 +667,7 @@ object FLPMSBackup: TFLPMSBackup
           object cbxDelete: TCheckBox
             Left = 10
             Height = 21
-            Top = 44
+            Top = 40
             Width = 213
             Caption = 'Discard invalid instructions on Exit'
             TabOrder = 1
@@ -73,10 +675,11 @@ object FLPMSBackup: TFLPMSBackup
           object btnTemplate: TButton
             Left = 10
             Height = 27
-            Top = 74
+            Top = 104
             Width = 75
             Caption = 'Template'
             OnClick = btnTemplateClick
+            ParentShowHint = False
             TabOrder = 2
           end
           object Bevel4: TBevel
@@ -85,6 +688,14 @@ object FLPMSBackup: TFLPMSBackup
             Top = 0
             Width = 2
             Align = alRight
+          end
+          object cbxCompress: TCheckBox
+            Left = 10
+            Height = 21
+            Top = 72
+            Width = 187
+            Caption = 'Compress Output Backup File'
+            TabOrder = 3
           end
         end
         object pnl00b1b: TPanel
@@ -268,601 +879,6 @@ object FLPMSBackup: TFLPMSBackup
           RowSelect = True
           TabOrder = 0
           ViewStyle = vsReport
-        end
-      end
-    end
-    object pnlP00a: TPanel
-      Left = 0
-      Height = 571
-      Top = 0
-      Width = 1037
-      Align = alClient
-      BevelOuter = bvNone
-      ClientHeight = 571
-      ClientWidth = 1037
-      TabOrder = 0
-      object pcInstructions: TPageControl
-        Left = 0
-        Height = 571
-        Top = 0
-        Width = 1037
-        ActivePage = tsInstruction
-        Align = alClient
-        TabIndex = 0
-        TabOrder = 0
-        OnChange = pcInstructionsChange
-        object tsInstruction: TTabSheet
-          Caption = 'Instruction'
-          ClientHeight = 536
-          ClientWidth = 1031
-          object pnlP00a2: TPanel
-            Left = 0
-            Height = 134
-            Top = 0
-            Width = 1031
-            Align = alTop
-            Anchors = [akTop, akLeft, akRight, akBottom]
-            BevelOuter = bvNone
-            ClientHeight = 134
-            ClientWidth = 1031
-            TabOrder = 0
-            object Label4: TLabel
-              Left = 12
-              Height = 17
-              Top = 42
-              Width = 74
-              Caption = 'Backup Type:'
-              ParentColor = False
-              ParentShowHint = False
-            end
-            object cbxType: TComboBox
-              Left = 150
-              Height = 27
-              Top = 38
-              Width = 150
-              ItemHeight = 0
-              ItemIndex = 1
-              Items.Strings = (
-                'Hourly'
-                'Daily'
-                'Weekly'
-              )
-              OnChange = cbxTypeChange
-              TabOrder = 1
-              Text = 'Daily'
-            end
-            object lblL01: TLabel
-              Left = 12
-              Height = 17
-              Top = 74
-              Width = 24
-              Caption = 'T01:'
-              ParentColor = False
-              ParentShowHint = False
-            end
-            object cbxT01: TComboBox
-              Left = 150
-              Height = 27
-              Top = 70
-              Width = 150
-              ItemHeight = 0
-              ItemIndex = 0
-              Items.Strings = (
-                ''
-              )
-              OnChange = edtInstrNameCChange
-              TabOrder = 2
-            end
-            object lblL02: TLabel
-              Left = 334
-              Height = 17
-              Top = 74
-              Width = 21
-              Caption = 'T02'
-              ParentColor = False
-              ParentShowHint = False
-            end
-            object cbxT02: TComboBox
-              Left = 456
-              Height = 27
-              Top = 70
-              Width = 150
-              ItemHeight = 0
-              ItemIndex = 0
-              Items.Strings = (
-                ''
-              )
-              OnChange = edtInstrNameCChange
-              TabOrder = 3
-            end
-            object lblL03: TLabel
-              Left = 658
-              Height = 17
-              Top = 74
-              Width = 21
-              Caption = 'T03'
-              ParentColor = False
-              ParentShowHint = False
-            end
-            object cbxT03: TComboBox
-              Left = 772
-              Height = 27
-              Top = 70
-              Width = 150
-              ItemHeight = 0
-              ItemIndex = 0
-              Items.Strings = (
-                ''
-              )
-              OnChange = edtInstrNameCChange
-              TabOrder = 4
-            end
-            object Label6: TLabel
-              Left = 12
-              Height = 17
-              Top = 106
-              Width = 77
-              Caption = 'SMS Number:'
-              ParentColor = False
-              ParentShowHint = False
-            end
-            object edtSMSNumber: TEdit
-              Left = 150
-              Height = 27
-              Top = 102
-              Width = 106
-              OnChange = edtInstrNameCChange
-              ParentShowHint = False
-              TabOrder = 5
-            end
-            object rbSMSSuccess: TRadioButton
-              Left = 270
-              Height = 21
-              Top = 106
-              Width = 113
-              Caption = 'SMS on Success'
-              OnChange = edtInstrNameCChange
-              TabOrder = 6
-            end
-            object rbSMSFailure: TRadioButton
-              Left = 410
-              Height = 21
-              Top = 106
-              Width = 106
-              Caption = 'SMS on Failure'
-              OnChange = edtInstrNameCChange
-              TabOrder = 7
-            end
-            object rbSMSNever: TRadioButton
-              Left = 700
-              Height = 21
-              Top = 106
-              Width = 115
-              Caption = 'Never send SMS'
-              OnChange = edtInstrNameCChange
-              TabOrder = 9
-            end
-            object rbSMSAlways: TRadioButton
-              Left = 550
-              Height = 21
-              Top = 106
-              Width = 120
-              Caption = 'Always send SMS'
-              Checked = True
-              OnChange = edtInstrNameCChange
-              TabOrder = 8
-              TabStop = True
-            end
-            object edtLastBackup: TEdit
-              Left = 150
-              Height = 27
-              Top = 6
-              Width = 838
-              Anchors = [akTop, akLeft, akRight]
-              ParentShowHint = False
-              ReadOnly = True
-              TabOrder = 0
-            end
-            object btnOpenLB: TSpeedButton
-              Left = 992
-              Height = 26
-              Top = 6
-              Width = 28
-              Anchors = [akTop, akRight]
-              Glyph.Data = {
-                36030000424D3803000000000000360000002800000010000000100000000100
-                18000000000000000000120B0000120B00000000000000000000FF00FF0274AC
-                0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274
-                AC0274ACFF00FFFF00FF0274AC138AC457B7E06BCBF84BBFF74ABFF74ABFF74A
-                BFF74ABFF64ABFF74ABFF64BC0F72398CC0274ACFF00FFFF00FF0274AC33AAE0
-                2392C489D9FA54C7F854C7F753C7F854C7F754C7F854C7F854C7F853C7F7279D
-                CE6ACBE50274ACFF00FF0274AC57CAF80274AC99E3FB5ED1FA5ED1FA5ED1FA5E
-                D1FA5ED1FA5FD1FA5ED1F85ED1F82CA1CE99EDF70274ACFF00FF0274AC5ED3FA
-                0B81B782D5EF79E0FA6ADCFA69DCFB69DCFB6ADCFB69DCFB69DCFA6ADDFB2FA6
-                CF9FF0F70274ACFF00FF0274AC68DAFB2BA4D14AB2D797EBFC74E5FB74E5FB74
-                E5FC74E5FC74E5FB74E5FC046B0B33A9CFA3F4F752BBD70274AC0274AC70E3FB
-                5CD1EF1184B6FCFFFFB8F4FEBAF4FEBAF4FEBAF4FEB8F4FE046B0B25AA42046B
-                0BD4F7FACAF3F70274AC0274AC7AEBFE7AEBFC0A7FB50274AC0274AC0274AC02
-                74AC0274AC046B0B38CE6547E77F29B44A046B0B0274AC0274AC0274AC83F2FE
-                82F3FE82F3FE83F2FC83F3FE82F3FE83F2FE046B0B2DC0513FDC6E3ED86E46E5
-                7B28B04A046B0BFF00FF0274ACFEFEFE89FAFF89FAFE89FAFE8AF8FE8AFAFE04
-                6B0B046B0B046B0B046B0B3CD86A2EBF53046B0B046B0B046B0BFF00FF0274AC
-                FEFEFE8FFEFF8FFEFF8FFEFF0273A32BA4D12BA4D12BA4D1046B0B35D35E20A7
-                3A046B0BFF00FFFF00FFFF00FFFF00FF0274AC0274AC0274AC0274ACFF00FFFF
-                00FFFF00FFFF00FF046B0B28C24A046B0BFF00FFFF00FFFF00FFFF00FFFF00FF
-                FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B17A42B19A730046B
-                0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
-                00FFFF00FF046B0B11A122046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
-                FF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B046B0B046B0BFF00FFFF00
-                FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
-                6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
-              }
-              OnClick = btnOpenLBClick
-            end
-            object Label5: TLabel
-              Left = 12
-              Height = 17
-              Top = 10
-              Width = 70
-              Caption = 'Last Backup:'
-              ParentColor = False
-              ParentShowHint = False
-            end
-          end
-          object pnlP00a3: TPanel
-            Left = 0
-            Height = 402
-            Top = 134
-            Width = 1031
-            Align = alBottom
-            Anchors = [akTop, akLeft, akRight, akBottom]
-            BevelOuter = bvNone
-            Caption = 'pnlP00a3'
-            ClientHeight = 402
-            ClientWidth = 1031
-            TabOrder = 1
-            object lvLogSel: TListView
-              Left = 0
-              Height = 402
-              Top = 0
-              Width = 1031
-              Align = alClient
-              Columns = <              
-                item
-                  Caption = 'Date'
-                  Width = 100
-                end              
-                item
-                  Caption = 'Time'
-                  Width = 100
-                end              
-                item
-                  Caption = 'Instruction'
-                  Width = 100
-                end              
-                item
-                  AutoSize = True
-                  Caption = 'Message'
-                  Width = 714
-                end>
-              GridLines = True
-              HideSelection = False
-              ReadOnly = True
-              RowSelect = True
-              TabOrder = 0
-              ViewStyle = vsReport
-            end
-          end
-        end
-        object tsConfiguration: TTabSheet
-          Caption = 'Configuration'
-          ClientHeight = 536
-          ClientWidth = 1031
-          object Label10: TLabel
-            Left = 8
-            Height = 17
-            Top = 8
-            Width = 119
-            Caption = 'Backup Instruction:'
-            Font.Height = -13
-            Font.Style = [fsBold, fsUnderline]
-            ParentColor = False
-            ParentFont = False
-          end
-          object Label11: TLabel
-            Left = 16
-            Height = 15
-            Top = 40
-            Width = 95
-            Caption = 'Instruction Name:'
-            ParentColor = False
-          end
-          object edtInstrNameC: TEdit
-            Left = 160
-            Height = 23
-            Top = 36
-            Width = 272
-            OnChange = edtInstrNameCChange
-            TabOrder = 0
-          end
-          object Label12: TLabel
-            Left = 16
-            Height = 15
-            Top = 72
-            Width = 63
-            Caption = 'Host Name:'
-            ParentColor = False
-          end
-          object edtHostNameC: TEdit
-            Left = 160
-            Height = 23
-            Top = 68
-            Width = 272
-            OnChange = edtInstrNameCChange
-            TabOrder = 3
-          end
-          object Label13: TLabel
-            Left = 16
-            Height = 15
-            Top = 104
-            Width = 53
-            Caption = 'Template:'
-            ParentColor = False
-          end
-          object edtTemplateC: TEdit
-            Left = 160
-            Height = 23
-            Top = 100
-            Width = 862
-            Anchors = [akTop, akLeft, akRight]
-            OnChange = edtInstrNameCChange
-            TabOrder = 6
-          end
-          object Label14: TLabel
-            Left = 16
-            Height = 15
-            Top = 136
-            Width = 91
-            Caption = 'Backup Location:'
-            ParentColor = False
-          end
-          object edtLocationC: TDirectoryEdit
-            Left = 160
-            Height = 23
-            Top = 132
-            Width = 862
-            OnAcceptDirectory = edtLocationAcceptDirectory
-            ShowHidden = False
-            ButtonWidth = 28
-            NumGlyphs = 1
-            Anchors = [akTop, akLeft, akRight]
-            MaxLength = 0
-            TabOrder = 7
-            OnButtonClick = edtLocationButtonClick
-            OnChange = edtInstrNameCChange
-          end
-          object Label15: TLabel
-            Left = 16
-            Height = 15
-            Top = 168
-            Width = 84
-            Caption = 'Read Block Size:'
-            ParentColor = False
-          end
-          object speBlockSizeC: TSpinEdit
-            Left = 160
-            Height = 23
-            Top = 164
-            Width = 118
-            MaxValue = 100000
-            MinValue = 1
-            OnChange = edtInstrNameCChange
-            TabOrder = 8
-            Value = 1
-          end
-          object Label16: TLabel
-            Left = 16
-            Height = 15
-            Top = 200
-            Width = 80
-            Caption = 'Backup Viewer:'
-            ParentColor = False
-          end
-          object edtViewerC: TEdit
-            Left = 160
-            Height = 23
-            Top = 196
-            Width = 831
-            Anchors = [akTop, akLeft, akRight]
-            OnChange = edtInstrNameCChange
-            TabOrder = 9
-          end
-          object btnViewer: TSpeedButton
-            Left = 994
-            Height = 26
-            Top = 196
-            Width = 28
-            Anchors = [akTop, akRight]
-            Glyph.Data = {
-              36030000424D3803000000000000360000002800000010000000100000000100
-              18000000000000000000120B0000120B00000000000000000000FF00FF0274AC
-              0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274
-              AC0274ACFF00FFFF00FF0274AC138AC457B7E06BCBF84BBFF74ABFF74ABFF74A
-              BFF74ABFF64ABFF74ABFF64BC0F72398CC0274ACFF00FFFF00FF0274AC33AAE0
-              2392C489D9FA54C7F854C7F753C7F854C7F754C7F854C7F854C7F853C7F7279D
-              CE6ACBE50274ACFF00FF0274AC57CAF80274AC99E3FB5ED1FA5ED1FA5ED1FA5E
-              D1FA5ED1FA5FD1FA5ED1F85ED1F82CA1CE99EDF70274ACFF00FF0274AC5ED3FA
-              0B81B782D5EF79E0FA6ADCFA69DCFB69DCFB6ADCFB69DCFB69DCFA6ADDFB2FA6
-              CF9FF0F70274ACFF00FF0274AC68DAFB2BA4D14AB2D797EBFC74E5FB74E5FB74
-              E5FC74E5FC74E5FB74E5FC046B0B33A9CFA3F4F752BBD70274AC0274AC70E3FB
-              5CD1EF1184B6FCFFFFB8F4FEBAF4FEBAF4FEBAF4FEB8F4FE046B0B25AA42046B
-              0BD4F7FACAF3F70274AC0274AC7AEBFE7AEBFC0A7FB50274AC0274AC0274AC02
-              74AC0274AC046B0B38CE6547E77F29B44A046B0B0274AC0274AC0274AC83F2FE
-              82F3FE82F3FE83F2FC83F3FE82F3FE83F2FE046B0B2DC0513FDC6E3ED86E46E5
-              7B28B04A046B0BFF00FF0274ACFEFEFE89FAFF89FAFE89FAFE8AF8FE8AFAFE04
-              6B0B046B0B046B0B046B0B3CD86A2EBF53046B0B046B0B046B0BFF00FF0274AC
-              FEFEFE8FFEFF8FFEFF8FFEFF0273A32BA4D12BA4D12BA4D1046B0B35D35E20A7
-              3A046B0BFF00FFFF00FFFF00FFFF00FF0274AC0274AC0274AC0274ACFF00FFFF
-              00FFFF00FFFF00FF046B0B28C24A046B0BFF00FFFF00FFFF00FFFF00FFFF00FF
-              FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B17A42B19A730046B
-              0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
-              00FFFF00FF046B0B11A122046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
-              FF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B046B0B046B0BFF00FFFF00
-              FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
-              6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
-            }
-            OnClick = btnViewerClick
-          end
-          object Label17: TLabel
-            Left = 8
-            Height = 17
-            Top = 230
-            Width = 87
-            Caption = 'SMS Provider:'
-            Font.Height = -13
-            Font.Style = [fsBold, fsUnderline]
-            ParentColor = False
-            ParentFont = False
-          end
-          object Label18: TLabel
-            Left = 16
-            Height = 15
-            Top = 262
-            Width = 82
-            Caption = 'Provider Name:'
-            ParentColor = False
-          end
-          object cbSMSProviderC: TComboBox
-            Left = 160
-            Height = 23
-            Top = 258
-            Width = 118
-            ItemHeight = 0
-            ItemIndex = 0
-            Items.Strings = (
-              'Inactive'
-              'SMS Portal'
-              'BulkSMS'
-              'WinSMS'
-            )
-            OnChange = edtInstrNameCChange
-            Style = csDropDownList
-            TabOrder = 10
-            Text = 'Inactive'
-          end
-          object lblSMSUser: TLabel
-            Left = 16
-            Height = 15
-            Top = 303
-            Width = 40
-            Caption = 'User ID:'
-            ParentColor = False
-          end
-          object edtSMSUserC: TEdit
-            Left = 160
-            Height = 23
-            Top = 290
-            Width = 221
-            OnChange = edtInstrNameCChange
-            TabOrder = 12
-          end
-          object lblSMSPass: TLabel
-            Left = 16
-            Height = 15
-            Top = 338
-            Width = 53
-            Caption = 'Password:'
-            ParentColor = False
-          end
-          object edtSMSPassC: TEdit
-            Left = 160
-            Height = 23
-            Top = 322
-            Width = 221
-            EchoMode = emPassword
-            OnChange = edtInstrNameCChange
-            PasswordChar = '*'
-            TabOrder = 13
-          end
-          object btnSMSTest: TButton
-            Left = 296
-            Height = 25
-            Hint = 'Click to test SMS Login Credentials'
-            Top = 258
-            Width = 85
-            Caption = 'Test'
-            OnClick = btnSMSTestClick
-            TabOrder = 11
-          end
-          object cbxDBSuffixC: TCheckBox
-            Left = 751
-            Height = 19
-            Top = 40
-            Width = 104
-            Caption = ' LPMS Database'
-            OnChange = edtInstrNameCChange
-            TabOrder = 2
-          end
-          object Label2: TLabel
-            Left = 466
-            Height = 15
-            Top = 72
-            Width = 40
-            Caption = 'User ID:'
-            ParentColor = False
-          end
-          object edtDBUserC: TEdit
-            Left = 560
-            Height = 23
-            Top = 68
-            Width = 160
-            OnChange = edtInstrNameCChange
-            TabOrder = 4
-          end
-          object Label3: TLabel
-            Left = 753
-            Height = 15
-            Top = 72
-            Width = 53
-            Caption = 'Password:'
-            ParentColor = False
-          end
-          object edtDBPassC: TEdit
-            Left = 864
-            Height = 23
-            Top = 68
-            Width = 160
-            EchoMode = emPassword
-            OnChange = edtInstrNameCChange
-            PasswordChar = '*'
-            TabOrder = 5
-          end
-          object Label19: TLabel
-            Left = 466
-            Height = 15
-            Top = 40
-            Width = 51
-            Caption = 'Database:'
-            ParentColor = False
-          end
-          object edtDBPrefixC: TEdit
-            Left = 560
-            Height = 23
-            Top = 36
-            Width = 160
-            OnChange = edtInstrNameCChange
-            TabOrder = 1
-          end
-          object btnDBTest: TButton
-            Left = 939
-            Height = 25
-            Hint = 'Click to test Database connectivity'
-            Top = 36
-            Width = 85
-            Caption = 'Test'
-            OnClick = btnDBTestClick
-            TabOrder = 14
-          end
         end
       end
     end
@@ -5808,7 +5824,7 @@ object FLPMSBackup: TFLPMSBackup
     PoweredBy.About.Description.Strings = (
       'Component that shows a Powered By graphic.'#10'Use method ShowPoweredByForm in your form.create()'#10'to use the component'
     )
-    PoweredBy.About.Title = 'About About About About About PoweredBy component'
+    PoweredBy.About.Title = 'About About About About About About About PoweredBy component'
     PoweredBy.About.Height = 280
     PoweredBy.About.Width = 400
     PoweredBy.About.Font.Color = clNavy

@@ -37,7 +37,8 @@ uses
 
   Classes, SysUtils, sqldb, LCLType, Forms, Controls, Graphics, Dialogs,
   ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn, Spin,
-  usplashabout, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils;
+  usplashabout, strutils, INIFiles, HTTPSend, Synacode, DateUtils,
+  LazFileUtils, Zipper;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -46,13 +47,14 @@ type
 
   { TFLPMSBackup }
 
-  TFLPMSBackup = class(TForm)
-  ActionsRestore: TAction;
-  Bevel4: TBevel;
-  Bevel5: TBevel;
-  Bevel6: TBevel;
+   TFLPMSBackup = class(TForm)
+   ActionsRestore: TAction;
+   Bevel4: TBevel;
+   Bevel5: TBevel;
+   Bevel6: TBevel;
    btnDBTest: TButton;
    btnTemplate: TButton;
+   cbxCompress: TCheckBox;
    cbxDoSort: TCheckBox;
    cbxDelete: TCheckBox;
    FileDelete: TAction;
@@ -168,62 +170,62 @@ type
    btnLast: TToolButton;
    btnPrev: TToolButton;
    ActionsMinimise: TAction;
-    Bevel2: TBevel;
-    btnOpenLB: TSpeedButton;
-    edtLastBackup: TEdit;
-    imgTree: TImageList;
-    Label5: TLabel;
-    lvLogSel: TListView;
-    lvLogAll: TListView;
-    MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
-    pnlP00b: TPanel;
-    pnlP00: TPanel;
-    pnlP00a: TPanel;
-    pnlP02: TPanel;
-    pnlP00a3: TPanel;
-    rbSMSAlways: TRadioButton;
-    jvBrowse: TSelectDirectoryDialog;
-    splSplit01: TSplitter;
-    btnCancel: TButton;
-    btnClose: TButton;
-    btnRunNow: TButton;
-    btnMinimise: TButton;
-    btnUpdate: TButton;
-    cbxT01: TComboBox;
-    cbxT02: TComboBox;
-    cbxT03: TComboBox;
-    cbxType: TComboBox;
-    edtSMSNumber: TEdit;
-    FileClose: TAction;
-    actList: TActionList;
-    Image1: TImage;
-    Label1: TLabel;
-    Label4: TLabel;
-    Label6: TLabel;
-    lblL01: TLabel;
-    lblL02: TLabel;
-    lblL03: TLabel;
-    lblL04: TLabel;
-    lblL05: TLabel;
-    dlgOpen: TOpenDialog;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    pnlP03: TPanel;
-    pnlP00a2: TPanel;
-    pnlP01: TPanel;
-    pumTray: TPopupMenu;
-    rbSMSFailure: TRadioButton;
-    rbSMSNever: TRadioButton;
-    rbSMSSuccess: TRadioButton;
-    sqlQry1: TSQLQuery;
-    sqlTran: TSQLTransaction;
-    sbStatus: TStatusBar;
-    timTimer2: TTimer;
-    timTimer1: TTimer;
-    TrayIcon: TTrayIcon;
-    tvSmall: TTreeView;
-    tvInstructions: TTreeView;
+   Bevel2: TBevel;
+   btnOpenLB: TSpeedButton;
+   edtLastBackup: TEdit;
+   imgTree: TImageList;
+   Label5: TLabel;
+   lvLogSel: TListView;
+   lvLogAll: TListView;
+   MenuItem3: TMenuItem;
+   MenuItem4: TMenuItem;
+   pnlP00b: TPanel;
+   pnlP00: TPanel;
+   pnlP00a: TPanel;
+   pnlP02: TPanel;
+   pnlP00a3: TPanel;
+   rbSMSAlways: TRadioButton;
+   jvBrowse: TSelectDirectoryDialog;
+   splSplit01: TSplitter;
+   btnCancel: TButton;
+   btnClose: TButton;
+   btnRunNow: TButton;
+   btnMinimise: TButton;
+   btnUpdate: TButton;
+   cbxT01: TComboBox;
+   cbxT02: TComboBox;
+   cbxT03: TComboBox;
+   cbxType: TComboBox;
+   edtSMSNumber: TEdit;
+   FileClose: TAction;
+   actList: TActionList;
+   Image1: TImage;
+   Label1: TLabel;
+   Label4: TLabel;
+   Label6: TLabel;
+   lblL01: TLabel;
+   lblL02: TLabel;
+   lblL03: TLabel;
+   lblL04: TLabel;
+   lblL05: TLabel;
+   dlgOpen: TOpenDialog;
+   MenuItem1: TMenuItem;
+   MenuItem2: TMenuItem;
+   pnlP03: TPanel;
+   pnlP00a2: TPanel;
+   pnlP01: TPanel;
+   pumTray: TPopupMenu;
+   rbSMSFailure: TRadioButton;
+   rbSMSNever: TRadioButton;
+   rbSMSSuccess: TRadioButton;
+   sqlQry1: TSQLQuery;
+   sqlTran: TSQLTransaction;
+   sbStatus: TStatusBar;
+   timTimer2: TTimer;
+   timTimer1: TTimer;
+   TrayIcon: TTrayIcon;
+   tvSmall: TTreeView;
+   tvInstructions: TTreeView;
 
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -391,10 +393,11 @@ const
                                            '24', '25', '26', '27', '28', '29',
                                            '30', '31');
 
-   MinArray    : array[1..4] of string  = ('00', '15', '30', '45');
+   MinArray    : array[1..12] of string = ('00', '05', '10', '15', '20', '25',
+                                           '30', '35', '40', '45', '50', '55');
 
    SMSProvider : array[1..4] of string  = ('Inactive', 'SMS Portal',
-                                          'BulkSMS', 'WinSMS');
+                                           'BulkSMS', 'WinSMS');
 
    function  GetInstruction() : integer;
    procedure ShowInstruction();
@@ -699,15 +702,13 @@ begin
 
 //--- Save the Configuration File
 
-//*** Remove
-   btnTemplateClick(Sender);
-//*** Remove
-
    IniFile := TINIFile.Create(CfgFile);
 
    IniFile.WriteString('Config','String',CfgStr);
+
    IniFile.WriteBool('Parameters','Sort',cbxDoSort.Checked);
    IniFile.WriteBool('Parameters','Discard',cbxDelete.Checked);
+   IniFile.WriteBool('Parameters','Compress',cbxCompress.Checked);
 
    IniFile.WriteInteger('Template','BackupBlock',BackupTemplate.Instr_Rec.BackupBlock);
    IniFile.WriteInteger('Template','BackupSMSProvider',BackupTemplate.Instr_Rec.BackupSMSProvider);
@@ -786,10 +787,6 @@ begin
    ThisNode.Selected := True;
 
    lvLogSel.Clear;
-
-//--- TEMP
-
-   btnTemplateClick(Sender);
 
 //--- Prepare the new entry with the defaults contained in the Template
 
@@ -1648,7 +1645,7 @@ begin
       lblL01.Caption := 'Minute Mark:';
       cbxT01.Clear;
 
-      for idx := 1 to 4 do
+      for idx := 1 to 12 do
          cbxT01.Items.Add(MinArray[idx]);
 
       lblL02.Visible := false;
@@ -1665,7 +1662,7 @@ begin
       lblL02.Caption := 'Select Minute:';
       cbxT02.Clear;
 
-      for idx := 1 to 4 do
+      for idx := 1 to 12 do
          cbxT02.Items.Add(MinArray[idx]);
 
       lblL02.Visible := true;
@@ -1688,7 +1685,7 @@ begin
       lblL03.Caption := 'Select Minute:';
       cbxT03.Clear;
 
-      for idx := 1 to 4 do
+      for idx := 1 to 12 do
          cbxT03.Items.Add(MinArray[idx]);
 
       lblL02.Visible := true;
@@ -1696,6 +1693,7 @@ begin
       lblL03.Visible := true;
       cbxT03.Visible := true;
 
+{
    end else if (cbxType.Text = 'Monthly') then begin
 
       lblL01.Caption := 'Select Day:';
@@ -1713,14 +1711,14 @@ begin
       lblL03.Caption := 'Select Minute:';
       cbxT03.Clear;
 
-      for idx := 1 to 4 do
+      for idx := 1 to 12 do
          cbxT03.Items.Add(MinArray[idx]);
 
       lblL02.Visible := true;
       cbxT02.Visible := true;
       lblL03.Visible := true;
       cbxT03.Visible := true;
-
+}
    end;
 
    cbxT01.ItemIndex := 0;
@@ -2716,7 +2714,9 @@ begin
    OutFile := AnsiReplaceStr(OutFile,'&Instruction',Instr_List[ActiveInstr].Instruction);
    OutFile := AnsiReplaceStr(OutFile,'&HostName',Instr_List[ActiveInstr].Instr_Rec.BackupHostName);
    OutFile := AnsiReplaceStr(OutFile,'&BackupType',cbxType.Text);
-   OutFile := AnsiReplaceStr(OutFile,'&DBPrefix',Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
+   OutFile := AnsiReplaceStr(OutFile,'&DBPrefix',Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix);
+   OutFile := AnsiReplaceStr(OutFile,'&DBSuffix',Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
+   OutFile := AnsiReplaceStr(OutFile,'&OSName',OSName);
 
    DispLogMsg('------ Backup will be saved to "' + OutFile + '"');
    StartTime := Now;
@@ -2809,6 +2809,7 @@ var
    TableNames                                             : TStringList;
    FieldNames                                             : TList;
    Fields_Rec                                             : ^Fields_Struct;
+   ThisZipper                                             : TZipper;
 
 begin
 
@@ -3122,6 +3123,22 @@ begin
    WriteLn(BackupFile,ThisLine);
    CloseFile(BackupFile);
 
+//--- Compress the output file if cbxCompress is checked
+
+   if cbxCompress.Checked = True then begin
+
+      ThisZipper := TZipper.Create;
+
+      ThisZipper.FileName := Instr_List[ActiveInstr].Instr_Rec.BackupLocation + ChangeFileExt(ExtractFileName(FileName),'.zip');
+      ThisZipper.Entries.AddFileEntry(FileName);
+      ThisZipper.ZipAllFiles;
+
+      ThisZipper.Free;
+
+      DeleteFile(FileName);
+
+   end;
+
 //--- Clear and delete the Lists that were used
 
    TableNames.Free;
@@ -3157,19 +3174,6 @@ var
    ThisDays, BackupDay, CurrentDay        : integer;
    DispDate, DispTime, ThisDate, ThisTime : string;
    BackupTime, ThisBackupMsg              : string;
-
-{
-const
-   WeekDays : array[1..7]  of string = ('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-
-   WeekArray : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
-               'Wednesday', 'Thursday', 'Friday', 'Saturday');
-   HourArray : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
-               '06', '07', '08', '09', '10', '11', '12', '13', '14', '15',
-               '16', '17', '18', '19', '20', '21', '22', '23', '24', '25',
-               '26', '27', '28', '29', '30', '31');
-   MinArray  : array[1..4]  of string = ('00', '15', '30', '45');
-}
 
 begin
 
@@ -3493,10 +3497,10 @@ end;
 //---------------------------------------------------------------------------
 procedure TFLPMSBackup.DispLogMsg(RecCount : integer);
 var
-   ThisNum                    : double;
-   ThisMsg, ThisPart, RecPart : string;
-   ThisItem                   : TListItem;
-   SearchRec                  : TSearchRec;
+   ThisNum                              : double;
+   ThisMsg, ThisPart, RecPart, ThisFile : string;
+   ThisItem                             : TListItem;
+   SearchRec                            : TSearchRec;
 
 begin
 
@@ -3509,7 +3513,12 @@ begin
 
    if RecCount = -1 then begin
 
-      if (FindFirst(ExpandFileName(OutFile),faAnyFile,SearchRec) = 0) then
+      if cbxCompress.Checked = False then
+         ThisFile := OutFile
+      else
+         ThisFile := ChangeFileExt(OutFile,'.zip');
+
+      if (FindFirst(ExpandFileName(ThisFile),faAnyFile,SearchRec) = 0) then
          ThisNum := SearchRec.Size
       else
          ThisNum := 0;
@@ -3649,14 +3658,15 @@ begin
    InstrTokens := TStringList.Create;
    CfgInstr    := TStringList.Create;
 
-   if (FileExists(FileName) = true) then begin
+   if FileExists(FileName) = True then begin
 
       IniFile := TINIFile.Create(FileName);
 
       cfgStr := IniFile.ReadString('Config','String','New Instruction|');
 
-      cbxDoSort.Checked := IniFile.ReadBool('Parameters','Sort',False);
-      cbxDelete.Checked := IniFile.ReadBool('Parameters','Discard',False);
+      cbxDoSort.Checked   := IniFile.ReadBool('Parameters','Sort',False);
+      cbxDelete.Checked   := IniFile.ReadBool('Parameters','Discard',False);
+      cbxCompress.Checked := IniFile.ReadBool('Parameters','Compress',True);
 
 
       BackupTemplate.Instr_Rec.BackupBlock       := IniFile.ReadInteger('Template','BackupBlock',5000);
@@ -3753,11 +3763,9 @@ begin
 
 //--- Extract the information contained in the 'registry'
 
-      if (FileExists(RegString) = false) then begin
+      if FileExists(RegString) = False then begin
 
          ThisNodeS.Delete;
-
-         btnTemplateClick(Application);
 
          Instr_List[idx1].Instr_Rec.BackupBlock           := BackupTemplate.Instr_Rec.BackupBlock;
          Instr_List[idx1].Instr_Rec.BackupSMSProvider     := BackupTemplate.Instr_Rec.BackupSMSProvider;

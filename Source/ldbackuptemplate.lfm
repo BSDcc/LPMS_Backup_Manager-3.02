@@ -1,7 +1,7 @@
 object FLPMSBackupTemplate: TFLPMSBackupTemplate
-  Left = 1051
+  Left = 551
   Height = 365
-  Top = 63
+  Top = 57
   Width = 668
   Caption = 'FLPMSBackupTemplate'
   ClientHeight = 365
