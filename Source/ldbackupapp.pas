@@ -435,6 +435,8 @@ var
 
 implementation
 
+uses ldBackupTemplate;
+
 {$R *.lfm}
 
 { TFLPMSBackup }
@@ -1737,7 +1739,37 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.btnTemplateClick(Sender: TObject);
 begin
+   FLPMSBackup.Hide;
 
+   FLPMSBackupTemplate := TFLPMSBackupTemplate.Create(Application);
+
+   FLPMSBackupTemplate.ShowModal;
+   FLPMSBackupTemplate.Destroy;
+
+   FLPMSBackup.Show;
+{
+FLPMSBackup.Hide;
+
+FLPMSBackupSMSConfig := TFLPMSBackupSMSConfig.Create(Application);
+
+//--- Set the values to be used in the config utility
+
+FLPMSBackupSMSConfig.SMSProvider  := KeepSMSProvider;
+FLPMSBackupSMSConfig.BackupBlock  := KeepBackupBlock;
+FLPMSBackupSMSConfig.SMSUser      := SMSUserID;
+FLPMSBackupSMSConfig.SMSPassword  := SMSPassword;
+FLPMSBackupSMSConfig.DBPrefix     := DBPrefix;
+FLPMSBackupSMSConfig.MultiCompany := MultiCompany;
+FLPMSBackupSMSConfig.BackupViewer := BackupViewer;
+
+FLPMSBackupSMSConfig.ShowModal;
+FLPMSBackupSMSConfig.Destroy;
+
+FLPMSBackup.Show;
+
+}
+
+{
    BackupTemplate.Active := False;
    BackupTemplate.Ini_File := '';
    BackupTemplate.Instruction := '';
@@ -1766,6 +1798,7 @@ begin
    BackupTemplate.Instr_Rec.BackupTemplate := '&Date@&Time - &BackupType Backup of &Instruction on &HostName';
    BackupTemplate.Instr_Rec.BackupViewer := '/usr/bin/gedit';
    BackupTemplate.Instr_Rec.BackupSMSProviderName := '';
+}
 
 end;
 
@@ -3869,14 +3902,10 @@ begin
 
    ActiveName := '';
 
-//   if NumInstr > 0 then begin
-
-      try
-         CfgInstr.Free;
-      except
-      end;
-
-//   end;
+   try
+      CfgInstr.Free;
+   except
+   end;
 
    try
       InstrTokens.Free;

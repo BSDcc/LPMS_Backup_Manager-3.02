@@ -1,0 +1,435 @@
+object FLPMSBackupTemplate: TFLPMSBackupTemplate
+  Left = 1051
+  Height = 365
+  Top = 63
+  Width = 668
+  Caption = 'FLPMSBackupTemplate'
+  ClientHeight = 365
+  ClientWidth = 668
+  OnActivate = FormActivate
+  Position = poScreenCenter
+  LCLVersion = '2.0.6.0'
+  object Label1: TLabel
+    Left = 8
+    Height = 17
+    Top = 12
+    Width = 66
+    Caption = 'Host Name:'
+    ParentColor = False
+  end
+  object cbSMSProvider: TComboBox
+    Left = 100
+    Height = 25
+    Top = 201
+    Width = 118
+    ItemHeight = 0
+    Items.Strings = (
+      'Inactive'
+      'SMS Portal'
+      'BulkSMS'
+      'WinSMS'
+    )
+    Style = csDropDownList
+    TabOrder = 8
+  end
+  object btnSMSTest: TButton
+    Left = 572
+    Height = 28
+    Hint = 'Click to test SMS Login Credentials'
+    Top = 8
+    Width = 85
+    Anchors = [akTop, akRight]
+    Caption = 'Test'
+    TabOrder = 23
+  end
+  object lblSMSUser: TLabel
+    Left = 8
+    Height = 17
+    Top = 44
+    Width = 67
+    Caption = 'User Name:'
+    ParentColor = False
+  end
+  object edtDBUser: TEdit
+    Left = 100
+    Height = 27
+    Top = 40
+    Width = 225
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 1
+  end
+  object lblSMSPass: TLabel
+    Left = 337
+    Height = 17
+    Top = 44
+    Width = 57
+    Caption = 'Password:'
+    ParentColor = False
+  end
+  object edtDBPass: TEdit
+    Left = 432
+    Height = 27
+    Top = 40
+    Width = 225
+    Anchors = [akTop, akLeft, akRight]
+    EchoMode = emPassword
+    PasswordChar = '*'
+    TabOrder = 2
+  end
+  object Label3: TLabel
+    Left = 8
+    Height = 17
+    Top = 76
+    Width = 52
+    Caption = 'DBPrefix:'
+    ParentColor = False
+  end
+  object edtDBPrefix: TEdit
+    Left = 100
+    Height = 27
+    Top = 72
+    Width = 225
+    MaxLength = 6
+    TabOrder = 3
+  end
+  object Label2: TLabel
+    Left = 8
+    Height = 17
+    Top = 108
+    Width = 50
+    Caption = 'Location:'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 230
+    Height = 17
+    Top = 204
+    Width = 59
+    Caption = 'Block Size:'
+    ParentColor = False
+  end
+  object btnCancel: TButton
+    Left = 478
+    Height = 28
+    Top = 328
+    Width = 85
+    Caption = 'Cancel'
+    TabOrder = 21
+  end
+  object btnUpdate: TButton
+    Left = 572
+    Height = 28
+    Top = 328
+    Width = 85
+    Caption = 'Update'
+    TabOrder = 22
+  end
+  object speBlockSize: TSpinEdit
+    Left = 319
+    Height = 27
+    Top = 200
+    Width = 118
+    MaxValue = 100000
+    MinValue = 1
+    TabOrder = 9
+    Value = 1
+  end
+  object Label5: TLabel
+    Left = 8
+    Height = 17
+    Top = 140
+    Width = 41
+    Caption = 'Viewer:'
+    ParentColor = False
+  end
+  object edtViewer: TEdit
+    Left = 100
+    Height = 27
+    Top = 136
+    Width = 530
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 6
+  end
+  object btnViewer: TSpeedButton
+    Left = 635
+    Height = 26
+    Top = 136
+    Width = 22
+    Anchors = [akTop, akRight]
+    Glyph.Data = {
+      36030000424D3803000000000000360000002800000010000000100000000100
+      18000000000000000000120B0000120B00000000000000000000FF00FF0274AC
+      0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274AC0274
+      AC0274ACFF00FFFF00FF0274AC138AC457B7E06BCBF84BBFF74ABFF74ABFF74A
+      BFF74ABFF64ABFF74ABFF64BC0F72398CC0274ACFF00FFFF00FF0274AC33AAE0
+      2392C489D9FA54C7F854C7F753C7F854C7F754C7F854C7F854C7F853C7F7279D
+      CE6ACBE50274ACFF00FF0274AC57CAF80274AC99E3FB5ED1FA5ED1FA5ED1FA5E
+      D1FA5ED1FA5FD1FA5ED1F85ED1F82CA1CE99EDF70274ACFF00FF0274AC5ED3FA
+      0B81B782D5EF79E0FA6ADCFA69DCFB69DCFB6ADCFB69DCFB69DCFA6ADDFB2FA6
+      CF9FF0F70274ACFF00FF0274AC68DAFB2BA4D14AB2D797EBFC74E5FB74E5FB74
+      E5FC74E5FC74E5FB74E5FC046B0B33A9CFA3F4F752BBD70274AC0274AC70E3FB
+      5CD1EF1184B6FCFFFFB8F4FEBAF4FEBAF4FEBAF4FEB8F4FE046B0B25AA42046B
+      0BD4F7FACAF3F70274AC0274AC7AEBFE7AEBFC0A7FB50274AC0274AC0274AC02
+      74AC0274AC046B0B38CE6547E77F29B44A046B0B0274AC0274AC0274AC83F2FE
+      82F3FE82F3FE83F2FC83F3FE82F3FE83F2FE046B0B2DC0513FDC6E3ED86E46E5
+      7B28B04A046B0BFF00FF0274ACFEFEFE89FAFF89FAFE89FAFE8AF8FE8AFAFE04
+      6B0B046B0B046B0B046B0B3CD86A2EBF53046B0B046B0B046B0BFF00FF0274AC
+      FEFEFE8FFEFF8FFEFF8FFEFF0273A32BA4D12BA4D12BA4D1046B0B35D35E20A7
+      3A046B0BFF00FFFF00FFFF00FFFF00FF0274AC0274AC0274AC0274ACFF00FFFF
+      00FFFF00FFFF00FF046B0B28C24A046B0BFF00FFFF00FFFF00FFFF00FFFF00FF
+      FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B17A42B19A730046B
+      0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+      00FFFF00FF046B0B11A122046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+      FF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B046B0B046B0BFF00FFFF00
+      FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
+      6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+    }
+  end
+  object edtHostName: TEdit
+    Left = 100
+    Height = 27
+    Top = 8
+    Width = 557
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 0
+  end
+  object Label6: TLabel
+    Left = 337
+    Height = 17
+    Top = 76
+    Width = 51
+    Caption = 'DBSuffix:'
+    ParentColor = False
+  end
+  object edtDBSuffix: TEdit
+    Left = 432
+    Height = 27
+    Top = 72
+    Width = 225
+    MaxLength = 6
+    TabOrder = 4
+  end
+  object deDirectory: TDirectoryEdit
+    Left = 100
+    Height = 27
+    Top = 104
+    Width = 557
+    ShowHidden = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 5
+  end
+  object Label7: TLabel
+    Left = 8
+    Height = 17
+    Top = 172
+    Width = 55
+    Caption = 'Template:'
+    ParentColor = False
+  end
+  object edtTemplate: TEdit
+    Left = 100
+    Height = 27
+    Top = 168
+    Width = 557
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 7
+  end
+  object Label8: TLabel
+    Left = 8
+    Height = 17
+    Top = 268
+    Width = 77
+    Caption = 'SMS Number:'
+    ParentColor = False
+  end
+  object edtSMSNumber: TEdit
+    Left = 100
+    Height = 27
+    Top = 264
+    Width = 120
+    TabOrder = 14
+    Text = '+27833267243'
+  end
+  object rbSuccess: TRadioButton
+    Left = 232
+    Height = 21
+    Top = 266
+    Width = 87
+    Caption = 'On Success'
+    TabOrder = 15
+  end
+  object rbFailure: TRadioButton
+    Left = 344
+    Height = 21
+    Top = 266
+    Width = 80
+    Caption = 'On Failure'
+    TabOrder = 16
+  end
+  object rbAlways: TRadioButton
+    Left = 456
+    Height = 21
+    Top = 266
+    Width = 93
+    Caption = 'Always Send'
+    TabOrder = 17
+  end
+  object rbNever: TRadioButton
+    Left = 568
+    Height = 21
+    Top = 266
+    Width = 88
+    Caption = 'Never Send'
+    Checked = True
+    TabOrder = 18
+    TabStop = True
+  end
+  object lblSMSUser1: TLabel
+    Left = 8
+    Height = 17
+    Top = 300
+    Width = 67
+    Caption = 'User Name:'
+    ParentColor = False
+  end
+  object edtSMSUser: TEdit
+    Left = 100
+    Height = 27
+    Top = 296
+    Width = 225
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 19
+  end
+  object lblSMSPass1: TLabel
+    Left = 337
+    Height = 17
+    Top = 300
+    Width = 57
+    Caption = 'Password:'
+    ParentColor = False
+  end
+  object edtSMSPass: TEdit
+    Left = 432
+    Height = 27
+    Top = 296
+    Width = 225
+    Anchors = [akTop, akLeft, akRight]
+    EchoMode = emPassword
+    PasswordChar = '*'
+    TabOrder = 20
+  end
+  object Label9: TLabel
+    Left = 8
+    Height = 17
+    Top = 204
+    Width = 73
+    Caption = 'SMS Povider:'
+    ParentColor = False
+  end
+  object cbBackupType: TComboBox
+    Left = 538
+    Height = 25
+    Top = 201
+    Width = 118
+    ItemHeight = 0
+    Items.Strings = (
+      'Inactive'
+      'SMS Portal'
+      'BulkSMS'
+      'WinSMS'
+    )
+    Style = csDropDownList
+    TabOrder = 10
+  end
+  object Label10: TLabel
+    Left = 449
+    Height = 17
+    Top = 204
+    Width = 74
+    Caption = 'Backup Type:'
+    ParentColor = False
+  end
+  object lblT01: TLabel
+    Left = 8
+    Height = 17
+    Top = 236
+    Width = 21
+    Caption = 'T01'
+    ParentColor = False
+  end
+  object lblT02: TLabel
+    Left = 230
+    Height = 17
+    Top = 236
+    Width = 21
+    Caption = 'T02'
+    ParentColor = False
+  end
+  object cbT02: TComboBox
+    Left = 319
+    Height = 25
+    Top = 233
+    Width = 118
+    ItemHeight = 0
+    Items.Strings = (
+      'Inactive'
+      'SMS Portal'
+      'BulkSMS'
+      'WinSMS'
+    )
+    Style = csDropDownList
+    TabOrder = 12
+  end
+  object lblT03: TLabel
+    Left = 449
+    Height = 17
+    Top = 236
+    Width = 21
+    Caption = 'T03'
+    ParentColor = False
+  end
+  object cbT03: TComboBox
+    Left = 538
+    Height = 25
+    Top = 233
+    Width = 118
+    ItemHeight = 0
+    Items.Strings = (
+      'Inactive'
+      'SMS Portal'
+      'BulkSMS'
+      'WinSMS'
+    )
+    Style = csDropDownList
+    TabOrder = 13
+  end
+  object cbT01: TComboBox
+    Left = 100
+    Height = 25
+    Top = 233
+    Width = 118
+    ItemHeight = 0
+    Items.Strings = (
+      'Inactive'
+      'SMS Portal'
+      'BulkSMS'
+      'WinSMS'
+    )
+    Style = csDropDownList
+    TabOrder = 11
+  end
+  object dlgOpen: TOpenDialog
+    DefaultExt = '.exe'
+    Filter = 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*'
+    FilterIndex = 0
+    Options = [ofPathMustExist, ofFileMustExist, ofEnableSizing, ofViewDetail]
+    left = 224
+    top = 312
+  end
+  object sdSelDir: TSelectDirectoryDialog
+    left = 128
+    top = 312
+  end
+end
