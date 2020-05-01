@@ -35,6 +35,9 @@
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Linking>
+            <Debugging>
+              <UseHeaptrc Value="True"/>
+            </Debugging>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -86,25 +89,22 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="6">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="pl_ExCompress"/>
+        <PackageName Value="splashabout"/>
       </Item1>
       <Item2>
-        <PackageName Value="splashabout"/>
+        <PackageName Value="FCL"/>
       </Item2>
       <Item3>
-        <PackageName Value="FCL"/>
+        <PackageName Value="IDEIntf"/>
       </Item3>
       <Item4>
-        <PackageName Value="IDEIntf"/>
+        <PackageName Value="SQLDBLaz"/>
       </Item4>
       <Item5>
-        <PackageName Value="SQLDBLaz"/>
-      </Item5>
-      <Item6>
         <PackageName Value="LCL"/>
-      </Item6>
+      </Item5>
     </RequiredPackages>
     <Units Count="3">
       <Unit0>

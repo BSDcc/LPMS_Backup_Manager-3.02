@@ -1,7 +1,7 @@
 object FLPMSBackupTemplate: TFLPMSBackupTemplate
-  Left = 551
+  Left = 619
   Height = 365
-  Top = 57
+  Top = 63
   Width = 668
   Caption = 'FLPMSBackupTemplate'
   ClientHeight = 365
@@ -29,18 +29,9 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
       'BulkSMS'
       'WinSMS'
     )
+    OnChange = edtHostNameChange
     Style = csDropDownList
     TabOrder = 8
-  end
-  object btnSMSTest: TButton
-    Left = 572
-    Height = 28
-    Hint = 'Click to test SMS Login Credentials'
-    Top = 8
-    Width = 85
-    Anchors = [akTop, akRight]
-    Caption = 'Test'
-    TabOrder = 23
   end
   object lblSMSUser: TLabel
     Left = 8
@@ -56,6 +47,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 40
     Width = 225
     Anchors = [akTop, akLeft, akRight]
+    OnChange = edtHostNameChange
     TabOrder = 1
   end
   object lblSMSPass: TLabel
@@ -73,6 +65,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Width = 225
     Anchors = [akTop, akLeft, akRight]
     EchoMode = emPassword
+    OnChange = edtHostNameChange
     PasswordChar = '*'
     TabOrder = 2
   end
@@ -90,6 +83,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 72
     Width = 225
     MaxLength = 6
+    OnChange = edtHostNameChange
     TabOrder = 3
   end
   object Label2: TLabel
@@ -114,6 +108,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 328
     Width = 85
     Caption = 'Cancel'
+    OnClick = btnCancelClick
     TabOrder = 21
   end
   object btnUpdate: TButton
@@ -122,6 +117,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 328
     Width = 85
     Caption = 'Update'
+    OnClick = btnUpdateClick
     TabOrder = 22
   end
   object speBlockSize: TSpinEdit
@@ -131,6 +127,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Width = 118
     MaxValue = 100000
     MinValue = 1
+    OnChange = edtHostNameChange
     TabOrder = 9
     Value = 1
   end
@@ -148,6 +145,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 136
     Width = 530
     Anchors = [akTop, akLeft, akRight]
+    OnChange = edtHostNameChange
     TabOrder = 6
   end
   object btnViewer: TSpeedButton
@@ -184,6 +182,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
       FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF046B0B046B0B04
       6B0B046B0BFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
     }
+    OnClick = btnViewerClick
   end
   object edtHostName: TEdit
     Left = 100
@@ -191,6 +190,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 8
     Width = 557
     Anchors = [akTop, akLeft, akRight]
+    OnChange = edtHostNameChange
     TabOrder = 0
   end
   object Label6: TLabel
@@ -207,6 +207,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 72
     Width = 225
     MaxLength = 6
+    OnChange = edtHostNameChange
     TabOrder = 4
   end
   object deDirectory: TDirectoryEdit
@@ -219,6 +220,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     NumGlyphs = 1
     MaxLength = 0
     TabOrder = 5
+    OnChange = edtHostNameChange
   end
   object Label7: TLabel
     Left = 8
@@ -234,6 +236,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 168
     Width = 557
     Anchors = [akTop, akLeft, akRight]
+    OnChange = edtHostNameChange
     TabOrder = 7
   end
   object Label8: TLabel
@@ -249,6 +252,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Height = 27
     Top = 264
     Width = 120
+    OnChange = edtHostNameChange
     TabOrder = 14
     Text = '+27833267243'
   end
@@ -258,6 +262,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 266
     Width = 87
     Caption = 'On Success'
+    OnChange = edtHostNameChange
     TabOrder = 15
   end
   object rbFailure: TRadioButton
@@ -266,6 +271,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 266
     Width = 80
     Caption = 'On Failure'
+    OnChange = edtHostNameChange
     TabOrder = 16
   end
   object rbAlways: TRadioButton
@@ -274,6 +280,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 266
     Width = 93
     Caption = 'Always Send'
+    OnChange = edtHostNameChange
     TabOrder = 17
   end
   object rbNever: TRadioButton
@@ -283,6 +290,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Width = 88
     Caption = 'Never Send'
     Checked = True
+    OnChange = edtHostNameChange
     TabOrder = 18
     TabStop = True
   end
@@ -300,6 +308,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Top = 296
     Width = 225
     Anchors = [akTop, akLeft, akRight]
+    OnChange = edtHostNameChange
     TabOrder = 19
   end
   object lblSMSPass1: TLabel
@@ -317,6 +326,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Width = 225
     Anchors = [akTop, akLeft, akRight]
     EchoMode = emPassword
+    OnChange = edtHostNameChange
     PasswordChar = '*'
     TabOrder = 20
   end
@@ -328,18 +338,18 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Caption = 'SMS Povider:'
     ParentColor = False
   end
-  object cbBackupType: TComboBox
+  object cbxBackupType: TComboBox
     Left = 538
     Height = 25
     Top = 201
     Width = 118
     ItemHeight = 0
     Items.Strings = (
-      'Inactive'
-      'SMS Portal'
-      'BulkSMS'
-      'WinSMS'
+      'Hourly'
+      'Daily'
+      'Weekly'
     )
+    OnChange = cbxBackupTypeChange
     Style = csDropDownList
     TabOrder = 10
   end
@@ -351,7 +361,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Caption = 'Backup Type:'
     ParentColor = False
   end
-  object lblT01: TLabel
+  object lblL01: TLabel
     Left = 8
     Height = 17
     Top = 236
@@ -359,7 +369,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Caption = 'T01'
     ParentColor = False
   end
-  object lblT02: TLabel
+  object lblL02: TLabel
     Left = 230
     Height = 17
     Top = 236
@@ -367,22 +377,20 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Caption = 'T02'
     ParentColor = False
   end
-  object cbT02: TComboBox
+  object cbxT02: TComboBox
     Left = 319
     Height = 25
     Top = 233
     Width = 118
     ItemHeight = 0
     Items.Strings = (
-      'Inactive'
-      'SMS Portal'
-      'BulkSMS'
-      'WinSMS'
+      ''
     )
+    OnChange = edtHostNameChange
     Style = csDropDownList
     TabOrder = 12
   end
-  object lblT03: TLabel
+  object lblL03: TLabel
     Left = 449
     Height = 17
     Top = 236
@@ -390,35 +398,39 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Caption = 'T03'
     ParentColor = False
   end
-  object cbT03: TComboBox
+  object cbxT03: TComboBox
     Left = 538
     Height = 25
     Top = 233
     Width = 118
     ItemHeight = 0
     Items.Strings = (
-      'Inactive'
-      'SMS Portal'
-      'BulkSMS'
-      'WinSMS'
+      ''
     )
+    OnChange = edtHostNameChange
     Style = csDropDownList
     TabOrder = 13
   end
-  object cbT01: TComboBox
+  object cbxT01: TComboBox
     Left = 100
     Height = 25
     Top = 233
     Width = 118
     ItemHeight = 0
     Items.Strings = (
-      'Inactive'
-      'SMS Portal'
-      'BulkSMS'
-      'WinSMS'
+      ''
     )
+    OnChange = edtHostNameChange
     Style = csDropDownList
     TabOrder = 11
+  end
+  object lblModified: TLabel
+    Left = 8
+    Height = 17
+    Top = 339
+    Width = 64
+    Caption = '-- Browse --'
+    ParentColor = False
   end
   object dlgOpen: TOpenDialog
     DefaultExt = '.exe'

@@ -340,6 +340,7 @@ private { private declarations }
    SMSDone         : boolean;     // True if SMS send was successful
    DoSave          : boolean;     // Tracks whether a Save is requried
    DoNotConnect    : boolean;     // Prevents a DB connection when a previously inactive Backup Instruction is made active
+   BackupSuccess   : boolean;     // Indicates whether the backup was successful or not
    RecTotal        : integer;     // Holds unformatted rec count after backup
    NumInstr        : integer;     // Number of backup instructions in the Configuration File
    SaveInstr       : integer;     // Holds instruction index when an Update started - used in case of a Cancel
@@ -352,9 +353,7 @@ private { private declarations }
    BackupLogFile   : string;      // Log file name
    KeepVersion     : string;      // Holds the current DB version if this is a LPMS DB
    LastMsg         : string;      // Last SQL error message
-   OSDelim         : string;      // Holds '/' or '\' depending on the OS
    OSName          : string;      // Holds the name of the Platform we are running on
-   CfgFile         : string;      // Name of the default Configuration File
    SMSResult       : string;      // Holds result returned by the SMS Provider
    SaveName        : string;      // Holds instruction name when an Update started - used in case of a Cancel
    InstrSel        : string;      // Contains the Text of the selected TreeView item
@@ -364,7 +363,6 @@ private { private declarations }
    EndTime         : TDateTime;   // End time of the current Backup
    IniFile         : TINIFile;    // IniFile holding defaults
    InstrTokens     : TStrings;    // Holds the List of Backup Instruction names
-   BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
    Instr_List      : Array_Instructions; // Array of in-memory Backup instructions
    UpdateRec       : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
 
@@ -381,20 +379,6 @@ private { private declarations }
 {$endif}
 
 const
-
-   WeekArray   : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
-                                           'Wednesday', 'Thursday', 'Friday',
-                                           'Saturday');
-
-   HourArray   : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
-                                           '06', '07', '08', '09', '10', '11',
-                                           '12', '13', '14', '15', '16', '17',
-                                           '18', '19', '20', '21', '22', '23',
-                                           '24', '25', '26', '27', '28', '29',
-                                           '30', '31');
-
-   MinArray    : array[1..12] of string = ('00', '05', '10', '15', '20', '25',
-                                           '30', '35', '40', '45', '50', '55');
 
    SMSProvider : array[1..4] of string  = ('Inactive', 'SMS Portal',
                                            'BulkSMS', 'WinSMS');
@@ -417,16 +401,37 @@ const
    function  DoBackup() : boolean;
    function  GetFieldType(ThisType: string) : integer;
    function  ReadDB(FileName: string; ThisType: integer) : boolean;
+   procedure DBAccessFailed(ThisMsg: string);
    procedure GetNextSlot(ThisInstr: integer);
    function  GetBasicInfo() : boolean;
    function  ReadTable(Table: string; LimitStart: integer; LimitEnd: integer) : boolean;
    function  AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
-   function  Encode(PlainStr: string) : string;
-   function  Decode(CodedStr: string) : string;
 
 
 
 public  { public declarations }
+   OSDelim         : string;             // Holds '/' or '\' depending on the OS
+   CfgFile         : string;             // Name of the default Configuration File
+   BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
+
+   function  Encode(PlainStr: string) : string;
+   function  Decode(CodedStr: string) : string;
+
+const
+
+   WeekArray   : array[1..7]  of string = ('Sunday', 'Monday', 'Tuesday',
+                                           'Wednesday', 'Thursday', 'Friday',
+                                           'Saturday');
+
+   HourArray   : array[1..32] of string = ('00', '01', '02', '03', '04', '05',
+                                           '06', '07', '08', '09', '10', '11',
+                                           '12', '13', '14', '15', '16', '17',
+                                           '18', '19', '20', '21', '22', '23',
+                                           '24', '25', '26', '27', '28', '29',
+                                           '30', '31');
+
+   MinArray    : array[1..12] of string = ('00', '05', '10', '15', '20', '25',
+                                           '30', '35', '40', '45', '50', '55');
 
 end;
 
@@ -1137,7 +1142,7 @@ begin
 
          if AccessTreeView(UpdateRec) = False then begin
 
-            Application.MessageBox(pchar('Updating "' + Instr_List[ThisInstr].Instruction + '" to "' + edtInstrNameC.Text + '" will create a duplicate - no duplicates allowed.' + #10 + #10 + 'Please choose another Instruction Name'),'Backup Manager', MB_ICONHAND + MB_OK);
+            Application.MessageBox(pchar('Updating ''' + Instr_List[ThisInstr].Instruction + ''' to ''' + edtInstrNameC.Text + ''' will create a duplicate - no duplicates allowed.' + #10 + #10 + 'Please choose another Instruction Name'),'Backup Manager', MB_ICONHAND + MB_OK);
             edtInstrNameC.SetFocus;
             Exit;
 
@@ -1444,6 +1449,8 @@ begin
 
       Set_Buttons(ord(BTN_INITIAL));
 
+      btnTemplate.SetFocus;
+
    end else begin
 
       pnlP00b.Visible := False;
@@ -1464,6 +1471,12 @@ begin
 
       ActionsLastExecute(Application);
 
+      if tsInstruction.Visible = True then
+         cbxType.SetFocus;
+
+      if tsConfiguration.Visible = True then
+         edtInstrNameC.SetFocus;
+
    end;
 end;
 
@@ -1480,7 +1493,7 @@ begin
 
 //--- We need to add a final OS dependant delimiter (OSDelim) to the path.
 //--- If we are running on Winblows then the path must be at least 4 chars in
-//--- length (e.g "C:\A") before we can add the backslash
+//--- length (e.g ''C:\A'') before we can add the backslash
 
 {$IFDEF WINDOWS}
 
@@ -1517,7 +1530,7 @@ begin
 
    ThisNum := GetInstruction();
 
-   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
+   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('''' + edtLastBackup.Text + ''''),[]);
 
 end;
 
@@ -1528,6 +1541,12 @@ procedure TFLPMSBackup.pcInstructionsChange(Sender: TObject);
 begin
 
    Set_Buttons(ord(BTN_INSTRUCTION));
+
+   if tsInstruction.Visible = True then
+      cbxType.SetFocus;
+
+   if tsConfiguration.Visible = True then
+      edtInstrNameC.SetFocus;
 
 end;
 
@@ -1737,13 +1756,33 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.btnTemplateClick(Sender: TObject);
 begin
-   FLPMSBackup.Hide;
 
    FLPMSBackupTemplate := TFLPMSBackupTemplate.Create(Application);
 
+//--- Populate the Fields in FLPMSBackupTemplate
+
+   FLPMSBackupTemplate.speBlockSize.Value      := BackupTemplate.Instr_Rec.BackupBlock;
+   FLPMSBackupTemplate.cbSMSProvider.ItemIndex := BackupTemplate.Instr_Rec.BackupSMSProvider;
+   FLPMSBackupTemplate.cbXBackupType.ItemIndex := BackupTemplate.Instr_Rec.BackupType;
+   FLPMSBackupTemplate.rbAlways.Checked        := BackupTemplate.Instr_Rec.BackupSMSAlways;
+   FLPMSBackupTemplate.rbFailure.Checked       := BackupTemplate.Instr_Rec.BackupSMSFailure;
+   FLPMSBackupTemplate.rbNever.Checked         := BackupTemplate.Instr_Rec.BackupSMSNever;
+   FLPMSBackupTemplate.rbSuccess.Checked       := BackupTemplate.Instr_Rec.BackupSMSSuccess;
+   FLPMSBackupTemplate.edtDBPass.Text          := BackupTemplate.Instr_Rec.BackupDBPass;
+   FLPMSBackupTemplate.edtDBPrefix.Text        := BackupTemplate.Instr_Rec.BackupDBPrefix;
+   FLPMSBackupTemplate.edtDBSuffix.Text        := BackupTemplate.Instr_Rec.BackupDBSuffix;
+   FLPMSBackupTemplate.edtDBUser.Text          := BackupTemplate.Instr_Rec.BackupDBUser;
+   FLPMSBackupTemplate.edtHostName.Text        := BackupTemplate.Instr_Rec.BackupHostName;
+   FLPMSBackupTemplate.deDirectory.Text        := BackupTemplate.Instr_Rec.BackupLocation;
+   FLPMSBackupTemplate.edtSMSNumber.Text       := BackupTemplate.Instr_Rec.BackupSMSNumber;
+   FLPMSBackupTemplate.edtSMSPass.Text         := BackupTemplate.Instr_Rec.BackupSMSPass;
+   FLPMSBackupTemplate.edtSMSUser.Text         := BackupTemplate.Instr_Rec.BackupSMSUser;
+   FLPMSBackupTemplate.edtTemplate.Text        := BackupTemplate.Instr_Rec.BackupTemplate;
+   FLPMSBackupTemplate.edtViewer.Text          := BackupTemplate.Instr_Rec.BackupViewer;
+
+   FLPMSBackup.Hide;
    FLPMSBackupTemplate.ShowModal;
    FLPMSBackupTemplate.Destroy;
-
    FLPMSBackup.Show;
 {
 FLPMSBackup.Hide;
@@ -1940,7 +1979,7 @@ begin
             Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
 
          end else
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
+            Application.MessageBox('Test unsuccessful - Check ''User name'' and/or ''Password''.','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
 
       end;
 
@@ -1955,7 +1994,7 @@ begin
             Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
 
          end else
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
+            Application.MessageBox('Test unsuccessful - Check ''User name'' and/or ''Password''.','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
 
       end;
 
@@ -1964,7 +2003,7 @@ begin
          Req_Result := Copy(Answer,9,999999);
 
          if (lowercase(Req_Result) = 'fail') then
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING))
+            Application.MessageBox('Test unsuccessful - Check ''User name'' and/or ''Password''.','Backup Manager - Configuration',(MB_OK + MB_ICONWARNING))
          else begin
 
             Credits  := Req_Result;
@@ -2098,7 +2137,7 @@ begin
 
             if (DoBackup() = false) then begin
 
-               DispLogMsg('---    Backup failed with error message: "' + LastMsg + '"');
+               DispLogMsg('---    Backup failed with error message: ''' + LastMsg + '''');
 
                if (((rbSMSFailure.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[idx1].Instr_Rec.BackupSMSProvider <> 0)) then begin
 
@@ -2107,7 +2146,7 @@ begin
                   SendSMS(SMSMessage);
 
                   if (SMSDone = true) then
-                     DispLogMsg('---   SMS indicating FAILURE with message "' + DispMessage + '" sent to "' + edtSMSNumber.Text + '"')
+                     DispLogMsg('---   SMS indicating FAILURE with message ''' + DispMessage + ''' sent to ''' + edtSMSNumber.Text + '''')
                   else
                      DispLogMsg('---   Attempt to send SMS indicating FAILURE failed');
 
@@ -2343,7 +2382,7 @@ begin
    edtSMSPassC.Text         := Instr_List[ListNum].Instr_Rec.BackupSMSPass;
 
 //--- Connect to the database and get some basic information unless
-//--- DoNotConnect = True in which case we are dealing aith a previously
+//--- DoNotConnect = True in which case we are dealing with a previously
 //--- inactive instruction and the DB connecton parameters may not exist
 
    if DoNotConnect = False then begin
@@ -2416,11 +2455,15 @@ begin
 
       sqlCon.Connected := true;
 
-   except on E : Exception do
-      begin
+      except on E : Exception do begin
 
          LastMsg := E.Message;
-         Application.MessageBox(Pchar('FATAL: Unexpected database error: ''' + LastMsg + '''. Please try connecting again'),'Backup Manager',(MB_OK + MB_ICONSTOP));
+         Application.MessageBox(Pchar('FATAL: Unexpected database error: ' + #10 + #10 + '''' + LastMsg + ''''),'Backup Manager',(MB_OK + MB_ICONSTOP));
+
+         LogInstrType := ord(TYPE_BOTH);
+         DispLogMsg('*** Error connecting to ''' + DBName + ''' on ''' + DBHost + ''' - ''' + LastMsg + '''');
+         LogInstrType := ord(TYPE_LOGSEL);
+
          Exit;
 
       end;
@@ -2458,12 +2501,12 @@ begin
 
    if Instr_List[idx1].Instr_Rec.BackupDBSuffix = '_LPMS' then begin
 
-      DispLogMsg('Backups will be taken for "' + Instr_List[idx1].SymCpy + '" on "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
-      DispLogMsg('Database version is "' + Instr_List[idx1].SymVersion + '"');
+      DispLogMsg('Backups will be taken for ''' + Instr_List[idx1].SymCpy + ''' on ''' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']''');
+      DispLogMsg('Database version is ''' + Instr_List[idx1].SymVersion + '''');
 
    end else
 
-      DispLogMsg('Backups will be taken for "' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
+      DispLogMsg('Backups will be taken for ''' + DBHost + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']''');
 
 //--- Set up the rest of the information
 
@@ -2488,15 +2531,15 @@ begin
 
          if rbSMSAlways.Checked = true then
 
-            DispLogMsg('SMS will always be sent to "' + edtSMSNumber.Text + '" (Success or Failure) using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+            DispLogMsg('SMS will always be sent to ''' + edtSMSNumber.Text + ''' (Success or Failure) using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
 
          else if rbSMSSuccess.Checked = true then
 
-            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" after a successful backup using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+            DispLogMsg('SMS Message will be sent to ''' + edtSMSNumber.Text + ''' after a successful backup using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
 
          else if rbSMSFailure.Checked = true then
 
-            DispLogMsg('SMS Message will be sent to "' + edtSMSNumber.Text + '" if a backup fails using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+            DispLogMsg('SMS Message will be sent to ''' + edtSMSNumber.Text + ''' if a backup fails using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
 
          else
 
@@ -2504,7 +2547,7 @@ begin
 
       end else
 
-         DispLogMsg('SMS Messaging is inactive because "SMS Number: is not specified');
+         DispLogMsg('SMS Messaging is inactive because ''SMS Number: is not specified');
 
    end;
 
@@ -2718,7 +2761,7 @@ begin
    OutFile := AnsiReplaceStr(OutFile,'&DBSuffix',Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
    OutFile := AnsiReplaceStr(OutFile,'&OSName',OSName);
 
-   DispLogMsg('------ Backup will be saved to "' + OutFile + '"');
+   DispLogMsg('------ Backup will be saved to ''' + OutFile + '''');
    StartTime := Now;
    DispLogMsg('------ Backup attempt started on ' + FormatDateTime('yyyy/MM/dd',Now()) + ' at ' + FormatDateTime('hh:nn:ss.zzz',StartTime));
 
@@ -2743,7 +2786,11 @@ begin
 
 //--- Indicate the success of the backup and send an SMS if necessary
 
-   DispLogMsg('------ Backup succesfully completed');
+   if BackupSuccess = True then
+      DispLogMsg('------ Backup succesfully completed')
+   else
+      DispLogMsg('------ Backup FAILED');
+
    DispLogMsg(-1);
 
    EndTime := Now;
@@ -2762,9 +2809,9 @@ begin
       SendSMS(SMSMessage);
 
       if (SMSDone = true) then
-         DispLogMsg('------ SMS indicating SUCCESS with message "' + DispMessage + '" sent to "' + edtSMSNumber.Text + '"')
+         DispLogMsg('------ SMS indicating SUCCESS with message ''' + DispMessage + ''' sent to ''' + edtSMSNumber.Text + '''')
       else
-         DispLogMsg('------ Attempt to send SMS indicating SUCCESS failed with message "' + SMSResult + '"');
+         DispLogMsg('------ Attempt to send SMS indicating SUCCESS failed with message ''' + SMSResult + '''');
    end;
 
    DispLogMsg('--- Backup attempt completed on ' + FormatDateTime('yyyy/MM/dd',Now()) + ' at ' + FormatDateTime('hh:nn:ss.zzz',EndTime) + ', Time taken: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime));
@@ -2813,6 +2860,8 @@ var
 
 begin
 
+   BackupSuccess := True;
+
 //--- Set the Format Settings to override the system locale
 
    FormatSettings.ShortDateFormat   := 'yyyy/MM/dd';
@@ -2842,11 +2891,24 @@ begin
    sqlCon.UserName     := Instr_List[ActiveInstr].Instr_Rec.BackupDBUser;
    sqlCon.Password     := Instr_List[ActiveInstr].Instr_Rec.BackupDBPass;
    sqlCon.DatabaseName := Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix;
+
    sqlQry1.DataBase    := sqlCon;
 
 //--- Get the Table Names for the open Database
 
-   sqlCon.GetTableNames(TableNames,false);
+   try
+
+      sqlCon.GetTableNames(TableNames,false);
+
+      except on E : Exception do begin
+
+         LastMsg := '*** Error connecting to ''' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ''' on ''' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + ''' - ''' + E.Message + '''';
+         DBAccessFailed(LastMsg);
+         Exit;
+
+      end;
+
+   end;
 
 //--- Set the Flags
 
@@ -2891,7 +2953,7 @@ begin
 
 //--- Update the log display
 
-      DispLogMsg('--------- Backing up "' + ThisTable + '" table');
+      DispLogMsg('--------- Backing up ''' + ThisTable + ''' table');
 
 //--- Insert the Table name if in Managed mode
 
@@ -2912,16 +2974,21 @@ begin
 
 //--- Get the column names for the current table
 
+      sqlQry1.Close;
+      sqlQry1.SQL.Text := 'SHOW COLUMNS IN ' + ThisTable;
+
       try
-         sqlQry1.Close;
-         sqlQry1.SQL.Text := 'SHOW COLUMNS IN ' + ThisTable;
+
          sqlQry1.Open;
-      except on E : Exception do
-         begin
-            LastMsg := E.Message;
-            Result := false;
+
+         except on E : Exception do begin
+
+            LastMsg := '*** Error connecting to ''' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ''' on ''' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + ''' - ''' + E.Message + '''';
+            DBAccessFailed(LastMsg);
             Exit;
+
          end;
+
       end;
 
 //--- Extract the returned Column names
@@ -3010,7 +3077,7 @@ begin
 
       if (ActiveName = InstrSel) then begin
 
-//         lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading...';
+//         lblL05.Caption := 'Backing up Table ''' + ThisTable + ''', Reading...';
 //         lblL05.Refresh;
 
       end;
@@ -3083,9 +3150,12 @@ begin
             WriteLn(BackupFile,ThisLine);
 
             Inc(RecCount);
+
             if (RecCount mod 10 = 0) then begin
-               lblL05.Caption := 'Backing up Table "' + ThisTable + '", Writing record no.: ' + FloatToStrF(RecCount, ffNumber, 2, 0);
+
+               lblL05.Caption := 'Backing up Table ''' + ThisTable + ''', Writing record no.: ' + FloatToStrF(RecCount, ffNumber, 2, 0);
                lblL05.Refresh;
+
             end;
 
             sqlQry1.Next;
@@ -3095,15 +3165,18 @@ begin
 
          if ActiveName = InstrSel then begin
 
-            lblL05.Caption := 'Backing up Table "' + ThisTable + '", Reading up to ' + FloatToStrF(Instr_List[ActiveInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' records';
+            lblL05.Caption := 'Backing up Table ''' + ThisTable + ''', Reading up to ' + FloatToStrF(Instr_List[ActiveInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' records';
             lblL05.Refresh;
 
          end;
 
-         if (ReadTable(ThisTable,LimitStart,LimitEnd) = false) then begin
-            Result := false;
+         if ReadTable(ThisTable,LimitStart,LimitEnd) = False then begin
+
+            Result := False;
             Exit;
+
          end;
+
       end;
 
       DispLogMsg(RecCount);
@@ -3150,6 +3223,38 @@ begin
    sqlCon.Close;
 
    Result := true;
+
+end;
+
+//------------------------------------------------------------------------------
+// Procedure to log and send a message when DB Access Failed
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.DBAccessFailed(ThisMsg: string);
+var
+   SaveType   : integer;
+   SMSMessage : string;
+
+begin
+
+   BackupSuccess := False;
+
+   SaveType := ord(LogInstrType);
+   LogInstrType := ord(TYPE_BOTH);
+   DispLogMsg(LastMsg);
+
+   if (((Instr_List[ActiveInstr].Instr_Rec.BackupSMSFailure = true) or (Instr_List[ActiveInstr].Instr_Rec.BackupSMSAlways = true)) and (Instr_List[ActiveInstr].Instr_Rec.BackupSMSProvider <> 0)) then begin
+      LastMsg := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + LastMsg + ' {' + OSName + '}';
+      SMSMessage  := Get_Send_XML(LastMsg);
+
+      SendSMS(SMSMessage);
+
+      if (SMSDone = true) then
+         DispLogMsg('------ SMS indicating FAILURE with message ''' + LastMsg + ''' sent to ''' + Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber + '''')
+      else
+         DispLogMsg('------ Attempt to send SMS indicating SUCCESS failed with message ''' + SMSResult + '''');
+   end;
+
+   LogInstrType := ord(SaveType);
 
 end;
 
@@ -3863,11 +3968,11 @@ begin
       tvInstructions.Selected := ThisNodeM;
       ActiveName := tvInstructions.Selected.Text;
 
-      DispLogMsg('++++++ Instruction number ' + (IntToStr(idx1 + 1)) + ' - "' + Instr_List[idx1].Instruction + '":');
+      DispLogMsg('++++++ Instruction number ' + (IntToStr(idx1 + 1)) + ' - ''' + Instr_List[idx1].Instruction + ''':');
 
       if Instr_List[idx1].Active = True then begin
 
-         DispLogMsg('+++++++++ Backups will be taken for "' + Instr_List[idx1].Instr_Rec.BackupHostName + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']"');
+         DispLogMsg('+++++++++ Backups will be taken for ''' + Instr_List[idx1].Instr_Rec.BackupHostName + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']''');
          DispLogMsg('+++++++++ Next Backup will be taken at ' + Instr_List[idx1].NextDate + ' on ' + Instr_List[idx1].NextTime);
 
          if (Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0) then begin
@@ -3879,17 +3984,17 @@ begin
             if (Instr_List[idx1].Instr_Rec.BackupSMSNumber <> '') then begin
 
                if (rbSMSAlways.Checked = true) then
-                  DispLogMsg('+++++++++ SMS will always be sent to "' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + '" (Success or Failure) using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+                  DispLogMsg('+++++++++ SMS will always be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' (Success or Failure) using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
                else if (rbSMSSuccess.Checked = true) then
-                  DispLogMsg('+++++++++ SMS Message will be sent to "' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + '" after a successful backup using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+                  DispLogMsg('+++++++++ SMS Message will be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' after a successful backup using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
                else if (rbSMSFailure.Checked = true) then
-                  DispLogMsg('+++++++++ SMS Message will be sent to "' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + '" if a backup fails using "' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '"')
+                  DispLogMsg('+++++++++ SMS Message will be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' if a backup fails using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
                else
                   DispLogMsg('+++++++++ SMS Messages will never be sent');
 
             end else begin
 
-               DispLogMsg('+++++++++ SMS Messaging is inactive because "SMS Number: is not specified');
+               DispLogMsg('+++++++++ SMS Messaging is inactive because ''SMS Number: is not specified');
 
             end;
 
@@ -3897,7 +4002,7 @@ begin
 
       end else begin
 
-         DispLogMsg('+++++++++ No Backups will be taken for "' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + '" - Instruction is inactive/invalid');
+         DispLogMsg('+++++++++ No Backups will be taken for ''' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ''' - Instruction is inactive/invalid');
 
       end;
 
@@ -4081,32 +4186,32 @@ begin
 
    if ActiveNAme = InstrSel then begin
 
-      lblL05.Caption := 'Backing up Table "' + Table + '", Reading up to ' + FloatToStrF(Instr_List[ActiveInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' records';
+      lblL05.Caption := 'Backing up Table ''' + Table + ''', Reading up to ' + FloatToStrF(Instr_List[ActiveInstr].Instr_Rec.BackupBlock, ffNumber, 2, 0) + ' records';
       lblL05.Refresh;
 
    end;
 
    S1 := 'SELECT * FROM ' + Table + ' LIMIT ' + IntToStr(LimitStart) + ',' + IntToStr(LimitEnd);
 
+   sqlQry1.Close;
+   sqlQry1.SQL.Text := S1;
+
    try
 
-      sqlQry1.Close;
-      sqlQry1.SQL.Text := S1;
       sqlQry1.Open;
 
-   except on E : Exception do
-      begin
+      except on E : Exception do begin
 
-         LastMsg := E.Message;
-         Result  := false;
+         LastMsg := '*** Error connecting to ''' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ''' on ''' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + ''' - ''' + E.Message + '''';
+         DBAccessFailed(LastMsg);
          Exit;
 
       end;
 
    end;
 
-   if (sqlQry1.RecordCount = 0) then
-      LimitActive := false;
+   if sqlQry1.RecordCount = 0 then
+      LimitActive := False;
 
    Result := true;
 

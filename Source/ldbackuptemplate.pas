@@ -19,7 +19,7 @@ interface
 //------------------------------------------------------------------------------
 uses
   Classes, SysUtils, FileUtil, IDEWindowIntf, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Spin, INIFiles, LCLType, Buttons, EditBtn, HTTPSend;
+  Dialogs, StdCtrls, Spin, INIFiles, LCLType, Buttons, EditBtn;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -31,13 +31,12 @@ type
   TFLPMSBackupTemplate = class(TForm)
     btnCancel: TButton;
     btnViewer: TSpeedButton;
-    btnSMSTest: TButton;
     btnUpdate: TButton;
     cbSMSProvider: TComboBox;
-    cbBackupType: TComboBox;
-    cbT02: TComboBox;
-    cbT03: TComboBox;
-    cbT01: TComboBox;
+    cbxBackupType: TComboBox;
+    cbxT02: TComboBox;
+    cbxT03: TComboBox;
+    cbxT01: TComboBox;
     deDirectory: TDirectoryEdit;
     dlgOpen: TOpenDialog;
     edtDBPrefix: TEdit;
@@ -52,9 +51,10 @@ type
     edtDBUser: TEdit;
     Label1: TLabel;
     Label10: TLabel;
-    lblT01: TLabel;
-    lblT02: TLabel;
-    lblT03: TLabel;
+    lblModified: TLabel;
+    lblL01: TLabel;
+    lblL02: TLabel;
+    lblL03: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -74,6 +74,11 @@ type
     sdSelDir: TSelectDirectoryDialog;
     speBlockSize: TSpinEdit;
 
+    procedure btnCancelClick( Sender: TObject);
+    procedure btnUpdateClick( Sender: TObject);
+    procedure btnViewerClick( Sender: TObject);
+    procedure cbxBackupTypeChange( Sender: TObject);
+    procedure edtHostNameChange( Sender: TObject);
     procedure FormActivate(Sender: TObject);
 {
     procedure btnCancelClick(Sender: TObject);
@@ -85,8 +90,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
 }
   private { private declarations }
-{
     DoSave          : boolean;    // Controls whether a Save is required before Exiting
+{
     DBPrefixChanged : boolean;    // Indicates  change in the value of DBPrefix
     KeepDBPrefix    : string;     // Retain value of DBPrefix for later use
     RegString       : string;     // Points to the correct INI file taking MultiCompany into account
@@ -110,10 +115,6 @@ end;
 var
   FLPMSBackupTemplate: TFLPMSBackupTemplate;
 
-{
-  IniFile     : TINIFile;    // IniFile holding defaults
-  DebugOn     : boolean;     // Debug switch
-}
 implementation
 
 uses ldBackupApp;
@@ -126,50 +127,232 @@ uses ldBackupApp;
 // Executed before the form is displayed
 //------------------------------------------------------------------------------
 procedure TFLPMSBackupTemplate.FormActivate(Sender: TObject);
+begin
+
+   cbxBackupTypeChange(Sender);
+
+   cbXT01.ItemIndex := FLPMSBackup.BackupTemplate.Instr_Rec.BackupT01;
+   cbXT02.ItemIndex := FLPMSBackup.BackupTemplate.Instr_Rec.BackupT02;
+   cbXT03.ItemIndex := FLPMSBackup.BackupTemplate.Instr_Rec.BackupT03;
+
+   DoSave := False;
+
+   lblModified.Caption := '-- Browse --';
+   btnUpdate.Enabled   := False;
+
+   edtHostName.SetFocus;
+
+end;
+
+//------------------------------------------------------------------------------
+// User Clicked on the Cancel button
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate. btnCancelClick( Sender: TObject);
+begin
+
+   if DoSave = True then begin
+
+      if (MessageDlg('Backup Manager','WARNING: There are unsaved changes!' + #10 + #10 + 'Click [Yes] to return to the Backup Manager; or' + #10 + 'Click [No] to continue editing the defaults.', mtWarning, mbYesNo, 0) =  mrYes) then
+         Close
+      else
+         Exit;
+
+   end else begin
+
+     Close;
+
+   end;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on the Update button
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate. btnUpdateClick( Sender: TObject);
 var
-   HostName  : string;
+   IniFile : TINIFile;
 
 begin
 
-{
+//--- Update the Template Record
 
-   FLPMSBackupTemplate.Caption := 'LPMS Backup Manager';
-   DebugOn := false;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupBlock       := speBlockSize.Value;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSProvider := cbSMSProvider.ItemIndex;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupType        := cbxBackupType.ItemIndex;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupT01         := cbxT01.ItemIndex;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupT02         := cbxT02.ItemIndex;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupT03         := cbxT03.ItemIndex;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSAlways   := rbAlways.Checked;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSFailure  := rbFailure.Checked;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSNever    := rbNever.Checked;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSSuccess  := rbSuccess.Checked;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPass      := edtDBPass.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPrefix    := edtDBPrefix.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBSuffix    := edtDBSuffix.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBUser      := edtDBUser.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupHostName    := edtHostName.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupLocation    := deDirectory.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSNumber   := edtSMSNumber.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSPass     := edtSMSPass.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSUser     := edtSMSUser.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupTemplate    := edtTemplate.Text;
+   FLPMSBackup.BackupTemplate.Instr_Rec.BackupViewer      := edtViewer.Text;
 
-   if (MultiCompany = false) then
-      RegString := 'LPMS.ini'
-   else
-      RegString := 'LPMS_' + DBPrefix + '.ini';
+//--- Update the 'Registry'
 
-//--- Get the value of Hostname
+   IniFile := TINIFile.Create(FLPMSBackup.CfgFile);
 
-   IniFile := TINIFile.Create(RegString);
-   HostName := IniFile.ReadString('Parameters','BackupHostName','www.bluecrane.cc');
+   IniFile.WriteInteger('Template','BackupBlock',FLPMSBackup.BackupTemplate.Instr_Rec.BackupBlock);
+   IniFile.WriteInteger('Template','BackupSMSProvider',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSProvider);
+   IniFile.WriteInteger('Template','BackupType',FLPMSBackup.BackupTemplate.Instr_Rec.BackupType);
+   IniFile.WriteInteger('Template','BackupT01',FLPMSBackup.BackupTemplate.Instr_Rec.BackupT01);
+   IniFile.WriteInteger('Template','BackupT02',FLPMSBackup.BackupTemplate.Instr_Rec.BackupT02);
+   IniFile.WriteInteger('Template','BackupT03',FLPMSBackup.BackupTemplate.Instr_Rec.BackupT03);
+   IniFile.WriteBool('Template','BackupSMSAlways',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSAlways);
+   IniFile.WriteBool('Template','BackupSMSFailure',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSFailure);
+   IniFile.WriteBool('Template','BackupSMSNever',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSNever);
+   IniFile.WriteBool('Template','BackupSMSSuccess',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSSuccess);
+   IniFile.WriteString('Template','BackupDBPass',FLPMSBackup.Encode(FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPass));
+   IniFile.WriteString('Template','BackupDBPrefix',FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPrefix);
+   IniFile.WriteString('Template','BackupDBSuffix',FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBSuffix);
+   IniFile.WriteString('Template','BackupDBUser',FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBUser);
+   IniFile.WriteString('Template','BackupHostName',FLPMSBackup.BackupTemplate.Instr_Rec.BackupHostName);
+   IniFile.WriteString('Template','BackupLocation',FLPMSBackup.BackupTemplate.Instr_Rec.BackupLocation);
+   IniFile.WriteString('Template','BackupSMSNumber',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSNumber);
+   IniFile.WriteString('Template','BackupSMSPass',FLPMSBackup.Encode(FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSPass));
+   IniFile.WriteString('Template','BackupSMSUser',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSUser);
+   IniFile.WriteString('Template','BackupTemplate',FLPMSBackup.BackupTemplate.Instr_Rec.BackupTemplate);
+   IniFile.WriteString('Template','BackupViewer',FLPMSBackup.BackupTemplate.Instr_Rec.BackupViewer);
+
    IniFile.Destroy;
 
-   edtHostName.Text := HostName;
-   edtDBPrefix.Text := DBPrefix;
-   KeepDBPrefix     := DBPrefix;
+   btnUpdate.Enabled   := False;
+   DoSave              := False;
+   lblModified.Caption := '-- Browse --';
 
-   cbMultiCpy.Checked      := MultiCompany;
-   cbSMSProvider.ItemIndex := SMSProvider;
-   edtDBUser.Text         := SMSUser;
-   edtDBPass.Text         := SMSPassword;
-   speBlockSize.Value      := BackupBlock;
-   edtViewer.Text          := BackupViewer;
-   cbSMSProvider.SetFocus;
+end;
 
-   if ((cbSMSProvider.ItemIndex > 0) and (edtDBUser.Text <> '') and (edtDBPass.Text <> '')) then
-      btnSMSTest.Enabled := true
-   else
-      btnSMSTest.Enabled := false;
+//------------------------------------------------------------------------------
+// User clicked on the button to select a backup file viewer
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate. btnViewerClick( Sender: TObject);
+begin
 
-   btnSMSTest.Default := true;
-   DoSave             := false;
-   DBPrefixChanged    := false;
-   btnCancel.Enabled  := false;
-   btnUpdate.Caption  := 'Return';
-}
+   if Trim(edtViewer.Text) <> '' then
+      dlgOpen.InitialDir := ExtractFilePath(edtViewer.Text);
+
+{$ifdef WINDOWS}
+   dlgOpen.DefaultExt := '.exe';
+   dlgOpen.Filter     := 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*';
+{$endif}
+
+{$ifdef LINUX}
+   dlgOpen.DefaultExt := '';
+   dlgOpen.Filter     := 'All Files (*.*)|*.*';
+{$endif}
+
+{$ifdef DARWIN}
+   dlgOpen.DefaultExt := '';
+   dlgOpen.Filter     := 'All Files (*.*)|*.*';
+{$endif}
+
+   if (dlgOpen.Execute = true) then
+      edtViewer.Text := dlgOpen.FileName + FLPMSBackup.OSDelim;
+
+end;
+
+//------------------------------------------------------------------------------
+// Backup Type Changed
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate. cbxBackupTypeChange( Sender: TObject);
+var
+   idx : integer;
+
+begin
+
+//--- Set the correct display fields based on the Backup Type
+
+   lblL01.Visible := true;
+   lblL02.Visible := true;
+   lblL03.Visible := false;
+   cbxT01.Visible := true;
+   cbxT02.Visible := true;
+   cbxT03.Visible := false;
+
+   if (cbxBackupType.Text = 'Hourly') then begin
+
+      lblL01.Caption := 'Minute Mark:';
+      cbxT01.Clear;
+
+      for idx := 1 to 12 do
+         cbxT01.Items.Add(FLPMSBackup.MinArray[idx]);
+
+      lblL02.Visible := false;
+      cbxT02.Visible := false;
+
+   end else if (cbxBackupType.Text = 'Daily') then begin
+
+      lblL01.Caption := 'Select Hour:';
+      cbxT01.Clear;
+
+      for idx := 1 to 24 do
+         cbxT01.Items.Add(FLPMSBackup.HourArray[idx]);
+
+      lblL02.Caption := 'Select Minute:';
+      cbxT02.Clear;
+
+      for idx := 1 to 12 do
+         cbxT02.Items.Add(FLPMSBackup.MinArray[idx]);
+
+      lblL02.Visible := true;
+      cbxT02.Visible := true;
+
+   end else if (cbxBackupType.Text = 'Weekly') then begin
+
+      lblL01.Caption := 'Select Day:';
+      cbxT01.Clear;
+
+      for idx := 1 to 7 do
+         cbxT01.Items.Add(FLPMSBackup.WeekArray[idx]);
+
+      lblL02.Caption := 'Select Hour:';
+      cbxT02.Clear;
+
+      for idx := 1 to 24 do
+         cbxT02.Items.Add(FLPMSBackup.HourArray[idx]);
+
+      lblL03.Caption := 'Select Minute:';
+      cbxT03.Clear;
+
+      for idx := 1 to 12 do
+         cbxT03.Items.Add(FLPMSBackup.MinArray[idx]);
+
+      lblL02.Visible := true;
+      cbxT02.Visible := true;
+      lblL03.Visible := true;
+      cbxT03.Visible := true;
+
+   end;
+
+   cbxT01.ItemIndex := 0;
+   cbxT02.ItemIndex := 0;
+   cbxT03.ItemIndex := 0;
+
+   edtHostNameChange(Sender);
+
+end;
+
+//------------------------------------------------------------------------------
+// An editable field changed
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate. edtHostNameChange( Sender: TObject);
+begin
+
+   lblModified.Caption := '** Modified **';
+   btnUpdate.Enabled   := True;
+
+   DoSave := True;
+
 end;
 
 {
@@ -402,24 +585,8 @@ begin
    edtDBPrefix.Text := KeepDBPrefix;
    DBPrefixChanged  := false;
 end;
-
-//------------------------------------------------------------------------------
-// User clicked on the button to select a backup file viewer
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.btnViewerClick(Sender: TObject);
-begin
-   {$IFDEF WINDOWS}
-      dlgOpen.DefaultExt := '.exe';
-      dlgOpen.Filter     := 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*';
-   {$ELSE}
-      dlgOpen.DefaultExt := '';
-      dlgOpen.Filter     := 'All Files (*.*)|*.*';
-   {$ENDIF}
-
-   if (dlgOpen.Execute = true) then
-      edtViewer.Text := dlgOpen.FileName;
-end;
 }
+
 //------------------------------------------------------------------------------
 end.
 
