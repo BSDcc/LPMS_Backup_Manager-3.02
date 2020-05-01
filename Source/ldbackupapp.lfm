@@ -1,9 +1,8 @@
 object FLPMSBackup: TFLPMSBackup
   Left = 122
   Height = 718
-  Top = 0
+  Top = 25
   Width = 1242
-  ActiveControl = pnlP01
   Caption = 'FLPMSBackup'
   ClientHeight = 697
   ClientWidth = 1242
@@ -37,9 +36,9 @@ object FLPMSBackup: TFLPMSBackup
         Height = 571
         Top = 0
         Width = 1037
-        ActivePage = tsConfiguration
+        ActivePage = tsInstruction
         Align = alClient
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
         OnChange = pcInstructionsChange
         object tsInstruction: TTabSheet
@@ -390,6 +389,7 @@ object FLPMSBackup: TFLPMSBackup
             Top = 132
             Width = 862
             OnAcceptDirectory = edtLocationAcceptDirectory
+            DialogTitle = 'Backup Manager - Select Backup Folder'
             ShowHidden = False
             ButtonWidth = 28
             NumGlyphs = 1
@@ -5824,7 +5824,7 @@ object FLPMSBackup: TFLPMSBackup
     PoweredBy.About.Description.Strings = (
       'Component that shows a Powered By graphic.'#10'Use method ShowPoweredByForm in your form.create()'#10'to use the component'
     )
-    PoweredBy.About.Title = 'About About About About About About About PoweredBy component'
+    PoweredBy.About.Title = 'About About About About About About About About About PoweredBy component'
     PoweredBy.About.Height = 280
     PoweredBy.About.Width = 400
     PoweredBy.About.Font.Color = clNavy
