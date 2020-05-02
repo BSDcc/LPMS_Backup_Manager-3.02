@@ -73,6 +73,7 @@ type
    edtSMSUserC: TEdit;
    edtTemplateC: TEdit;
    edtViewerC: TEdit;
+   dlgFind: TFindDialog;
    HelpAbout: TAction;
    ActionsRunNow: TAction;
    ActionsNext: TAction;
@@ -99,13 +100,14 @@ type
    MenuItem21: TMenuItem;
    MenuItem22: TMenuItem;
    MenuItem23: TMenuItem;
+   MenuItem6: TMenuItem;
+   N4: TMenuItem;
    N3: TMenuItem;
    N1: TMenuItem;
    pnl00b1b2: TPanel;
    pnl00b1b1: TPanel;
    pnl00b1b: TPanel;
    pnl00b1a: TPanel;
-   SearchFindAgain: TAction;
    SearchFind: TAction;
    EditUpdate: TAction;
    EditCancel: TAction;
@@ -125,12 +127,9 @@ type
    MenuItem12: TMenuItem;
    MenuItem13: TMenuItem;
    MenuItem14: TMenuItem;
-   MenuItem15: TMenuItem;
    MenuItem16: TMenuItem;
    MenuItem17: TMenuItem;
    MenuItem18: TMenuItem;
-   MenuItem19: TMenuItem;
-   MenuItem20: TMenuItem;
    MenuItem8: TMenuItem;
    N2: TMenuItem;
    MenuItem9: TMenuItem;
@@ -156,7 +155,6 @@ type
    ToolButton1: TToolButton;
    ToolButton10: TToolButton;
    ToolButton11: TToolButton;
-   ToolButton12: TToolButton;
    ToolButton13: TToolButton;
    ToolButton14: TToolButton;
    ToolButton15: TToolButton;
@@ -166,7 +164,6 @@ type
    ToolButton4: TToolButton;
    btnFirst: TToolButton;
    btnNext: TToolButton;
-   ToolButton7: TToolButton;
    btnLast: TToolButton;
    btnPrev: TToolButton;
    ActionsMinimise: TAction;
@@ -227,6 +224,7 @@ type
    tvSmall: TTreeView;
    tvInstructions: TTreeView;
 
+    procedure dlgFindFind( Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FileCloseExecute(Sender: TObject);
@@ -234,7 +232,7 @@ type
     procedure FileNewExecute(Sender: TObject);
     procedure EditCancelExecute(Sender: TObject);
     procedure EditUpdateExecute(Sender: TObject);
-    procedure SearchFindAgainExecute(Sender: TObject);
+    procedure FormCreate( Sender: TObject);
     procedure SearchFindExecute(Sender: TObject);
     procedure ActionsFirstExecute(Sender: TObject);
     procedure ActionsLastExecute(Sender: TObject);
@@ -335,36 +333,38 @@ type
 
 private { private declarations }
 
-   LimitActive     : boolean;     // Indicates whether LIMIT is used when reading SQL records
-   CanUpdate       : boolean;     // Used to override setting of DoSave
-   SMSDone         : boolean;     // True if SMS send was successful
-   DoSave          : boolean;     // Tracks whether a Save is requried
-   DoNotConnect    : boolean;     // Prevents a DB connection when a previously inactive Backup Instruction is made active
-   BackupSuccess   : boolean;     // Indicates whether the backup was successful or not
-   RecTotal        : integer;     // Holds unformatted rec count after backup
-   NumInstr        : integer;     // Number of backup instructions in the Configuration File
-   SaveInstr       : integer;     // Holds instruction index when an Update started - used in case of a Cancel
-   ActiveInstr     : integer;     // Set by the Timer to indicate which backup instruction popped
-   LogInstrType    : integer;     // Determines in which logs the message is displayed
-   RecTotalF       : string;      // Holds formated rec count after backup
-   ThisMsgF        : string;      // Holds formatted message containing outcome of current backup
-   OutFile         : string;      // Name of the Backup file that will be created
-   RegString       : string;      // Holds the name of the ini file
-   BackupLogFile   : string;      // Log file name
-   KeepVersion     : string;      // Holds the current DB version if this is a LPMS DB
-   LastMsg         : string;      // Last SQL error message
-   OSName          : string;      // Holds the name of the Platform we are running on
-   SMSResult       : string;      // Holds result returned by the SMS Provider
-   SaveName        : string;      // Holds instruction name when an Update started - used in case of a Cancel
-   InstrSel        : string;      // Contains the Text of the selected TreeView item
-   ActiveName      : string;      // Name of the Instruction scheduled by the Scheduler
-   LocalPath       : string;      // Dir where Log, Config File and Back Instructions File are stored
-   StartTime       : TDateTime;   // Start time of the current Backup
-   EndTime         : TDateTime;   // End time of the current Backup
-   IniFile         : TINIFile;    // IniFile holding defaults
-   InstrTokens     : TStrings;    // Holds the List of Backup Instruction names
-   Instr_List      : Array_Instructions; // Array of in-memory Backup instructions
-   UpdateRec       : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
+   LimitActive      : boolean;     // Indicates whether LIMIT is used when reading SQL records
+   CanUpdate        : boolean;     // Used to override setting of DoSave
+   SMSDone          : boolean;     // True if SMS send was successful
+   DoSave           : boolean;     // Tracks whether a Save is requried
+   DoNotConnect     : boolean;     // Prevents a DB connection when a previously inactive Backup Instruction is made active
+   BackupSuccess    : boolean;     // Indicates whether the backup was successful or not
+   FirstRun         : boolean;     // Prevents FormActivate from running more than once
+   RecTotal         : integer;     // Holds unformatted rec count after backup
+   NumInstr         : integer;     // Number of backup instructions in the Configuration File
+   SaveInstr        : integer;     // Holds instruction index when an Update started - used in case of a Cancel
+   ActiveInstr      : integer;     // Set by the Timer to indicate which backup instruction popped
+   LogInstrType     : integer;     // Determines in which logs the message is displayed
+   LastPos          : integer;     // Used by Search to keep track of the lof entry line that will be searched next
+   RecTotalF        : string;      // Holds formated rec count after backup
+   ThisMsgF         : string;      // Holds formatted message containing outcome of current backup
+   OutFile          : string;      // Name of the Backup file that will be created
+   RegString        : string;      // Holds the name of the ini file
+   BackupLogFile    : string;      // Log file name
+   KeepVersion      : string;      // Holds the current DB version if this is a LPMS DB
+   LastMsg          : string;      // Last SQL error message
+   OSName           : string;      // Holds the name of the Platform we are running on
+   SMSResult        : string;      // Holds result returned by the SMS Provider
+   SaveName         : string;      // Holds instruction name when an Update started - used in case of a Cancel
+   InstrSel         : string;      // Contains the Text of the selected TreeView item
+   ActiveName       : string;      // Name of the Instruction scheduled by the Scheduler
+   LocalPath        : string;      // Dir where Log, Config File and Back Instructions File are stored
+   StartTime        : TDateTime;   // Start time of the current Backup
+   EndTime          : TDateTime;   // End time of the current Backup
+   IniFile          : TINIFile;    // IniFile holding defaults
+   InstrTokens      : TStrings;    // Holds the List of Backup Instruction names
+   Instr_List       : Array_Instructions; // Array of in-memory Backup instructions
+   UpdateRec        : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
 
 {$ifdef WINDOWS}
    sqlCon : TMySQL56Connection;  // Running on Winblows
@@ -386,6 +386,7 @@ const
    function  GetInstruction() : integer;
    procedure ShowInstruction();
    procedure Navigate();
+   function  FindTextString() : integer;
    procedure DBConnect(DBHost: string; DBName: string; DBUser: string; DBPass: string);
    procedure DispLogMsg(ThisDate: string; ThisTime: string; ThisInstr: string; ThisMsg: string);
    procedure DispLogMsg(RecCount: integer);
@@ -407,9 +408,8 @@ const
    function  ReadTable(Table: string; LimitStart: integer; LimitEnd: integer) : boolean;
    function  AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
 
-
-
 public  { public declarations }
+
    OSDelim         : string;             // Holds '/' or '\' depending on the OS
    CfgFile         : string;             // Name of the default Configuration File
    BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
@@ -450,12 +450,25 @@ uses ldBackupTemplate;
 { TFLPMSBackup }
 
 //------------------------------------------------------------------------------
+// Excuted when the Form is created
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup. FormCreate( Sender: TObject);
+begin
+   FirstRun := False;
+end;
+
+//------------------------------------------------------------------------------
 // Executed before the form is displayed
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.FormActivate(Sender: TObject);
 begin
 
+   if FirstRun = True then
+      Exit;
+
+   FirstRun := True;
    FLPMSBackup.Hide;
+
 
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
@@ -1274,15 +1287,182 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.SearchFindExecute(Sender: TObject);
 begin
-   //
+
+   with dlgFind do begin
+
+//--- If frEntireScope is set then Search begins at Line 1 in the log otherwise
+//--- at the selected line
+
+     if frEntireScope in Options then begin
+
+        if frDown in Options then
+           LastPos := 0
+        else
+           LastPos := lvLogAll.Items.Count - 1;
+
+     end else begin
+
+        LastPos := lvLogAll.ItemIndex;
+
+     end;
+
+     Execute;
+
+   end;
+
 end;
 
 //------------------------------------------------------------------------------
-// Action to continue a search in a Log display
+// User clciked on the Find button in the Find Dialog
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.SearchFindAgainExecute(Sender: TObject);
+procedure TFLPMSBackup.dlgFindFind(Sender: TObject);
+var
+   idx1 : integer;
+
 begin
-   //
+
+   idx1 := FindTextString();
+
+   if idx1 <> -1 then begin
+
+      lvLogAll.ItemIndex := idx1;
+      lvLogAll.Items.Item[idx1].Selected := True;
+      lvLogAll.Items.Item[idx1].MakeVisible(False);
+
+//      lvLogAll.SetFocus;
+
+   end else begin
+
+     if frDown in dlgFind.Options then begin
+
+        if (Application.MessageBox('End of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+           LastPos := 0
+        else
+           dlgFind.CloseDialog;
+
+     end else begin
+
+        if (Application.MessageBox('Start of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+           LastPos := lvLogAll.Items.Count - 1
+        else
+           dlgFind.CloseDialog;
+
+     end;
+
+   end;
+
+end;
+
+//------------------------------------------------------------------------------
+// Procedure to drive the Search function
+//------------------------------------------------------------------------------
+function TFLPMSBackup.FindTextString() : integer;
+var
+   idx1      : integer;
+   Found     : boolean;
+   ListItem  : TlistItem;
+
+begin
+
+   Result := -1;
+
+   if frDown in dlgFind.Options then begin
+
+      for idx1 := LastPos to lvLogAll.Items.Count - 1 do begin
+
+         ListItem := lvLogAll.Items.Item[idx1];
+         Found    := False;
+
+         if frMatchCase in dlgFind.Options then begin
+
+            if AnsiContainsStr(ListItem.Caption,dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[0],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[1],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[2],dlgFind.FindText) then
+               Found := True;
+
+         end else begin
+
+            if AnsiContainsText(ListItem.Caption,dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[0],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[1],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[2],dlgFind.FindText) then
+               Found := True;
+
+         end;
+
+         if Found = True then begin
+
+            LastPos := idx1 + 1;
+            Result := idx1;
+            Exit
+
+         end;
+
+      end;
+
+   end else begin
+
+      for idx1 := LastPos downto 0 do begin
+
+         ListItem := lvLogAll.Items.Item[idx1];
+         Found    := false;
+
+         if frMatchCase in dlgFind.Options then begin
+
+            if AnsiContainsStr(ListItem.Caption,dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[0],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[1],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsStr(ListItem.SubItems.Strings[2],dlgFind.FindText) then
+               Found := True;
+
+
+         end else begin
+
+            if AnsiContainsText(ListItem.Caption,dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[0],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[1],dlgFind.FindText) then
+               Found := True;
+
+            if AnsiContainsText(ListItem.SubItems.Strings[2],dlgFind.FindText) then
+               Found := True;
+
+         end;
+
+         if Found = True then begin
+
+            LastPos := idx1 - 1;
+            Result := idx1;
+            Exit
+
+         end;
+
+      end;
+
+   end;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -1845,12 +2025,26 @@ end;
 procedure TFLPMSBackup.btnViewerClick(Sender: TObject);
 begin
 
-   dlgOpen.InitialDir := '~';
+   if Trim(edtViewerC.Text) <> '' then
+      dlgOpen.InitialDir := ExtractFilePath(edtViewerC.Text);
 
-   if dlgOpen.Execute = False then
-      Exit;
+{$ifdef WINDOWS}
+   dlgOpen.DefaultExt := '.exe';
+   dlgOpen.Filter     := 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*';
+{$endif}
 
-   edtViewerC.Text := dlgOpen.FileName;
+{$ifdef LINUX}
+   dlgOpen.DefaultExt := '';
+   dlgOpen.Filter     := 'All Files (*.*)|*.*';
+{$endif}
+
+{$ifdef DARWIN}
+   dlgOpen.DefaultExt := '';
+   dlgOpen.Filter     := 'All Files (*.*)|*.*';
+{$endif}
+
+   if (dlgOpen.Execute = true) then
+      edtViewerC.Text := dlgOpen.FileName;
 
 end;
 
@@ -2657,7 +2851,6 @@ begin
    EditCancel.Enabled      := False;
    EditUpdate.Enabled      := False;
    SearchFind.Enabled      := False;
-   SearchFindAgain.Enabled := False;
    ActionsFirst.Enabled    := False;
    ActionsNext.Enabled     := False;
    ActionsPrevious.Enabled := False;
@@ -2674,7 +2867,6 @@ begin
          FileClose.Enabled       := True;
          FileNew.Enabled         := True;
          SearchFind.Enabled      := True;
-         SearchFindAgain.Enabled := True;
          ActionsFirst.Enabled    := True;
          ActionsNext.Enabled     := True;
          ActionsPrevious.Enabled := True;
@@ -2691,7 +2883,6 @@ begin
          if pcInstructions.ActivePage = tsInstruction then begin
 
             SearchFind.Enabled      := True;
-            SearchFindAgain.Enabled := True;
             ActionsFirst.Enabled    := True;
             ActionsNext.Enabled     := True;
             ActionsPrevious.Enabled := True;
@@ -3773,7 +3964,6 @@ begin
       cbxDelete.Checked   := IniFile.ReadBool('Parameters','Discard',False);
       cbxCompress.Checked := IniFile.ReadBool('Parameters','Compress',True);
 
-
       BackupTemplate.Instr_Rec.BackupBlock       := IniFile.ReadInteger('Template','BackupBlock',5000);
       BackupTemplate.Instr_Rec.BackupSMSProvider := IniFile.ReadInteger('Template','BackupSMSProvider',0);
       BackupTemplate.Instr_Rec.BackupType        := IniFile.ReadInteger('Template','BackupType',1);
@@ -3975,19 +4165,19 @@ begin
          DispLogMsg('+++++++++ Backups will be taken for ''' + Instr_List[idx1].Instr_Rec.BackupHostName + '[' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + Instr_List[idx1].Instr_Rec.BackupDBSuffix + ']''');
          DispLogMsg('+++++++++ Next Backup will be taken at ' + Instr_List[idx1].NextDate + ' on ' + Instr_List[idx1].NextTime);
 
-         if (Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0) then begin
+         if Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0 then begin
 
             DispLogMsg('+++++++++ SMS Messaging for ' + Instr_List[idx1].Instruction + ' is inactive');
 
          end else begin
 
-            if (Instr_List[idx1].Instr_Rec.BackupSMSNumber <> '') then begin
+            if Trim(Instr_List[idx1].Instr_Rec.BackupSMSNumber) <> '' then begin
 
-               if (rbSMSAlways.Checked = true) then
+               if Instr_List[idx1].Instr_Rec.BackupSMSAlways = True then
                   DispLogMsg('+++++++++ SMS will always be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' (Success or Failure) using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
-               else if (rbSMSSuccess.Checked = true) then
+               else if Instr_List[idx1].Instr_Rec.BackupSMSSuccess = True then
                   DispLogMsg('+++++++++ SMS Message will be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' after a successful backup using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
-               else if (rbSMSFailure.Checked = true) then
+               else if Instr_List[idx1].Instr_Rec.BackupSMSFailure = True then
                   DispLogMsg('+++++++++ SMS Message will be sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + ''' if a backup fails using ''' + Instr_List[idx1].Instr_Rec.BackupSMSProviderName + '''')
                else
                   DispLogMsg('+++++++++ SMS Messages will never be sent');

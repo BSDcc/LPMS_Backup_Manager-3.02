@@ -257,7 +257,7 @@ begin
 {$endif}
 
    if (dlgOpen.Execute = true) then
-      edtViewer.Text := dlgOpen.FileName + FLPMSBackup.OSDelim;
+      edtViewer.Text := dlgOpen.FileName;
 
 end;
 
