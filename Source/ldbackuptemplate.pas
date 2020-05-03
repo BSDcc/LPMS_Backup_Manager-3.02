@@ -37,10 +37,10 @@ type
     cbxT02: TComboBox;
     cbxT03: TComboBox;
     cbxT01: TComboBox;
+    cbDBSuffix: TCheckBox;
     deDirectory: TDirectoryEdit;
     dlgOpen: TOpenDialog;
     edtDBPrefix: TEdit;
-    edtDBSuffix: TEdit;
     edtSMSNumber: TEdit;
     edtSMSPass: TEdit;
     edtHostName: TEdit;
@@ -59,7 +59,6 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
-    Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
@@ -78,6 +77,7 @@ type
     procedure btnUpdateClick( Sender: TObject);
     procedure btnViewerClick( Sender: TObject);
     procedure cbxBackupTypeChange( Sender: TObject);
+    procedure deDirectoryAcceptDirectory(Sender: TObject; var Value: String);
     procedure edtHostNameChange( Sender: TObject);
     procedure FormActivate(Sender: TObject);
 {
@@ -188,7 +188,12 @@ begin
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSSuccess  := rbSuccess.Checked;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPass      := edtDBPass.Text;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBPrefix    := edtDBPrefix.Text;
-   FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBSuffix    := edtDBSuffix.Text;
+
+   if cbDBSuffix.Checked = True then
+      FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBSuffix := '_LPMS'
+   else
+      FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBSuffix := '';
+
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupDBUser      := edtDBUser.Text;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupHostName    := edtHostName.Text;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupLocation    := deDirectory.Text;
@@ -343,6 +348,36 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// User selected a directory
+//------------------------------------------------------------------------------
+procedure TFLPMSBackupTemplate.deDirectoryAcceptDirectory(Sender: TObject; var Value: String);
+var
+   ThisDir : string;
+
+begin
+
+   ThisDir := Value;
+
+//--- We need to add a final OS dependant delimiter (OSDelim) to the path.
+//--- If we are running on Winblows then the path must be at least 4 chars in
+//--- length (e.g 'C:\A') before we can add the backslash
+
+{$IFDEF WINDOWS}
+
+   if (Length(ThisDir) > 3) then
+      ThisDir := ThisDir + FLPMSBackup.OSDelim;
+
+{$ELSE}
+
+   ThisDir := ThisDir + FLPMSBackup.OSDelim;
+
+{$ENDIF}
+
+   Value := ThisDir;
+
+end;
+
+//------------------------------------------------------------------------------
 // An editable field changed
 //------------------------------------------------------------------------------
 procedure TFLPMSBackupTemplate. edtHostNameChange( Sender: TObject);
@@ -354,238 +389,6 @@ begin
    DoSave := True;
 
 end;
-
-{
-//------------------------------------------------------------------------------
-// Executed before the form is finally closed
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-begin
-   if (DoSave = true) then begin
-      if (Application.MessageBox('WARNING: There are unsaved changes. Click [Yes] to ignore the changes or [No] to return to the changes.','LPMS Backup Manager - Configuration', (MB_YESNO + MB_ICONWARNING )) = IDNO) then begin
-         CloseAction := caNone;
-         Exit;
-      end;
-   end;
-
-//--- Write the updated values to the Registry taking the value of MultiCompany
-//--- into account
-
-   if (cbMultiCpy.Checked = false) then
-      RegString := 'LPMS.ini'
-   else
-      RegString := 'LPMS_' + edtDBPrefix.Text + '.ini';
-
-   IniFile := TINIFile.Create(RegString);
-
-   IniFile.WriteInteger('Parameters','BackupSMSProvider',cbSMSProvider.ItemIndex);
-   IniFile.WriteInteger('Parameters','BackupBlock',speBlockSize.Value);
-   IniFile.WriteString('Parameters','BackupSMSUser',edtDBUser.Text);
-   IniFile.WriteString('Parameters','BackupSMSPass',edtDBPass.Text);
-   IniFile.WriteString('Parameters','BackupHostName',edtHostName.Text);
-   IniFile.WriteString('Parameters','BackupViewer',edtViewer.Text);
-
-   IniFile.Destroy;
-end;
-
-//------------------------------------------------------------------------------
-// User changed the DBPrefix
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.edtDBPrefixChange(Sender: TObject);
-begin
-   DBPrefixChanged := true;
-   cbSMSProviderChange(Sender);
-end;
-
-//------------------------------------------------------------------------------
-// A field on the screen has changed
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.cbSMSProviderChange(Sender: TObject);
-begin
-   DoSave             := true;
-   btnUpdate.Caption  := 'Update';
-   btnCancel.Enabled  := true;
-   btnSMSTest.Enabled := false;
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Test button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.btnSMSTestClick(Sender: TObject);
-var
-   PosStart   : integer;
-   PosEnd     : integer;
-   URL        : string;
-   Params     : string;
-   Answer     : string;
-   Credits    : string;
-   Req_Result : string;
-   Response   : TMemoryStream;
-
-begin
-   Response := TMemoryStream.Create;
-
-//--- Construct the RPC based on the selected interface
-
-   case cbSMSProvider.ItemIndex of
-      1: begin
-         URL := 'http://www.mymobileapi.com/api5/http5.aspx';
-         Params   := 'Type=credits&username=' + edtDBUser.Text + '&password=' + edtDBPass.Text;
-      end;
-
-      2: begin
-         URL    := 'http://bulksms.2way.co.za/eapi/user/get_credits/1/1.1';
-         Params := 'username=' + edtDBUser.Text + '&password=' + edtDBPass.Text;
-      end;
-
-      3: begin
-         URL    := 'http://www.winsms.co.za/api/credits.ASP';
-         Params := 'User=' + edtDBUser.Text + '&Password=' + edtDBPass.Text;
-      end;
-   end;
-
-//--- Do the HTTP Post/Get operation
-
-   try
-      SMSDone := HTTPpostURL(URL, Params, Response);
-   finally
-   end;
-
-//--- Extract the result from the HTTP Post/Get operation
-
-   SetString(Answer, PAnsiChar(Response.Memory), Response.Size);
-   Response.Destroy;
-
-   case cbSMSProvider.ItemIndex of
-      1: begin
-         PosStart := AnsiPos('<result>',Answer);
-         PosEnd   := AnsiPos('</result>',Answer);
-         Req_Result := Copy(Answer,PosStart + 8,PosEnd - (PosStart + 8));
-
-         if (lowercase(Req_Result) = 'true') then begin
-            PosStart := AnsiPos('<credits>',Answer);
-            PosEnd   := AnsiPos('</credits>',Answer);
-            Credits  := Copy(Answer,PosStart + 9,PosEnd - (PosStart + 9));
-            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'LPMS Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
-         end else
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','LPMS Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
-      end;
-
-      2: begin
-         Req_Result := Copy(Answer,1,1);
-
-         if (Req_Result = '0') then begin
-            PosStart := AnsiPos('.', Answer);
-            Credits  := Copy(Answer,3,PosStart);
-            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'LPMS Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
-         end else
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','LPMS Backup Manager - Configuration',(MB_OK + MB_ICONWARNING));
-      end;
-
-      3: begin
-         Req_Result := Copy(Answer,9,999999);
-
-         if (lowercase(Req_Result) = 'fail') then
-            Application.MessageBox('Test unsuccessful - Check "User name" and/or "Password".','LPMS Backup Manager - Configuration',(MB_OK + MB_ICONWARNING))
-         else begin
-            Credits  := Req_Result;
-            Application.MessageBox(PChar('Test successful - Number of Credits Remaining: ' + Credits),'LPMS Backup Manager - Configuration',(MB_OK + MB_ICONINFORMATION));
-         end;
-      end;
-   end;
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Update button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.btnUpdateClick(Sender: TObject);
-begin
-   if (btnUpdate.Caption = 'Return') then begin
-      Close;
-      Exit;
-   end;
-
-   if (DBPrefixChanged = true) then begin
-      if (Length(edtDBPrefix.Text) <> 6) then begin
-         Application.MessageBox('DBPrefix appears to be invalid - please provide a valid DBPrefix','LPMS Backup Manager - Configuration', (MB_OK + MB_ICONWARNING));
-         edtDBPrefix.SetFocus;
-         Exit;
-      end;
-
-      if (Application.MessageBox('WARNING: Changing "DBPrefix" to an invalid value may prevent LPMS Backup Manager from functioning properly!' + #10 + #10 + 'Click [Yes] to continue or [No] to reset the change and return.','LPMS Backup Manager - Configuration', (MB_YESNO + MB_ICONWARNING )) = IDNO) then begin
-         edtDBPrefix.Text := KeepDBPrefix;
-         edtDBPrefix.SetFocus;
-         Exit;
-      end;
-   end;
-
-   if ((cbSMSProvider.ItemIndex > 0) and (edtDBUser.Text = '')) then begin
-      Application.MessageBox('"User name" is a required field and cannot be blank.','LPMS Backup Manager - Configuration', (MB_OK + MB_ICONWARNING ));
-      edtDBUser.SetFocus;
-      Exit;
-   end;
-
-   if ((cbSMSProvider.ItemIndex > 0) and (edtDBPass.Text = '')) then begin
-      Application.MessageBox('"Password" is a required field and cannot be blank.','LPMS Backup Manager - Configuration', (MB_OK + MB_ICONWARNING ));
-      edtDBPass.SetFocus;
-      Exit;
-   end;
-
-//--- Update the values in the calling program
-
-   FLPMSBackup.SMSUserID       := edtDBUser.Text;
-   FLPMSBackup.SMSPassword     := edtDBPass.Text;
-   FLPMSBackup.HostName        := edtHostName.Text;
-   FLPMSBackup.DBPrefix        := edtDBPrefix.Text;
-   FLPMSBackup.KeepSMSProvider := cbSMSProvider.ItemIndex;
-   FLPMSBackup.KeepBackupBlock := speBlockSize.Value;
-   FLPMSBackup.DoSave          := true;
-   FLPMSBackup.MultiCompany    := cbMultiCpy.Checked;
-   FLPMSBackup.BackupViewer    := edtViewer.Text;
-//   FLPMSBackup.SMSProviderName := cbSMSProvider.Text;
-
-   if ((cbSMSProvider.ItemIndex > 0) and (edtDBUser.Text <> '') and (edtDBPass.Text <> '')) then
-      btnSMSTest.Enabled := true
-   else
-      btnSMSTest.Enabled := false;
-
-   DoSave := false;
-   btnUpdate.Caption := 'Return';
-   btnCancel.Enabled := false;
-
-   KeepDBPrefix := edtDBPrefix.Text;
-   DBPrefixChanged := false;
-end;
-
-//------------------------------------------------------------------------------
-// User clicked on the Cancel button
-//------------------------------------------------------------------------------
-procedure TFLPMSBackupTemplate.btnCancelClick(Sender: TObject);
-begin
-   if (DoSave = true) then begin
-      if (Application.MessageBox('WARNING: There are unsaved changes. Click [Yes] to ignore the changes or [No] to return to the changes.','LPMS Backup Manager - Configuration', (MB_YESNO + MB_ICONWARNING )) = IDNO) then begin
-         Exit;
-      end;
-   end;
-
-   cbSMSProvider.ItemIndex := FLPMSBackup.KeepSMSProvider;
-   edtDBUser.Text         := FLPMSBackup.SMSUserID;
-   edtDBPass.Text         := FLPMSBackup.SMSPassword;
-   edtViewer.Text          := FLPMSBackup.BackupViewer;
-
-   if ((cbSMSProvider.ItemIndex > 0) and (edtDBUser.Text <> '') and (edtDBPass.Text <> '')) then
-      btnSMSTest.Enabled := true
-   else
-      btnSMSTest.Enabled := false;
-
-   btnUpdate.Caption := 'Return';
-   btnCancel.Enabled := false;
-   DoSave := false;
-
-   edtDBPrefix.Text := KeepDBPrefix;
-   DBPrefixChanged  := false;
-end;
-}
 
 //------------------------------------------------------------------------------
 end.

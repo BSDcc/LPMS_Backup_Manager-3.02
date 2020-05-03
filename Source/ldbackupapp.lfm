@@ -1,11 +1,10 @@
 object FLPMSBackup: TFLPMSBackup
-  Left = 122
+  Left = 44
   Height = 718
-  Top = 25
+  Top = 113
   Width = 1242
-  ActiveControl = pnlP00a2
   Caption = 'FLPMSBackup'
-  ClientHeight = 697
+  ClientHeight = 698
   ClientWidth = 1242
   Menu = mnuMain
   OnActivate = FormActivate
@@ -15,23 +14,23 @@ object FLPMSBackup: TFLPMSBackup
   LCLVersion = '2.0.6.0'
   object pnlP00: TPanel
     Left = 205
-    Height = 571
+    Height = 570
     Top = 57
     Width = 1037
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 571
+    ClientHeight = 570
     ClientWidth = 1037
     TabOrder = 3
     object pnlP00b: TPanel
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 571
+      ClientHeight = 570
       ClientWidth = 1037
       TabOrder = 1
       object pnl00b1: TPanel
@@ -56,18 +55,18 @@ object FLPMSBackup: TFLPMSBackup
           TabOrder = 0
           object cbxDoSort: TCheckBox
             Left = 10
-            Height = 21
+            Height = 19
             Top = 8
-            Width = 182
+            Width = 170
             Caption = 'Sort Instructions in TreeView'
             OnChange = cbxDoSortChange
             TabOrder = 0
           end
           object cbxDelete: TCheckBox
             Left = 10
-            Height = 21
+            Height = 19
             Top = 40
-            Width = 213
+            Width = 200
             Caption = 'Discard invalid instructions on Exit'
             TabOrder = 1
           end
@@ -90,9 +89,9 @@ object FLPMSBackup: TFLPMSBackup
           end
           object cbxCompress: TCheckBox
             Left = 10
-            Height = 21
+            Height = 19
             Top = 72
-            Width = 187
+            Width = 177
             Caption = 'Compress Output Backup File'
             TabOrder = 3
           end
@@ -159,39 +158,39 @@ object FLPMSBackup: TFLPMSBackup
             TabOrder = 1
             object Label7: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 10
-              Width = 61
+              Width = 60
               Caption = 'Config File:'
               ParentColor = False
             end
             object Label8: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 42
-              Width = 66
+              Width = 63
               Caption = 'Host Name:'
               ParentColor = False
             end
             object Label9: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 73
+              Width = 69
               Caption = 'Next Backup:'
               ParentColor = False
             end
             object lblDBVersion: TLabel
               Left = 16
-              Height = 17
+              Height = 15
               Top = 106
-              Width = 91
+              Width = 90
               Caption = 'Output Location:'
               ParentColor = False
             end
             object edtConfigFile: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 6
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -199,7 +198,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtHostName: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 38
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -207,7 +206,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtNextBackup: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 70
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -215,7 +214,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLocation: TEdit
               Left = 135
-              Height = 27
+              Height = 23
               Top = 102
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -240,17 +239,17 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnl00b2: TPanel
         Left = 0
-        Height = 433
+        Height = 432
         Top = 138
         Width = 1037
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 433
+        ClientHeight = 432
         ClientWidth = 1037
         TabOrder = 1
         object lvLogAll: TListView
           Left = 0
-          Height = 433
+          Height = 432
           Top = 0
           Width = 1037
           Align = alClient
@@ -270,7 +269,7 @@ object FLPMSBackup: TFLPMSBackup
             item
               AutoSize = True
               Caption = 'Message'
-              Width = 720
+              Width = 61
             end>
           GridLines = True
           HideSelection = False
@@ -283,17 +282,17 @@ object FLPMSBackup: TFLPMSBackup
     end
     object pnlP00a: TPanel
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 571
+      ClientHeight = 570
       ClientWidth = 1037
       TabOrder = 0
       object pcInstructions: TPageControl
         Left = 0
-        Height = 571
+        Height = 570
         Top = 0
         Width = 1037
         ActivePage = tsInstruction
@@ -303,34 +302,34 @@ object FLPMSBackup: TFLPMSBackup
         OnChange = pcInstructionsChange
         object tsInstruction: TTabSheet
           Caption = 'Instruction'
-          ClientHeight = 536
-          ClientWidth = 1031
+          ClientHeight = 542
+          ClientWidth = 1029
           object pnlP00a2: TPanel
             Left = 0
-            Height = 134
+            Height = 140
             Top = 0
-            Width = 1031
+            Width = 1029
             Align = alTop
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
-            ClientHeight = 134
-            ClientWidth = 1031
+            ClientHeight = 140
+            ClientWidth = 1029
             TabOrder = 0
             object Label4: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 42
-              Width = 74
+              Width = 71
               Caption = 'Backup Type:'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxType: TComboBox
               Left = 150
-              Height = 25
+              Height = 23
               Top = 38
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 1
               Items.Strings = (
                 'Hourly'
@@ -344,19 +343,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL01: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 24
+              Width = 22
               Caption = 'T01:'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT01: TComboBox
               Left = 150
-              Height = 25
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -367,19 +366,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL02: TLabel
               Left = 334
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 21
+              Width = 19
               Caption = 'T02'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT02: TComboBox
               Left = 456
-              Height = 25
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -390,19 +389,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL03: TLabel
               Left = 658
-              Height = 17
+              Height = 15
               Top = 74
-              Width = 21
+              Width = 19
               Caption = 'T03'
               ParentColor = False
               ParentShowHint = False
             end
             object cbxT03: TComboBox
               Left = 772
-              Height = 25
+              Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 0
+              ItemHeight = 15
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -413,16 +412,16 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label6: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 106
-              Width = 77
+              Width = 73
               Caption = 'SMS Number:'
               ParentColor = False
               ParentShowHint = False
             end
             object edtSMSNumber: TEdit
               Left = 150
-              Height = 27
+              Height = 23
               Top = 102
               Width = 106
               OnChange = edtInstrNameCChange
@@ -431,36 +430,36 @@ object FLPMSBackup: TFLPMSBackup
             end
             object rbSMSSuccess: TRadioButton
               Left = 270
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 113
+              Width = 104
               Caption = 'SMS on Success'
               OnChange = edtInstrNameCChange
               TabOrder = 6
             end
             object rbSMSFailure: TRadioButton
               Left = 410
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 106
+              Width = 98
               Caption = 'SMS on Failure'
               OnChange = edtInstrNameCChange
               TabOrder = 7
             end
             object rbSMSNever: TRadioButton
               Left = 700
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 115
+              Width = 105
               Caption = 'Never send SMS'
               OnChange = edtInstrNameCChange
               TabOrder = 9
             end
             object rbSMSAlways: TRadioButton
               Left = 550
-              Height = 21
+              Height = 19
               Top = 106
-              Width = 120
+              Width = 111
               Caption = 'Always send SMS'
               Checked = True
               OnChange = edtInstrNameCChange
@@ -469,19 +468,19 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLastBackup: TEdit
               Left = 150
-              Height = 27
+              Height = 23
               Top = 6
-              Width = 838
+              Width = 836
               Anchors = [akTop, akLeft, akRight]
               ParentShowHint = False
               ReadOnly = True
               TabOrder = 0
             end
             object btnOpenLB: TSpeedButton
-              Left = 992
-              Height = 26
-              Top = 6
-              Width = 28
+              Left = 990
+              Height = 25
+              Top = 5
+              Width = 26
               Anchors = [akTop, akRight]
               Glyph.Data = {
                 36030000424D3803000000000000360000002800000010000000100000000100
@@ -515,9 +514,9 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label5: TLabel
               Left = 12
-              Height = 17
+              Height = 15
               Top = 10
-              Width = 70
+              Width = 66
               Caption = 'Last Backup:'
               ParentColor = False
               ParentShowHint = False
@@ -525,21 +524,21 @@ object FLPMSBackup: TFLPMSBackup
           end
           object pnlP00a3: TPanel
             Left = 0
-            Height = 402
+            Height = 408
             Top = 134
-            Width = 1031
+            Width = 1029
             Align = alBottom
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'pnlP00a3'
-            ClientHeight = 402
-            ClientWidth = 1031
+            ClientHeight = 408
+            ClientWidth = 1029
             TabOrder = 1
             object lvLogSel: TListView
               Left = 0
-              Height = 402
+              Height = 408
               Top = 0
-              Width = 1031
+              Width = 1029
               Align = alClient
               Columns = <              
                 item
@@ -557,7 +556,7 @@ object FLPMSBackup: TFLPMSBackup
                 item
                   AutoSize = True
                   Caption = 'Message'
-                  Width = 714
+                  Width = 61
                 end>
               GridLines = True
               HideSelection = False
@@ -570,13 +569,13 @@ object FLPMSBackup: TFLPMSBackup
         end
         object tsConfiguration: TTabSheet
           Caption = 'Configuration'
-          ClientHeight = 536
-          ClientWidth = 1031
+          ClientHeight = 542
+          ClientWidth = 1029
           object Label10: TLabel
             Left = 8
-            Height = 18
+            Height = 17
             Top = 8
-            Width = 131
+            Width = 119
             Caption = 'Backup Instruction:'
             Font.Height = -13
             Font.Style = [fsBold, fsUnderline]
@@ -585,15 +584,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label11: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 40
-            Width = 100
+            Width = 95
             Caption = 'Instruction Name:'
             ParentColor = False
           end
           object edtInstrNameC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 36
             Width = 272
             OnChange = edtInstrNameCChange
@@ -601,15 +600,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label12: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 72
-            Width = 66
+            Width = 63
             Caption = 'Host Name:'
             ParentColor = False
           end
           object edtHostNameC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 68
             Width = 272
             OnChange = edtInstrNameCChange
@@ -617,18 +616,18 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label13: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 104
-            Width = 55
+            Width = 53
             Caption = 'Template:'
             ParentColor = False
           end
           object edtTemplateC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Hint = 'Valid Symbolic Variables are: &Date, &Year, &Month, &Day, &Time, & Hour, &Minute, &CpyName, &Instruction, &HostName, &BackupType, &DBPrefix, &DBSuffix and &OSName'
             Top = 100
-            Width = 862
+            Width = 860
             Anchors = [akTop, akLeft, akRight]
             OnChange = edtInstrNameCChange
             ParentShowHint = False
@@ -637,17 +636,17 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label14: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 136
-            Width = 94
+            Width = 91
             Caption = 'Backup Location:'
             ParentColor = False
           end
           object edtLocationC: TDirectoryEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 132
-            Width = 862
+            Width = 860
             OnAcceptDirectory = edtLocationAcceptDirectory
             DialogTitle = 'Backup Manager - Select Backup Folder'
             ShowHidden = False
@@ -661,15 +660,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label15: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 168
-            Width = 90
+            Width = 84
             Caption = 'Read Block Size:'
             ParentColor = False
           end
           object speBlockSizeC: TSpinEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 164
             Width = 118
             MaxValue = 100000
@@ -680,23 +679,23 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label16: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 200
-            Width = 85
+            Width = 80
             Caption = 'Backup Viewer:'
             ParentColor = False
           end
           object edtViewerC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 196
-            Width = 831
+            Width = 829
             Anchors = [akTop, akLeft, akRight]
             OnChange = edtInstrNameCChange
             TabOrder = 9
           end
           object btnViewer: TSpeedButton
-            Left = 994
+            Left = 992
             Height = 26
             Top = 196
             Width = 28
@@ -733,9 +732,9 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label17: TLabel
             Left = 8
-            Height = 18
+            Height = 17
             Top = 230
-            Width = 88
+            Width = 87
             Caption = 'SMS Provider:'
             Font.Height = -13
             Font.Style = [fsBold, fsUnderline]
@@ -744,18 +743,18 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label18: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 262
-            Width = 87
+            Width = 82
             Caption = 'Provider Name:'
             ParentColor = False
           end
           object cbSMSProviderC: TComboBox
             Left = 160
-            Height = 25
+            Height = 23
             Top = 258
             Width = 118
-            ItemHeight = 0
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               'Inactive'
@@ -770,15 +769,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object lblSMSUser: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 303
-            Width = 46
+            Width = 40
             Caption = 'User ID:'
             ParentColor = False
           end
           object edtSMSUserC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 290
             Width = 221
             OnChange = edtInstrNameCChange
@@ -786,15 +785,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object lblSMSPass: TLabel
             Left = 16
-            Height = 17
+            Height = 15
             Top = 338
-            Width = 57
+            Width = 53
             Caption = 'Password:'
             ParentColor = False
           end
           object edtSMSPassC: TEdit
             Left = 160
-            Height = 27
+            Height = 23
             Top = 322
             Width = 221
             EchoMode = emPassword
@@ -814,24 +813,24 @@ object FLPMSBackup: TFLPMSBackup
           end
           object cbxDBSuffixC: TCheckBox
             Left = 751
-            Height = 21
+            Height = 19
             Top = 40
-            Width = 114
+            Width = 104
             Caption = ' LPMS Database'
             OnChange = edtInstrNameCChange
             TabOrder = 2
           end
           object Label2: TLabel
             Left = 466
-            Height = 17
+            Height = 15
             Top = 72
-            Width = 46
+            Width = 40
             Caption = 'User ID:'
             ParentColor = False
           end
           object edtDBUserC: TEdit
             Left = 560
-            Height = 27
+            Height = 23
             Top = 68
             Width = 160
             OnChange = edtInstrNameCChange
@@ -839,15 +838,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label3: TLabel
             Left = 753
-            Height = 17
+            Height = 15
             Top = 72
-            Width = 57
+            Width = 53
             Caption = 'Password:'
             ParentColor = False
           end
           object edtDBPassC: TEdit
             Left = 864
-            Height = 27
+            Height = 23
             Top = 68
             Width = 160
             EchoMode = emPassword
@@ -857,15 +856,15 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label19: TLabel
             Left = 466
-            Height = 17
+            Height = 15
             Top = 40
-            Width = 57
+            Width = 51
             Caption = 'Database:'
             ParentColor = False
           end
           object edtDBPrefixC: TEdit
             Left = 560
-            Height = 27
+            Height = 23
             Top = 36
             Width = 160
             OnChange = edtInstrNameCChange
@@ -887,8 +886,8 @@ object FLPMSBackup: TFLPMSBackup
   end
   object sbStatus: TStatusBar
     Left = 0
-    Height = 21
-    Top = 676
+    Height = 23
+    Top = 675
     Width = 1242
     Panels = <    
       item
@@ -917,7 +916,7 @@ object FLPMSBackup: TFLPMSBackup
   end
   object splSplit01: TSplitter
     Left = 200
-    Height = 571
+    Height = 570
     Top = 57
     Width = 5
     Beveled = True
@@ -1531,18 +1530,18 @@ object FLPMSBackup: TFLPMSBackup
   end
   object pnlP02: TPanel
     Left = 0
-    Height = 571
+    Height = 570
     Top = 57
     Width = 200
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 571
+    ClientHeight = 570
     ClientWidth = 200
     TabOrder = 1
     object tvInstructions: TTreeView
       Left = 0
-      Height = 571
+      Height = 570
       Top = 0
       Width = 200
       Align = alClient
@@ -1558,7 +1557,7 @@ object FLPMSBackup: TFLPMSBackup
   object pnlP03: TPanel
     Left = 0
     Height = 48
-    Top = 628
+    Top = 627
     Width = 1242
     Align = alBottom
     BevelOuter = bvNone
@@ -1614,8 +1613,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL04: TLabel
       Left = 12
-      Height = 17
-      Top = 6
+      Height = 15
+      Top = 8
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -1623,8 +1622,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL05: TLabel
       Left = 12
-      Height = 17
-      Top = 26
+      Height = 15
+      Top = 28
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -2631,72 +2630,72 @@ object FLPMSBackup: TFLPMSBackup
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00AE837EFFAE837EFFAE837EFFAE837EFFAE837EFFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE83
-      7EFFAE837EFFE8D5B4FFFFF9C5FFFFF5C0FFFFF5C2FFEED8B7FFAE837EFFAE83
-      7EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFD9C6
-      C0FFFFFFFFFFFFF7D7FFF8DAA6FFF4CB95FFF5CD99FFF9D9A6FFFFF1BBFFDEC2
-      A9FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFE0CAB2FFFFFF
-      FFFFFEF9F2FFF8E1BEFFF1C48DFFEEBA85FFF1C491FFF4D1A1FFF8DEB0FFFFF7
-      C6FFDDC7AEFFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFFFFED0FFFCF0
-      D6FFF8E0BEFFF4CF9DFFF3CD9AFFF6D8AAFFFBEABFFFFDF4CBFFFCF7CFFFFEF8
-      D1FFFFFFDEFFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFECD5B4FFFDE6B2FFF3C9
-      96FFF2C792FFF3D09CFFF8E3B5FFFCF5CDFFFFFFDAFFFFFFDCFFFFFFDBFFFFFF
-      DBFFFFFFDCFFE2D3B8FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFFFF5C3FFF6D19CFFEEB2
-      7DFFF1C593FFF7E0B3FFFDF7D0FFFFFFDCFFFFFFDDFFFFFFDDFFFFFFDDFFFFFF
-      DBFFFFFFDAFFFFFFE1FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFFFF4C0FFF3C994FFEEB8
-      84FFF5D5A5FFFDF3CBFFFFFFDCFFFFFFDDFFFFFFE2FFFFFFE8FFFFFFE9FFFFFF
-      E2FFFFFFDDFFFFFFE3FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFFFF3BFFFF4CB95FFF0C1
-      8EFFF9E5BAFFFEFDD7FFFFFFDCFFFFFFDFFFFFFFECFFFFFFF8FFFFFFF8FFFFFF
-      ECFFFFFFE0FFFFFFE3FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFECD5B4FFF8D6A2FFF2C9
-      97FFFCEDC4FFFFFFDBFFFFFFDAFFFFFFE0FFFFFFF0FFFFFFFEFFFFFFFDFFFFFF
-      F5FFFFFFEBFFE1D3B8FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE837EFFFFEFB9FFF5D4
-      A5FFFBF0C6FFFFFFDBFFFFFFDAFFFFFFDDFFFFFFEBFFFFFFF5FFFFFFFBFFFFFF
-      FDFFFFFFFEFFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00AE857FFFDEC0A5FFFFF3
-      C1FFFCF1C8FFFFFFDAFFFFFFD9FFFFFFDAFFFFFFE0FFFFFFE4FFFFFFEFFFFFFF
-      FFFFDDCAC8FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00DCBFB8FFC69E8EFFD8BD
-      A3FFFFFFDDFFFFFFDDFFFFFFDBFFFFFFDAFFFFFFDBFFFFFFDDFFFFFFE9FFDEC9
-      B7FFAE837EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF0046AFFEFF66C5FFFFA3CCF1FFBEB3ABFF867170FFA980
-      7AFFAE837EFFE5D8BDFFFFFFE2FFFFFFE2FFFFFFE0FFEEDFC6FFAE837EFFAE83
-      7EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF0046AEFEFF5CBFFEFF4CB0FFFF3F97EDFF577B94FFFF00FF00FF00
-      FF00FF00FF00AE837EFFAE837EFFAE837EFFAE837EFFAE837EFFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF0044ADFEFF5CBFFEFF4DB0FFFF2D94F8FF1979C6FF437397FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0042AC
-      FEFF5CC0FEFF4DAFFFFF2E94FAFF187AC7FF5F7C97FFBB9396FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0042ABFEFF5CC0
-      FEFF4DAFFFFF3096FAFF197AC8FF587A96FFC19494FFFF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0041ABFFFF5DBFFEFF4DAF
-      FFFF3196FAFF197BC8FF5A7A97FFC29594FFFF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF003DADFFFF57C1FFFF4DB1FFFF3196
-      FAFF197CC9FF537997FFC19495FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF009B9D9DFF5492C2FF2E99FFFF1B7C
-      CBFF557A97FFC19595FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00ACA8A7FF86868AFF2A669AFF4B7B
-      A0FFC09494FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00ABA7A6FF8C8888FFC095
-      96FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00000000FF000000FF000000FF000000FFFF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF0000598AFF004A72FF006A9DFF00659CFF0073A9FF008FC5FF0066
+      9AFF00669AFF00669AFF00669AFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00000000FF000000FFFF00FF00FF00
+      FF0000608EFF008BC1FF0086BDFF008BC2FF00AFE5FF00B8EEFF00B2E8FF00AD
+      E2FF00A7DCFF0092C8FF006EA3FF00669AFF00669AFF00669AFF00669AFFFF00
+      FF00FF00FF00FF00FF00FF00FF00000000FF3F3A38FF27292AFF004C76FF0067
+      A0FF0977ADFF33A4CFFF35DDFFFF10DAFFFF00D0FFFF00C8FEFF00C1F7FF00A2
+      D9FF0070A6FF005889FF005C8BFF00A8DCFF0095CAFF0090C5FF008CC1FF0066
+      9AFF00669AFF00669AFFFF00FF00000000FF989391FF0D6694FF64A9CCFFFEFF
+      FFFFF3FFFFFFCEFFFFFFA4FAFFFF77F0FFFF47E6FFFF12CCFDFF006C9BFF0068
+      9FFF0094C9FF006A9FFF0073A6FF0090C5FF00A5DBFF00A6DBFF00A3D8FF038F
+      BCFF5A624EFF0A3044FF00669AFF000000FF4A6979FF0069A2FFCDFFFFFFFBFF
+      FFFFFFFFFFFFFFFFFFFFFCFFFFFFD9FFFFFF5AAECEFF002639FF002139FF007E
+      B5FF00A8DEFF006BA1FF007AAFFF0095CAFF00B9EEFF00B2E7FF00ADE2FF8E66
+      2EFFD08540FF22140EFF00669AFF000000FF0F3649FF138BBEFF7AF5FFFFA6FC
+      FFFFCDFFFFFFEFFFFFFFFFFFFFFFF1F8FCFF003556FF185C7FFF4C8CAAFF1E7E
+      ADFF00659CFF005E95FF007AAFFF00B5EAFF00CAFFFF00C2F8FF258A9CFFFF9C
+      3DFFD79E6BFF6B5E58FF00669AFFFF00FF00000000FF0077B0FF0DD8FFFF34E5
+      FFFF67EEFFFF96F5FFFFC0FEFFFF89C6DFFF277FACFFFEFFFFFFFFFFFFFFF2FF
+      FFFFB9EEFDFF469DC4FF0071A8FF2ABBE8FF1EDFFFFF03D5FFFF6A9184FFFFC9
+      7FFF9E826EFF8B7E7AFF00669AFFFF00FF00FF00FF0000669AFF00669AFF00C4
+      FAFF04DAFFFF24E0FFFF55E8FFFF0B72A6FF98E6FCFFD7FFFFFFF7FFFFFFE3DE
+      DDFFC07F45FF7D4A1EFF052638FF016BA0FF48BBE2FF5DECFFFF7B8F83FFAA80
+      5CFF695C57FF34596EFF00669AFFFF00FF00FF00FF00FF00FF00FF00FF000066
+      9AFF00A5DCFF00D7FFFF00C1F6FF027FB4FF42E4FFFF75EEFFFFA2F7FFFFB372
+      32FFFB9535FFD59258FF1A0E0AFF3F8EB6FF00669AFF00669AFF296E8AFF1E18
+      17FF1D4358FF00669AFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF0000669AFF00669AFF00A3DAFF0085BCFF00D5FFFF09D9FFFF42A2AFFFFC94
+      34FFFFBF74FFBC8E66FF403431FF00669AFFFF00FF00FF00FF0000669AFF0066
+      9AFF00669AFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF0000669AFF0077AEFF00D6FFFF00D6FFFF5A8D85FFFFBE
+      73FFFFD391FF927F72FF686B6CFF00669AFFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF0000669AFF008EC4FF00D0FFFF80A08FFFFCBC
+      80FF90715AFF8D817CFF1F6786FF00669AFFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF0000669AFF00669AFF056D91FF1E11
+      0DFF41342FFF2A5166FF00669AFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0000669AFF0066
+      9AFF00669AFF00669AFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
@@ -3445,36 +3444,36 @@ object FLPMSBackup: TFLPMSBackup
       00FF401800FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A77E70FFA98073FFA4786EFFFF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00986865FFBA9587FFEAD7A4FFEAD59EFFE0C097FFA577
-      6CFFA5776CFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00A1746BFFE1D4D3FFFFFEEEFFF7CC8CFFF0B473FFF7C788FFFCE3
-      A5FFC2A088FFA5776CFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00CEB293FFFFFEDDFFF4D1A5FFEEBA7BFFF2C78FFFF8E1ABFFFCF0
-      BAFFFCFACAFFA3776FFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00AA7F73FFFAE0A4FFF0B778FFEEBA7BFFF6DDA6FFFEFBCCFFFFFFD3FFFFFF
-      D1FFFFFFD7FFD9C5A7FFA3756CFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00B18A78FFFFDE99FFE9A167FFF4D199FFFEFCCCFFFFFFD5FFFFFFDAFFFFFF
-      DCFFFFFFD7FFEFE6C5FFA97E75FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00B08978FFFEDA97FFEDB478FFFBEEBBFFFFFFD3FFFFFFDCFFFFFFF4FFFFFF
-      F4FFFFFFE2FFE9DDBCFFA67B73FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00B08978FFFAD192FFFEF4C2FFFFFFD0FFFFFFDAFFFFFFF6FFFFFF
-      FCFFFFFFFCFFB69384FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00C0917DFFFCE9ACFFFFFFCCFFFFFFCFFFFFFFD0FFFFFFDEFFFFFF
-      FAFFE3D3D1FF996965FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF003BAB
-      FFFFA1CAE7FFAD8679FFA98373FFE0CFB1FFFFFFDAFFFFFFDDFFFCF8CFFFCCB2
-      9FFFA1746BFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF0038A5FEFF329D
-      FFFF156DCEFF444F5BFFFF00FF009C6B65FFAF887BFFAF887EFFAA8075FFFF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0037A4FEFF359EFFFF0F6F
-      DEFF35608BFFA67B7FFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF0037A4FEFF379FFFFF0E6DDEFF355F
-      89FFBB7F79FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF0032A0FEFF37A1FFFF106FE2FF325F8BFFB67D
-      79FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF005084B2FF0F6FE1FF325F8CFFB87E7AFFFF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00314B62FFAC7D7EFFFF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF0000060DFF001323FF004B82FF004B82FF004B82FFFF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00004B
+      82FF009CE1FF0093D8FF00A0E5FF008CCEFF008CCEFF004B82FF004B82FF004B
+      82FF004B82FFFF00FF00FF00FF00060302FF060302FF004B82FF004B82FF4BD4
+      FFFF1CE2FFFF01CFFFFF00ACF2FF0069A9FF00447DFF005C93FF00A0E3FF007B
+      BAFF007BBAFF004B82FF004B82FF060302FF165984FFD1FFFFFFFFFFFFFFFFFF
+      FFFFC4FFFFFF2080A6FF001B32FF0070B0FF0064A1FF006FAFFF00A6EAFF009E
+      E0FF2D5A54FF6E320CFF004B82FF060302FF013E69FF53F7FFFFA1FFFFFFEAFF
+      FFFFEBFFFFFF043050FF6693A9FF3589B7FF004781FF007BBBFF00C9FFFF00BB
+      FFFFC7631CFF9D6C49FF004B82FFFF00FF00004B82FF004B82FF0ADEFFFF3AED
+      FFFF1F86BAFF8AD7F3FFFFFFFFFFDDCFC1FF6D4F32FF003359FF1A9ED4FF25B4
+      D9FFCB7D41FF5A4941FF004B82FFFF00FF00FF00FF00FF00FF00004B82FF00B8
+      FFFF0081C2FF25E3FFFF60D3EFFFD8600FFFD17734FF0D161CFF004B82FF004B
+      82FF004B82FF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00004B
+      82FF004B82FF00D4FFFF248995FFFFAC4EFFB88055FF004B82FFFF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00004B82FF18758AFF845432FF5C4B43FF004B82FFFF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00004B82FF004B82FF004B82FFFF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00A77E70FFA98073FFA4786EFFFF00
@@ -4135,72 +4134,72 @@ object FLPMSBackup: TFLPMSBackup
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00A1A1A1FFA1A1A1FFA1A1A1FFA1A1A1FFA1A1A1FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1
-      A1FFA1A1A1FFCECECEFFE2E2E2FFDFDFDFFFE0E0E0FFD2D2D2FFA1A1A1FFA1A1
-      A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFCCCC
-      CCFFFFFFFFFFEBEBEBFFCFCFCFFFC4C4C4FFC7C7C7FFCFCFCFFFDDDDDDFFC3C3
-      C3FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFC9C9C9FFFFFF
-      FFFFF8F8F8FFDBDBDBFFBFBFBFFFB9B9B9FFC1C1C1FFCACACAFFD4D4D4FFE2E2
-      E2FFC5C5C5FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFE7E7E7FFE9E9
-      E9FFDBDBDBFFC8C8C8FFC6C6C6FFD0D0D0FFDDDDDDFFE4E4E4FFE5E5E5FFE7E7
-      E7FFEEEEEEFFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFD0D0D0FFD7D7D7FFC4C4
-      C4FFC2C2C2FFC7C7C7FFD6D6D6FFE4E4E4FFECECECFFEDEDEDFFEDEDEDFFEDED
-      EDFFEDEDEDFFCDCDCDFFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFE1E1E1FFC9C9C9FFB5B5
-      B5FFC2C2C2FFD5D5D5FFE6E6E6FFEDEDEDFFEEEEEEFFEEEEEEFFEEEEEEFFEDED
-      EDFFECECECFFF0F0F0FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFDFDFDFFFC3C3C3FFB9B9
-      B9FFCDCDCDFFE4E4E4FFEDEDEDFFEEEEEEFFF0F0F0FFF3F3F3FFF4F4F4FFF0F0
-      F0FFEEEEEEFFF1F1F1FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFDFDFDFFFC4C4C4FFBFBF
-      BFFFD9D9D9FFEAEAEAFFEDEDEDFFEFEFEFFFF5F5F5FFFBFBFBFFFBFBFBFFF5F5
-      F5FFEFEFEFFFF1F1F1FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFD0D0D0FFCDCDCDFFC4C4
-      C4FFE0E0E0FFEDEDEDFFECECECFFEFEFEFFFF7F7F7FFFEFEFEFFFEFEFEFFFAFA
-      FAFFF5F5F5FFCCCCCCFFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A1A1A1FFDCDCDCFFCDCD
-      CDFFE0E0E0FFEDEDEDFFECECECFFEEEEEEFFF5F5F5FFFAFAFAFFFDFDFDFFFEFE
-      FEFFFEFEFEFFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00A2A2A2FFC1C1C1FFE0E0
-      E0FFE2E2E2FFECECECFFECECECFFECECECFFEFEFEFFFF1F1F1FFF7F7F7FFFFFF
-      FFFFD2D2D2FFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00CACACAFFAAAAAAFFBDBD
-      BDFFEEEEEEFFEEEEEEFFEDEDEDFFECECECFFEDEDEDFFEEEEEEFFF4F4F4FFCACA
-      CAFFA1A1A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00B6B6B6FFC6C6C6FFCACACAFFB4B4B4FF7B7B7BFF9797
-      97FFA1A1A1FFD1D1D1FFF0F0F0FFF0F0F0FFEFEFEFFFDADADAFFA1A1A1FFA1A1
-      A1FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00B6B6B6FFC1C1C1FFB9B9B9FFAAAAAAFF898989FFFF00FF00FF00
-      FF00FF00FF00A1A1A1FFA1A1A1FFA1A1A1FFA1A1A1FFA1A1A1FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00B5B5B5FFC1C1C1FFBABABAFFA6A6A6FF838383FF818181FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00B4B4
-      B4FFC1C1C1FFBABABAFFA8A8A8FF838383FF8F8F8FFFBBBBBBFFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00B4B4B4FFC1C1
-      C1FFBABABAFFA9A9A9FF848484FF8B8B8BFFBEBEBEFFFF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00B4B4B4FFC1C1C1FFBABA
-      BAFFA9A9A9FF848484FF8C8C8CFFBFBFBFFFFF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00B2B2B2FFBFBFBFFFBABABAFFA9A9
-      A9FF858585FF898989FFBEBEBEFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00B0B0B0FF9F9F9FFFAAAAAAFF8787
-      87FF8A8A8AFFBFBFBFFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00BDBDBDFF9C9C9CFF767676FF8989
-      89FFBEBEBEFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00BCBCBCFF9E9E9EFFBEBE
-      BEFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00595959FF595959FF595959FF595959FFFF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00B4B4B4FFA7A7A7FFC0C0C0FFBDBDBDFFC6C6C6FFD5D5D5FFBDBD
+      BDFFBDBDBDFFBDBDBDFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00595959FF595959FFFF00FF00FF00
+      FF00B8B8B8FFD3D3D3FFD1D1D1FFD3D3D3FFE2E2E2FFE6E6E6FFE4E4E4FFE2E2
+      E2FFDFDFDFFFD6D6D6FFC3C3C3FFBDBDBDFFBDBDBDFFBDBDBDFFBDBDBDFFFF00
+      FF00FF00FF00FF00FF00FF00FF00595959FF959595FF848484FFA9A9A9FFC0C0
+      C0FFC9C9C9FFDFDFDFFFF2F2F2FFF0F0F0FFEDEDEDFFEBEBEBFFE9E9E9FFDEDE
+      DEFFC4C4C4FFB4B4B4FFB6B6B6FFDFDFDFFFD8D8D8FFD5D5D5FFD3D3D3FFBDBD
+      BDFFBDBDBDFFBDBDBDFFFF00FF00595959FFD7D7D7FFBDBDBDFFE2E2E2FFFFFF
+      FFFFFFFFFFFFFDFDFDFFFBFBFBFFF8F8F8FFF4F4F4FFEDEDEDFFC0C0C0FFC0C0
+      C0FFD7D7D7FFC0C0C0FFC6C6C6FFD5D5D5FFDEDEDEFFDFDFDFFFDEDEDEFFD3D3
+      D3FFB2B2B2FF8D8D8DFFBDBDBDFF595959FFBDBDBDFFC1C1C1FFFDFDFDFFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFEFFE3E3E3FF838383FF808080FFCDCD
+      CDFFE0E0E0FFC1C1C1FFCACACAFFD8D8D8FFE6E6E6FFE3E3E3FFE2E2E2FFB1B1
+      B1FFC8C8C8FF6E6E6EFFBDBDBDFF595959FF929292FFD3D3D3FFF9F9F9FFFBFB
+      FBFFFDFDFDFFFEFEFEFFFFFFFFFFFDFDFDFF949494FFB5B5B5FFD4D4D4FFCDCD
+      CDFFBDBDBDFFB9B9B9FFCACACAFFE5E5E5FFECECECFFE9E9E9FFCECECEFFD2D2
+      D2FFD8D8D8FFB4B4B4FFBDBDBDFFFF00FF00595959FFC9C9C9FFEFEFEFFFF3F3
+      F3FFF7F7F7FFFAFAFAFFFDFDFDFFEDEDEDFFCECECEFFFFFFFFFFFFFFFFFFFFFF
+      FFFFFAFAFAFFDDDDDDFFC5C5C5FFE8E8E8FFF1F1F1FFEFEFEFFFD1D1D1FFE8E8
+      E8FFCBCBCBFFCBCBCBFFBDBDBDFFFF00FF00FF00FF00BDBDBDFFBDBDBDFFEAEA
+      EAFFF0F0F0FFF2F2F2FFF5F5F5FFC6C6C6FFF7F7F7FFFEFEFEFFFFFFFFFFF5F5
+      F5FFC5C5C5FF9C9C9CFF838383FFC1C1C1FFE8E8E8FFF6F6F6FFD1D1D1FFC8C8
+      C8FFB3B3B3FFB2B2B2FFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00BDBD
+      BDFFDEDEDEFFEFEFEFFFE9E9E9FFCDCDCDFFF4F4F4FFF7F7F7FFFAFAFAFFBBBB
+      BBFFCECECEFFD1D1D1FF686868FFD6D6D6FFBDBDBDFFBDBDBDFFC1C1C1FF7272
+      72FF9F9F9FFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00BDBDBDFFBDBDBDFFDEDEDEFFD0D0D0FFEEEEEEFFF0F0F0FFDBDBDBFFCECE
+      CEFFE4E4E4FFD0D0D0FF8F8F8FFFBDBDBDFFFF00FF00FF00FF00BDBDBDFFBDBD
+      BDFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00BDBDBDFFC8C8C8FFEFEFEFFFEFEFEFFFCFCFCFFFE4E4
+      E4FFECECECFFCACACAFFBEBEBEFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00BDBDBDFFD5D5D5FFEDEDEDFFD9D9D9FFE5E5
+      E5FFC0C0C0FFCDCDCDFFBCBCBCFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00BDBDBDFFBDBDBDFFBFBFBFFF6B6B
+      6BFF8F8F8FFFABABABFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00BDBDBDFFBDBD
+      BDFFBDBDBDFFBDBDBDFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
@@ -5152,72 +5151,72 @@ object FLPMSBackup: TFLPMSBackup
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00996964FF996964FF996964FF996964FF996964FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF009969
-      64FF996964FFE1C9A0FFFFF7B5FFFFF2AFFFFFF2B1FFE9CCA4FF996964FF9969
-      64FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFCEB6
-      AFFFFFFFFFFFFFF4CBFFF6CF90FFF0BC7DFFF2BF81FFF7CE90FFFFEDA9FFD4B1
-      93FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFD7BB9EFFFFFF
-      FFFFFEF7EEFFF6D8ACFFEDB474FFE9A76BFFEDB478FFF0C48AFFF6D49CFFFFF4
-      B6FFD3B799FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFFFFEC2FFFBEB
-      CAFFF6D7ACFFF0C186FFEFBF82FFF3CC95FFFAE3ADFFFCF0BCFFFBF4C1FFFEF6
-      C4FFFFFFD4FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFE6C9A0FFFCDE9EFFEFBA
-      7EFFEEB779FFEFC284FFF6DAA1FFFBF2BFFFFFFFCFFFFFFFD1FFFFFFD0FFFFFF
-      D0FFFFFFD1FFD9C6A5FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFFFF2B2FFF3C484FFE99E
-      63FFEDB57AFFF4D79FFFFCF4C2FFFFFFD1FFFFFFD3FFFFFFD3FFFFFFD3FFFFFF
-      D0FFFFFFCFFFFFFFD8FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFFFF0AFFFEFBA7BFFE9A5
-      6AFFF2C98FFFFCEFBCFFFFFFD1FFFFFFD3FFFFFFD9FFFFFFE1FFFFFFE2FFFFFF
-      D9FFFFFFD3FFFFFFDAFF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFFFEFADFFF0BC7DFFEBB0
-      75FFF7DDA7FFFEFCCBFFFFFFD1FFFFFFD5FFFFFFE6FFFFFFF6FFFFFFF6FFFFFF
-      E6FFFFFFD7FFFFFFDAFF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFE6C9A0FFF6CA8BFFEEBA
-      7FFFFBE7B4FFFFFFD0FFFFFFCFFFFFFFD7FFFFFFEBFFFFFFFEFFFFFFFCFFFFFF
-      F2FFFFFFE5FFD8C6A5FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00996964FFFFEAA6FFF2C7
-      8FFFFAEBB6FFFFFFD0FFFFFFCFFFFFFFD3FFFFFFE5FFFFFFF2FFFFFFFAFFFFFF
-      FCFFFFFFFEFF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00996B65FFD4AF8FFFFFEF
-      B0FFFBEDB8FFFFFFCFFFFFFFCEFFFFFFCFFFFFFFD7FFFFFFDCFFFFFFEAFFFFFF
-      FFFFD3BBB8FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00D1ADA5FFB68775FFCCAB
-      8CFFFFFFD3FFFFFFD3FFFFFFD0FFFFFFCFFFFFFFD0FFFFFFD3FFFFFFE2FFD4BA
-      A4FF996964FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF002D9AFEFF4BB5FFFF8CBDEDFFAC9F96FF6C5655FF9366
-      5FFF996964FFDDCCABFFFFFFD9FFFFFFD9FFFFFFD7FFE9D5B6FF996964FF9969
-      64FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF002D99FEFF41ADFEFF339CFFFF287FE7FF3D607BFFFF00FF00FF00
-      FF00FF00FF00996964FF996964FF996964FF996964FF996964FFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF002C98FEFF41ADFEFF349CFFFF197BF6FF0C5EB6FF2B587FFFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF002A97
-      FEFF41AFFEFF349AFFFF1A7BF8FF0B5FB7FF44627FFFA97A7EFFFF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF002A96FEFF41AF
-      FEFF349AFFFF1C7EF8FF0C5FB8FF3E5F7EFFB07B7BFFFF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF002996FFFF42ADFEFF349A
-      FFFF1C7EF8FF0C60B8FF405F7FFFB17D7BFFFF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF002698FFFF3DB0FFFF349DFFFF1C7E
-      F8FF0C62BAFF395E7FFFB07B7DFFFF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00838686FF3A79B1FF1A81FFFF0D62
-      BCFF3B5F7FFFB07D7DFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00979291FF6C6C70FF174B82FF3260
-      89FFAF7B7BFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
-      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00969190FF736E6EFFAF7D
-      7EFFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00000000FF000000FF000000FF000000FFFF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00003F70FF003157FF004F86FF004A84FF005893FF0076B5FF004B
+      82FF004B82FF004B82FF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00000000FF000000FFFF00FF00FF00
+      FF00004575FF0072B0FF006CABFF0072B1FF009ADDFF00A5E9FF009EE1FF0098
+      D9FF0091D1FF0079B8FF00538CFF004B82FF004B82FF004B82FF004B82FFFF00
+      FF00FF00FF00FF00FF00FF00FF00000000FF282322FF151617FF00335BFF004C
+      89FF035C98FF1E8EC1FF1FD3FFFF06CFFFFF00C2FFFF00B8FEFF00B0F4FF008B
+      CEFF005590FF003E6FFF004172FF0092D1FF007DBBFF0077B5FF0073B0FF004B
+      82FF004B82FF004B82FFFF00FF00000000FF807A78FF054B7BFF4993BDFFFEFF
+      FFFFEFFFFFFFC0FFFFFF8EF8FFFF5CEBFFFF2EDEFFFF07BDFCFF005183FF004D
+      88FF007BBAFF004F88FF005890FF0077B5FF008FD0FF0090D0FF008CCCFF0176
+      AAFF404735FF031C2CFF004B82FF000000FF314E5EFF004E8BFFBFFFFFFFFAFF
+      FFFFFFFFFFFFFFFFFFFFFBFFFFFFCEFFFFFF4099C0FF001423FF001123FF0064
+      A1FF0092D4FF00508AFF005F9AFF007DBBFF00A6E9FF009EE0FF0098D9FF754B
+      1AFFC26B28FF110905FF004B82FF000000FF062030FF0872ACFF5FF2FFFF90FB
+      FFFFBFFFFFFFEAFFFFFFFFFFFFFFEDF6FBFF001F3CFF0B4165FF337395FF0F64
+      98FF004A84FF00437DFF005F9AFF00A1E3FF00BBFFFF00B1F6FF137084FFFF84
+      26FFCB8750FF50433EFF004B82FFFF00FF00000000FF005C9CFF05CCFFFF1FDD
+      FFFF4CE9FFFF7EF2FFFFAFFEFFFF6FB6D5FF156597FFFEFFFFFFFFFFFFFFEEFF
+      FFFFA6E9FCFF2D86B4FF005692FF17A9E1FF0FD5FFFF01C9FFFF4F786AFFFFBA
+      65FF876853FF72645FFF004B82FFFF00FF00FF00FF00004B82FF004B82FF00B4
+      F8FF01CFFFFF13D7FFFF3BE1FFFF045790FF80DEFBFFCBFFFFFFF4FFFFFFDAD4
+      D3FFAF652DFF63310FFF011422FF005089FF2FA9D9FF42E6FFFF607669FF9566
+      41FF4E413DFF1F3F53FF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00004B
+      82FF008FD1FF00CBFFFF00B0F3FF0065A0FF2ADCFFFF5AE9FFFF8BF4FFFF9F57
+      1DFFFA7D1FFFC9793EFF0C0503FF2875A3FF004B82FF004B82FF165370FF0F0B
+      0AFF0E2B3EFF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00004B82FF004B82FF008CCFFF006BAAFF00C9FFFF03CEFFFF2A8B9AFFFB7B
+      1FFFFFAD59FFAA754BFF281F1CFF004B82FFFF00FF00FF00FF00004B82FF004B
+      82FF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00004B82FF005C99FF00CAFFFF00CAFFFF40746BFFFFAC
+      58FFFFC678FF796557FF4D5051FF004B82FFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00004B82FF0075B4FF00C2FFFF668976FFFBAA
+      66FF775640FF746762FF0F4C6CFF004B82FFFF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00004B82FF004B82FF015278FF0F07
+      05FF291F1BFF17374BFF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00004B82FF004B
+      82FF004B82FF004B82FFFF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
+      FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
       FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00
@@ -5805,7 +5804,7 @@ object FLPMSBackup: TFLPMSBackup
     PoweredBy.About.Description.Strings = (
       'Component that shows a Powered By graphic.'#10'Use method ShowPoweredByForm in your form.create()'#10'to use the component'
     )
-    PoweredBy.About.Title = 'About About About About About About About About About About PoweredBy component'
+    PoweredBy.About.Title = 'About About About About About About About About About About About About PoweredBy component'
     PoweredBy.About.Height = 280
     PoweredBy.About.Width = 400
     PoweredBy.About.Font.Color = clNavy

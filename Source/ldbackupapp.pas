@@ -340,6 +340,8 @@ private { private declarations }
    DoNotConnect     : boolean;     // Prevents a DB connection when a previously inactive Backup Instruction is made active
    BackupSuccess    : boolean;     // Indicates whether the backup was successful or not
    FirstRun         : boolean;     // Prevents FormActivate from running more than once
+   AtFirst          : boolean;     // Indicates a Search has hit the first line of the Log
+   AtLast           : boolean;     // Indciates a Search has reached the last line of the Log
    RecTotal         : integer;     // Holds unformatted rec count after backup
    NumInstr         : integer;     // Number of backup instructions in the Configuration File
    SaveInstr        : integer;     // Holds instruction index when an Update started - used in case of a Cancel
@@ -363,6 +365,7 @@ private { private declarations }
    EndTime          : TDateTime;   // End time of the current Backup
    IniFile          : TINIFile;    // IniFile holding defaults
    InstrTokens      : TStrings;    // Holds the List of Backup Instruction names
+   VisibleLog       : TListView;   // Allows search in bith lvLogAll and lvLogSel
    Instr_List       : Array_Instructions; // Array of in-memory Backup instructions
    UpdateRec        : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
 
@@ -844,8 +847,8 @@ begin
    Instr_List[ThisInstr].Active := False;
    Instr_List[ThisInstr].Status := ord(STAT_INACTIVE);
 
-   tvInstructionsClick(Sender);
    tvSmallClick(Sender);
+   tvInstructionsClick(Sender);
 
 end;
 
@@ -879,10 +882,8 @@ begin
 
    AccessTreeView(UpdateRec);
 
-   if tvInstructions.Selected.Level = 0 then
-      Set_Buttons(ord(BTN_INITIAL))
-   else
-      Set_Buttons(ord(BTN_INSTRUCTION));
+   tvSmallClick(Sender);
+   tvInstructionsClick(Sender);
 
    timTimer1.Enabled := True;
 
@@ -1228,12 +1229,51 @@ begin
    GetNextSlot(ThisInstr);
    lblL04.Caption := Instr_List[ThisInstr].Instr_Rec.BackupMsg;
 
+//--- Update the information displayed in the Small TreeView
+
+   tvSmallClick(Sender);
+
 //--- Make both Tabs visible again
 
    CanUpdate := False;
 
    tsInstruction.TabVisible   := True;
    tsConfiguration.TabVisible := True;
+
+//--- Update the SMS indciators on tsInstruction to ensure the lastest settings
+//--- are always displayed
+
+   if Instr_List[ThisInstr].Instr_Rec.BackupSMSProvider = 0 then begin
+
+      edtSMSNumber.Enabled := False;
+      rbSMSSuccess.Enabled := False;
+      rbSMSFailure.Enabled := False;
+      rbSMSNever.Enabled   := False;
+      rbSMSAlways.Enabled  := False;
+
+      edtSMSNumber.Text    := '';
+      rbSMSSuccess.Checked := False;
+      rbSMSFailure.Checked := False;
+      rbSMSNever.Checked   := False;
+      rbSMSAlways.Checked  := False;
+
+   end else begin
+
+      edtSMSNumber.Enabled := True;
+      rbSMSSuccess.Enabled := True;
+      rbSMSFailure.Enabled := True;
+      rbSMSNever.Enabled   := True;
+      rbSMSAlways.Enabled  := True;
+
+      edtSMSNumber.Text    := Instr_List[ThisInstr].Instr_Rec.BackupSMSNumber;
+      rbSMSSuccess.Checked := Instr_List[ThisInstr].Instr_Rec.BackupSMSSuccess;
+      rbSMSFailure.Checked := Instr_List[ThisInstr].Instr_Rec.BackupSMSFailure;
+      rbSMSNever.Checked   := Instr_List[ThisInstr].Instr_Rec.BackupSMSNever;
+      rbSMSAlways.Checked  := Instr_List[ThisInstr].Instr_Rec.BackupSMSAlways;
+
+   end;
+
+//--- From here on changes are registered again
 
    CanUpdate := True;
 
@@ -1290,6 +1330,17 @@ begin
 
    with dlgFind do begin
 
+//--- We can seaech in either the overall log or the instruction log depending
+//--- on what is visible
+
+      if tvInstructions.Selected.Level = 0 then
+         VisibleLog := lvLogAll
+      else
+         VisibleLog := lvLogSel;
+
+      AtFirst := False;
+      AtLast  := False;
+
 //--- If frEntireScope is set then Search begins at Line 1 in the log otherwise
 //--- at the selected line
 
@@ -1298,11 +1349,11 @@ begin
         if frDown in Options then
            LastPos := 0
         else
-           LastPos := lvLogAll.Items.Count - 1;
+           LastPos := VisibleLog.Items.Count - 1;
 
      end else begin
 
-        LastPos := lvLogAll.ItemIndex;
+        LastPos := VisibleLog.ItemIndex;
 
      end;
 
@@ -1321,15 +1372,37 @@ var
 
 begin
 
+   if AtLast = True then begin
+
+      if (Application.MessageBox('End of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+         LastPos := 0
+      else
+         dlgFind.CloseDialog;
+
+      AtLast := False;
+      Exit;
+
+   end else if AtFirst = True then begin
+
+     if (Application.MessageBox('Start of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+        LastPos := VisibleLog.Items.Count - 1
+     else
+        dlgFind.CloseDialog;
+
+       AtFirst := False;
+       Exit;
+
+   end;
+
    idx1 := FindTextString();
 
    if idx1 <> -1 then begin
 
-      lvLogAll.ItemIndex := idx1;
-      lvLogAll.Items.Item[idx1].Selected := True;
-      lvLogAll.Items.Item[idx1].MakeVisible(False);
+      VisibleLog.ItemIndex := idx1;
+      VisibleLog.Items.Item[idx1].Selected := True;
+      VisibleLog.Items.Item[idx1].MakeVisible(False);
 
-//      lvLogAll.SetFocus;
+      VisibleLog.SetFocus;
 
    end else begin
 
@@ -1343,7 +1416,7 @@ begin
      end else begin
 
         if (Application.MessageBox('Start of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
-           LastPos := lvLogAll.Items.Count - 1
+           LastPos := VisibleLog.Items.Count - 1
         else
            dlgFind.CloseDialog;
 
@@ -1368,9 +1441,9 @@ begin
 
    if frDown in dlgFind.Options then begin
 
-      for idx1 := LastPos to lvLogAll.Items.Count - 1 do begin
+      for idx1 := LastPos to VisibleLog.Items.Count - 1 do begin
 
-         ListItem := lvLogAll.Items.Item[idx1];
+         ListItem := VisibleLog.Items.Item[idx1];
          Found    := False;
 
          if frMatchCase in dlgFind.Options then begin
@@ -1405,7 +1478,17 @@ begin
 
          if Found = True then begin
 
-            LastPos := idx1 + 1;
+            if idx1 < VisibleLog.Items.Count - 1 then begin
+
+               LastPos := idx1 + 1;
+
+            end else begin
+
+               AtLast  := True;
+               LastPos := idx1;
+
+            end;
+
             Result := idx1;
             Exit
 
@@ -1417,7 +1500,7 @@ begin
 
       for idx1 := LastPos downto 0 do begin
 
-         ListItem := lvLogAll.Items.Item[idx1];
+         ListItem := VisibleLog.Items.Item[idx1];
          Found    := false;
 
          if frMatchCase in dlgFind.Options then begin
@@ -1453,7 +1536,17 @@ begin
 
          if Found = True then begin
 
-            LastPos := idx1 - 1;
+            if idx1 > 0 then begin
+
+               LastPos := idx1 - 1;
+
+            end else begin
+
+               AtFirst := True;
+               LastPos := idx1;
+
+            end;
+
             Result := idx1;
             Exit
 
@@ -1629,7 +1722,7 @@ begin
 
       Set_Buttons(ord(BTN_INITIAL));
 
-      btnTemplate.SetFocus;
+//      btnTemplate.SetFocus;
 
    end else begin
 
@@ -1763,6 +1856,19 @@ var
 
 begin
 
+//--- The following is relevant when the User has deleted all instructions
+
+   if tvSmall.Items.Count = 0 then begin
+
+      edtConfigFile.Text := '';
+      edtHostName.Text   := '';
+      edtNextBackup.Text := '';
+      edtLocation.Text   := '';
+
+      Exit;
+
+   end;
+
    ThisInstr := tvSmall.Selected.Text;
 
    for idx1 := 0 to NumInstr - 1 do begin
@@ -1892,32 +1998,6 @@ begin
       lblL03.Visible := true;
       cbxT03.Visible := true;
 
-{
-   end else if (cbxType.Text = 'Monthly') then begin
-
-      lblL01.Caption := 'Select Day:';
-      cbxT01.Clear;
-
-      for idx := 2 to 32 do
-         cbxT01.Items.Add(HourArray[idx]);
-
-      lblL02.Caption := 'Select Hour:';
-      cbxT02.Clear;
-
-      for idx := 1 to 24 do
-         cbxT02.Items.Add(HourArray[idx]);
-
-      lblL03.Caption := 'Select Minute:';
-      cbxT03.Clear;
-
-      for idx := 1 to 12 do
-         cbxT03.Items.Add(MinArray[idx]);
-
-      lblL02.Visible := true;
-      cbxT02.Visible := true;
-      lblL03.Visible := true;
-      cbxT03.Visible := true;
-}
    end;
 
    cbxT01.ItemIndex := 0;
@@ -1950,7 +2030,12 @@ begin
    FLPMSBackupTemplate.rbSuccess.Checked       := BackupTemplate.Instr_Rec.BackupSMSSuccess;
    FLPMSBackupTemplate.edtDBPass.Text          := BackupTemplate.Instr_Rec.BackupDBPass;
    FLPMSBackupTemplate.edtDBPrefix.Text        := BackupTemplate.Instr_Rec.BackupDBPrefix;
-   FLPMSBackupTemplate.edtDBSuffix.Text        := BackupTemplate.Instr_Rec.BackupDBSuffix;
+
+   if BackupTemplate.Instr_Rec.BackupDBSuffix = '_LPMS' then
+      FLPMSBackupTemplate.cbDBSuffix.Checked   := True
+   else
+      FLPMSBackupTemplate.cbDBSuffix.Checked   := False;
+
    FLPMSBackupTemplate.edtDBUser.Text          := BackupTemplate.Instr_Rec.BackupDBUser;
    FLPMSBackupTemplate.edtHostName.Text        := BackupTemplate.Instr_Rec.BackupHostName;
    FLPMSBackupTemplate.deDirectory.Text        := BackupTemplate.Instr_Rec.BackupLocation;
@@ -1964,58 +2049,6 @@ begin
    FLPMSBackupTemplate.ShowModal;
    FLPMSBackupTemplate.Destroy;
    FLPMSBackup.Show;
-{
-FLPMSBackup.Hide;
-
-FLPMSBackupSMSConfig := TFLPMSBackupSMSConfig.Create(Application);
-
-//--- Set the values to be used in the config utility
-
-FLPMSBackupSMSConfig.SMSProvider  := KeepSMSProvider;
-FLPMSBackupSMSConfig.BackupBlock  := KeepBackupBlock;
-FLPMSBackupSMSConfig.SMSUser      := SMSUserID;
-FLPMSBackupSMSConfig.SMSPassword  := SMSPassword;
-FLPMSBackupSMSConfig.DBPrefix     := DBPrefix;
-FLPMSBackupSMSConfig.MultiCompany := MultiCompany;
-FLPMSBackupSMSConfig.BackupViewer := BackupViewer;
-
-FLPMSBackupSMSConfig.ShowModal;
-FLPMSBackupSMSConfig.Destroy;
-
-FLPMSBackup.Show;
-
-}
-
-{
-   BackupTemplate.Active := False;
-   BackupTemplate.Ini_File := '';
-   BackupTemplate.Instruction := '';
-   BackupTemplate.NextDate := '';
-   BackupTemplate.NextTime := '';
-   BackupTemplate.Instr_Rec.BackupBlock := 5000;
-   BackupTemplate.Instr_Rec.BackupSMSProvider := 1;
-   BackupTemplate.Instr_Rec.BackupType := 1;
-   BackupTemplate.Instr_Rec.BackupT01 := 7;
-   BackupTemplate.Instr_Rec.BackupT02 := 0;
-   BackupTemplate.Instr_Rec.BackupT03 := 0;
-   BackupTemplate.Instr_Rec.BackupSMSAlways := False;
-   BackupTemplate.Instr_Rec.BackupSMSFailure := False;
-   BackupTemplate.Instr_Rec.BackupSMSNever := True;
-   BackupTemplate.Instr_Rec.BackupSMSSuccess := False;
-   BackupTemplate.Instr_Rec.BackupDBPass := '';
-   BackupTemplate.Instr_Rec.BackupDBPrefix := '';
-   BackupTemplate.Instr_Rec.BackupDBSuffix := '';
-   BackupTemplate.Instr_Rec.BackupDBUser := '';
-   BackupTemplate.Instr_Rec.BackupHostName := '127.0.0.1';
-   BackupTemplate.Instr_Rec.BackupLocation := '';
-   BackupTemplate.Instr_Rec.BackupMsg := '';
-   BackupTemplate.Instr_Rec.BackupSMSNumber := '';
-   BackupTemplate.Instr_Rec.BackupSMSPass := '';
-   BackupTemplate.Instr_Rec.BackupSMSUser := 'mpa';
-   BackupTemplate.Instr_Rec.BackupTemplate := '&Date@&Time - &BackupType Backup of &Instruction on &HostName';
-   BackupTemplate.Instr_Rec.BackupViewer := '/usr/bin/gedit';
-   BackupTemplate.Instr_Rec.BackupSMSProviderName := '';
-}
 
 end;
 
@@ -2548,11 +2581,36 @@ begin
    cbxT01.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT01;
    cbxT02.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT02;
    cbxT03.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT03;
-   edtSMSNumber.Text    := Instr_List[ListNum].Instr_Rec.BackupSMSNumber;
-   rbSMSSuccess.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSSuccess;
-   rbSMSFailure.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSFailure;
-   rbSMSNever.Checked   := Instr_List[ListNum].Instr_Rec.BackupSMSNever;
-   rbSMSAlways.Checked  := Instr_List[ListNum].Instr_Rec.BackupSMSAlways;
+
+   if Instr_List[ListNum].Instr_Rec.BackupSMSProvider = 0 then begin
+
+      edtSMSNumber.Enabled := False;
+      rbSMSSuccess.Enabled := False;
+      rbSMSFailure.Enabled := False;
+      rbSMSNever.Enabled   := False;
+      rbSMSAlways.Enabled  := False;
+
+      edtSMSNumber.Text    := '';
+      rbSMSSuccess.Checked := False;
+      rbSMSFailure.Checked := False;
+      rbSMSNever.Checked   := False;
+      rbSMSAlways.Checked  := False;
+
+   end else begin
+
+      edtSMSNumber.Enabled := True;
+      rbSMSSuccess.Enabled := True;
+      rbSMSFailure.Enabled := True;
+      rbSMSNever.Enabled   := True;
+      rbSMSAlways.Enabled  := True;
+
+      edtSMSNumber.Text    := Instr_List[ListNum].Instr_Rec.BackupSMSNumber;
+      rbSMSSuccess.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSSuccess;
+      rbSMSFailure.Checked := Instr_List[ListNum].Instr_Rec.BackupSMSFailure;
+      rbSMSNever.Checked   := Instr_List[ListNum].Instr_Rec.BackupSMSNever;
+      rbSMSAlways.Checked  := Instr_List[ListNum].Instr_Rec.BackupSMSAlways;
+
+   end;
 
 //--- Populate the fields on the Configuration Page
 
@@ -2706,20 +2764,20 @@ begin
 
    if Instr_List[idx1].Instr_Rec.BackupSMSProvider = 0 then begin
 
-      edtSMSNumber.Enabled := false;
-      rbSMSSuccess.Enabled := false;
-      rbSMSFailure.Enabled := false;
-      rbSMSNever.Enabled   := false;
-      rbSMSAlways.Enabled  := false;
+      edtSMSNumber.Enabled := False;
+      rbSMSSuccess.Enabled := False;
+      rbSMSFailure.Enabled := False;
+      rbSMSNever.Enabled   := False;
+      rbSMSAlways.Enabled  := False;
       DispLogMsg('SMS Messaging for ' + Instr_List[idx1].Instruction + ' is inactive');
 
    end else begin
 
-      edtSMSNumber.Enabled := true;
-      rbSMSSuccess.Enabled := true;
-      rbSMSFailure.Enabled := true;
-      rbSMSNever.Enabled   := true;
-      rbSMSAlways.Enabled  := true;
+      edtSMSNumber.Enabled := True;
+      rbSMSSuccess.Enabled := True;
+      rbSMSFailure.Enabled := True;
+      rbSMSNever.Enabled   := True;
+      rbSMSAlways.Enabled  := True;
 
       if edtSMSNumber.Text <> '' then begin
 
@@ -4514,7 +4572,7 @@ begin
                ThisNodeS.Delete;
 
                if NextNode <> nil then
-                  tvInstructions.Selected := NextNode;
+                  tvSmall.Selected := NextNode;
 
                break;
 
