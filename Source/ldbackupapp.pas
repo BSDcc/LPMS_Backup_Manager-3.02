@@ -1231,7 +1231,8 @@ begin
 
 //--- Update the information displayed in the Small TreeView
 
-   tvSmallClick(Sender);
+   if tvSmall.Selected.Index <> -1 then
+      tvSmallClick(Sender);
 
 //--- Make both Tabs visible again
 
