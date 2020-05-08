@@ -35,10 +35,6 @@ uses
   FileUtil, mysql56conn,
 {$endif}
 
-{$ifdef FreeBSD}                                   // Target is FreeBSD
-  FileUtil, mysql57conn,
-{$endif}
-
   Classes, SysUtils, sqldb, LCLType, Forms, Controls, Graphics, Dialogs,
   ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn, Spin,
   usplashabout, strutils, INIFiles, HTTPSend, Synacode, DateUtils,
@@ -385,10 +381,6 @@ private { private declarations }
    sqlCon : TMySQL57Connection;  // Running on macOS
 {$endif}
 
-{$ifdef FreeBSD}
-   sqlCon : TMySQL57Connection;  // Running on FreeBSD
-{$endif}
-
 const
 
    SMSProvider : array[1..4] of string  = ('Inactive', 'SMS Portal',
@@ -499,12 +491,6 @@ begin
 {$ifdef DARWIN}
    OSDelim := '/';
    OSName  := 'macOS';
-   sqlCon  := TMySQL57Connection.Create(nil);
-{$endif}
-
-{$ifdef FreeBSD}
-   OSDelim := '/';
-   OSName  := 'FreeBSD';
    sqlCon  := TMySQL57Connection.Create(nil);
 {$endif}
 
