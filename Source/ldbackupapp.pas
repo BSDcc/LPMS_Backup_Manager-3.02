@@ -892,7 +892,7 @@ begin
 
    ThisInstr := GetInstruction();
 
-   if (MessageDlg('Backup Manager','CAUTION: Your requested Backup Instruction ''' + Instr_List[ThisInstr].Instruction + ''' to be deleted. This action is irreversible and cannot be undone!' + #10 + #10 + #10 + 'Click [Yes] to proceed with the Delete request; or ' + #10 + #10 + 'Click [No] to return and keep the Backup Instruction.', mtWarning, mbYesNo, 0) =  mrNo) then begin
+   if (MessageDlg('Backup Manager','CAUTION: Your requested Backup Instruction ''' + Instr_List[ThisInstr].Instruction + ''' to be deleted. This action is irreversible and cannot be undone! You can:' + #10 + #10 + #10 + 'Click [Yes] to proceed with the Delete request; or ' + #10 + #10 + 'Click [No] to return and keep the Backup Instruction.', mtWarning, mbYesNo, 0) =  mrNo) then begin
 
       timTimer1.Enabled := True;
       Exit
@@ -1411,7 +1411,7 @@ begin
 
    if AtLast = True then begin
 
-      if (Application.MessageBox('End of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+      if (Application.MessageBox('End of log entries reached. You can:' + #10 + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
          LastPos := 0
       else
          dlgFind.CloseDialog;
@@ -1421,7 +1421,7 @@ begin
 
    end else if AtFirst = True then begin
 
-     if (Application.MessageBox('Start of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+     if (Application.MessageBox('Start of log entries reached. You can:' + #10 + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
         LastPos := VisibleLog.Items.Count - 1
      else
         dlgFind.CloseDialog;
@@ -1445,14 +1445,14 @@ begin
 
      if frDown in dlgFind.Options then begin
 
-        if (Application.MessageBox('End of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+        if (Application.MessageBox('End of log entries reached. You can:' + #10 + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the beginning of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
            LastPos := 0
         else
            dlgFind.CloseDialog;
 
      end else begin
 
-        if (Application.MessageBox('Start of log entries reached - you can:' + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
+        if (Application.MessageBox('Start of log entries reached. You can:' + #10 + #10 + #10 + 'Click [Yes] and then on [Find] to restart at the end of the log; or' + #10 + #10 + 'Click [No] to end the search.','Backup Manager',(MB_YESNO + MB_ICONINFORMATION)) = IDYES) then
            LastPos := VisibleLog.Items.Count - 1
         else
            dlgFind.CloseDialog;
