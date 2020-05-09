@@ -882,6 +882,8 @@ begin
 
    AccessTreeView(UpdateRec);
 
+   DispLogMsg('*** ' + UpdateRec.InstrName + ' DELETED');
+
    tvSmallClick(Sender);
    tvInstructionsClick(Sender);
 
@@ -1305,6 +1307,15 @@ begin
    IniFile.WriteString('Parameters','BackupViewer',Instr_List[ThisInstr].Instr_Rec.BackupViewer);
 
    IniFile.Destroy;
+
+//--- Sort the TreeView entries if required
+
+   if cbxDoSort.Checked = True then begin
+
+      tvInstructions.AlphaSort;
+      tvSmall.AlphaSort;
+
+   end;
 
    Set_Buttons(ord(BTN_INSTRUCTION));
 
@@ -4216,6 +4227,9 @@ begin
       tvInstructions.Selected := ThisNodeM;
       ActiveName := tvInstructions.Selected.Text;
 
+      tvSmall.Selected := ThisNodeS;
+      tvSmallClick(Application);
+
       DispLogMsg('++++++ Instruction number ' + (IntToStr(idx1 + 1)) + ' - ''' + Instr_List[idx1].Instruction + ''':');
 
       if Instr_List[idx1].Active = True then begin
@@ -4256,8 +4270,10 @@ begin
 
    end;
 
-   if cbxDoSort.Checked = True then
+   if cbxDoSort.Checked = True then begin
       tvInstructions.AlphaSort;
+      tvSmall.AlphaSort;
+   end;
 
    DispLogMsg('+++ End of Backup Instructuctions');
 
