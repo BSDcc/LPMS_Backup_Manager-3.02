@@ -537,7 +537,7 @@ begin
 
       if DirectoryExists(LocalPath) = False then begin
 
-         if (MessageDlg('Backup Manager','WARNING: Unable to locate home directory. ' + #10 + #10 + 'Click [Yes] to locate the home directory, or [No] to terminate', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
+         if (MessageDlg('Backup Manager','WARNING: Unable to locate home directory. You can:' + #10 + #10 + #10 + 'Click [Yes] to locate the home directory; or ' + #10 +#10 + 'Click [No] to terminate.', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
 
             Application.Terminate;
             Exit;
@@ -572,7 +572,7 @@ begin
 
    if DirectoryExists(LocalPath) = False then begin
 
-      if (MessageDlg('Backup Manager','WARNING: Backup Manager directory does not exist' + #10 + #10 + 'Click [Yes] to create the directory, or [No] to terminate', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
+      if (MessageDlg('Backup Manager','WARNING: Backup Manager directory does not exist. You can:' + #10 + #10 + #10 + 'Click [Yes] to create the directory; or' +#10 + #10 + 'Click [No] to terminate.', mtWarning, [mbYes,mbNo], '') = mrNo) then begin;
 
          Application.Terminate;
          Exit;
@@ -892,7 +892,7 @@ begin
 
    ThisInstr := GetInstruction();
 
-   if (MessageDlg('Backup Manager','CAUTION: Your requested Backup Instruction ''' + Instr_List[ThisInstr].Instruction + ''' to be deleted. This action is irreversible and cannot be undone!' + #10 + #10 + 'Click [Yes] to proceed with the Delete request; or ' + #10 + 'Click [No] to return and keep the Backup Instruction.', mtWarning, mbYesNo, 0) =  mrNo) then begin
+   if (MessageDlg('Backup Manager','CAUTION: Your requested Backup Instruction ''' + Instr_List[ThisInstr].Instruction + ''' to be deleted. This action is irreversible and cannot be undone!' + #10 + #10 + #10 + 'Click [Yes] to proceed with the Delete request; or ' + #10 + #10 + 'Click [No] to return and keep the Backup Instruction.', mtWarning, mbYesNo, 0) =  mrNo) then begin
 
       timTimer1.Enabled := True;
       Exit
@@ -907,7 +907,8 @@ begin
 
    AccessTreeView(UpdateRec);
 
-   DispLogMsg('*** ' + UpdateRec.InstrName + ' DELETED');
+   ActiveName := 'Backup';
+   DispLogMsg('*** Backup Instruction ''' + UpdateRec.InstrName + ''' DELETED');
 
    tvSmallClick(Sender);
    tvInstructionsClick(Sender);
@@ -3847,7 +3848,6 @@ begin
          ThisItem.SubItems.Add('Backup')
       else
          ThisItem.SubItems.Add(ActiveName);
-//         ThisItem.SubItems.Add(tvInstructions.Selected.Text);
 
       ThisItem.SubItems.Add(ThisMsg);
       ThisItem.MakeVisible(false);
@@ -3868,7 +3868,6 @@ begin
             ThisItem.Caption := ThisDate;
             ThisItem.SubItems.Add(Thistime);
             ThisItem.SubItems.Add(ActiveName);
-//            ThisItem.SubItems.Add(tvInstructions.Selected.Text);
             ThisItem.SubItems.Add(ThisMsg);
             ThisItem.MakeVisible(false);
             ThisItem.Selected := true;
@@ -4360,10 +4359,6 @@ var
    LogLines  : TStringList;
    LogTokens : TStrings;
 
-//***
-//*** TO DO - Check for invalid log file content/format and give user options
-//***
-
 begin
 
 //--- Set the Format Settings to override the system locale
@@ -4383,10 +4378,15 @@ begin
          LogTokens := TStringList.Create;
          ThisLine  := LogLines.Strings[idx1];
 
-         ExtractStrings(['|'], [], PChar(ThisLine), LogTokens);
+         ExtractStrings(['|'], [' '], PChar(ThisLine), LogTokens);
 
-         DispLogMsg(LogTokens[0], LogTokens[1], LogTokens[2], LogTokens[3]);
-         inc(NumLines);
+         try
+
+            DispLogMsg(LogTokens[0], LogTokens[1], LogTokens[2], LogTokens[3]);
+            inc(NumLines);
+
+         except
+         end;
 
          LogTokens.Free;
 

@@ -2,15 +2,12 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="11"/>
-    <BuildModes Active="Debug"/>
-    <Units Count="38">
+    <BuildModes Active="Default"/>
+    <Units Count="4">
       <Unit0>
         <Filename Value="LPMS_Backup.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="2"/>
-        <CursorPos Y="15"/>
-        <UsageCount Value="200"/>
+        <UsageCount Value="21"/>
       </Unit0>
       <Unit1>
         <Filename Value="ldbackupapp.pas"/>
@@ -20,12 +17,13 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ldBackupApp"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="1226"/>
-        <CursorPos Y="1236"/>
-        <FoldState Value=" T3rR0311121 p0+L0a2 plDmL0I5 piYje033[95E032]e]DjOmC0a3]e5mI03]vkKkY0+[I4NnK0{c2]oZle0\1]kGlC0_o3]c3tP0m[J4CkR0+1]bfkS0j013[d4rW0Q112i"/>
-        <UsageCount Value="200"/>
-        <Bookmarks Count="1">
-          <Item0 X="11" Y="1318"/>
+        <TopLine Value="558"/>
+        <CursorPos X="200" Y="575"/>
+        <FoldState Value=" T3rb03011 pkCoV031[B50mg0~o2 pj8qP0{k5]A0mT094 pibjS037[S4k80{43]AKld0{Q2]wNnH0+]JlNnK0{c2]mZle0\1]cHlD0_o3]c3tP0m[J4CkR0z1]bfkQ0j]9nVp10R013 pj4lJ0{d2\"/>
+        <UsageCount Value="21"/>
+        <Bookmarks Count="2">
+          <Item0 Y="4384"/>
+          <Item1 Y="3847" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -37,540 +35,142 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="357"/>
-        <CursorPos X="50" Y="370"/>
-        <UsageCount Value="205"/>
+        <UsageCount Value="21"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="ldbackupfirst.pas"/>
-        <ComponentName Value="FLPMSBackupFirst"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="68"/>
-        <CursorPos X="51"/>
-        <UsageCount Value="396"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="LPMS Backup.cfg"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="34"/>
-        <UsageCount Value="188"/>
-        <DefaultSyntaxHighlighter Value="None"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="LPMS.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos Y="2"/>
-        <UsageCount Value="119"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="lib/laz_synapse.pas"/>
-        <EditorIndex Value="-1"/>
-        <WindowIndex Value="-1"/>
-        <TopLine Value="-1"/>
-        <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="129"/>
-      </Unit6>
-      <Unit7>
         <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/treeview.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1597"/>
+        <TopLine Value="1596"/>
         <CursorPos Y="1607"/>
-        <UsageCount Value="2"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="LPMS_Backup_MPA001.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="5"/>
-        <UsageCount Value="77"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="LPMS Backup Manager.cfg"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="33"/>
-        <UsageCount Value="75"/>
-        <DefaultSyntaxHighlighter Value="None"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/customform.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="449"/>
-        <CursorPos Y="460"/>
-        <UsageCount Value="7"/>
-      </Unit10>
-      <Unit11>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="2235"/>
-        <CursorPos Y="2244"/>
-        <UsageCount Value="8"/>
-      </Unit11>
-      <Unit12>
-        <Filename Value="LPMS_Backup_lpmsdefault.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="5"/>
-        <UsageCount Value="5"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit12>
-      <Unit13>
-        <Filename Value="LPMS Backup Logfile.txt"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="31" Y="21"/>
-        <UsageCount Value="5"/>
-        <DefaultSyntaxHighlighter Value="None"/>
-      </Unit13>
-      <Unit14>
-        <Filename Value="LPMS_Backup_BSA001.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="5"/>
-        <UsageCount Value="2"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="Backup Manager_BSA001.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="6"/>
-        <UsageCount Value="2"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="Backup Manager_lpmsdefault.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="6"/>
-        <UsageCount Value="2"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit16>
-      <Unit17>
-        <Filename Value="Backup Manager_MPA001.ini"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="12" Y="6"/>
-        <UsageCount Value="2"/>
-        <DefaultSyntaxHighlighter Value="Ini"/>
-      </Unit17>
-      <Unit18>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/buttoncontrol.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="12"/>
-        <CursorPos Y="22"/>
-        <UsageCount Value="8"/>
-      </Unit18>
-      <Unit19>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/radiobutton.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="67"/>
-        <CursorPos Y="77"/>
-        <UsageCount Value="6"/>
-      </Unit19>
-      <Unit20>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/customcheckbox.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="59"/>
-        <CursorPos Y="69"/>
-        <UsageCount Value="6"/>
-      </Unit20>
-      <Unit21>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/wincontrol.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="5403"/>
-        <CursorPos Y="5412"/>
-        <UsageCount Value="8"/>
-      </Unit21>
-      <Unit22>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/lclmessageglue.pas"/>
-        <UnitName Value="LCLMessageGlue"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="110"/>
-        <CursorPos Y="123"/>
-        <UsageCount Value="8"/>
-      </Unit22>
-      <Unit23>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/interfaces/gtk2/gtk2proc.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3772"/>
-        <CursorPos Y="3783"/>
-        <UsageCount Value="6"/>
-      </Unit23>
-      <Unit24>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/interfaces/gtk2/gtk2callback.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="555"/>
-        <CursorPos Y="564"/>
-        <UsageCount Value="6"/>
-      </Unit24>
-      <Unit25>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/customcombobox.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="208"/>
-        <CursorPos Y="218"/>
-        <UsageCount Value="6"/>
-      </Unit25>
-      <Unit26>
-        <Filename Value="../../../lazarus/lcl/include/treeview.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1595"/>
-        <CursorPos Y="1607"/>
-        <UsageCount Value="2"/>
-      </Unit26>
-      <Unit27>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/listitem.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="614"/>
-        <CursorPos Y="624"/>
-        <UsageCount Value="5"/>
-      </Unit27>
-      <Unit28>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/customnotebook.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1121"/>
-        <CursorPos Y="1130"/>
-        <UsageCount Value="6"/>
-      </Unit28>
-      <Unit29>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/controls.pp"/>
-        <UnitName Value="Controls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="3338"/>
-        <CursorPos Y="3350"/>
-        <UsageCount Value="6"/>
-      </Unit29>
-      <Unit30>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/interfaces/gtk2/gtk2pagecontrol.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="154"/>
-        <CursorPos Y="170"/>
-        <UsageCount Value="6"/>
-      </Unit30>
-      <Unit31>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/finddialog.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="375"/>
-        <CursorPos Y="385"/>
-        <UsageCount Value="8"/>
-      </Unit31>
-      <Unit32>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/include/buttons.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="160"/>
-        <CursorPos Y="170"/>
-        <UsageCount Value="8"/>
-      </Unit32>
-      <Unit33>
-        <Filename Value="/usr/share/lazarus/2.0.6/lcl/interfaces/gtk2/gtk2wsstdctrls.pp"/>
-        <UnitName Value="Gtk2WSStdCtrls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="2453"/>
-        <CursorPos Y="2462"/>
-        <UsageCount Value="8"/>
-      </Unit33>
-      <Unit34>
-        <Filename Value="../../../lazarus/lcl/include/listitems.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="38"/>
-        <CursorPos Y="50"/>
-        <UsageCount Value="11"/>
-      </Unit34>
-      <Unit35>
-        <Filename Value="../../../lazarus/lcl/include/finddialog.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="482"/>
-        <CursorPos Y="494"/>
-        <UsageCount Value="11"/>
-      </Unit35>
-      <Unit36>
-        <Filename Value="../../../lazarus/lcl/include/containedaction.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="88"/>
-        <CursorPos Y="100"/>
         <UsageCount Value="10"/>
-      </Unit36>
-      <Unit37>
-        <Filename Value="../../../lazarus/lcl/include/customaction.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="235"/>
-        <CursorPos Y="247"/>
-        <UsageCount Value="10"/>
-      </Unit37>
+      </Unit3>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="ldbackupapp.pas"/>
-<<<<<<< HEAD
-        <Caret Line="1874" TopLine="1862"/>
+        <Caret Line="3844" TopLine="3829"/>
       </Position1>
       <Position2>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1876" TopLine="1862"/>
+        <Caret Line="3846" TopLine="3829"/>
       </Position2>
       <Position3>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1874" TopLine="1862"/>
+        <Caret Line="4401" TopLine="4386"/>
       </Position3>
       <Position4>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1876" TopLine="1862"/>
+        <Caret Line="4402" TopLine="4386"/>
       </Position4>
       <Position5>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1874" TopLine="1862"/>
+        <Caret Line="3826" TopLine="3717"/>
       </Position5>
       <Position6>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1876" TopLine="1862"/>
+        <Caret Line="3830" TopLine="3717"/>
       </Position6>
       <Position7>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1874" TopLine="1862"/>
+        <Caret Line="3831" TopLine="3717"/>
       </Position7>
       <Position8>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1876" TopLine="1862"/>
+        <Caret Line="3832" TopLine="3717"/>
       </Position8>
       <Position9>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1878" TopLine="1862"/>
+        <Caret Line="3834" TopLine="3718"/>
       </Position9>
       <Position10>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1879" TopLine="1862"/>
+        <Caret Line="3835" TopLine="3817"/>
       </Position10>
       <Position11>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1880" TopLine="1863"/>
+        <Caret Line="3839" TopLine="3829"/>
       </Position11>
       <Position12>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1881" TopLine="1864"/>
+        <Caret Line="3841" TopLine="3829"/>
       </Position12>
       <Position13>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1874" TopLine="1864"/>
+        <Caret Line="3843" TopLine="3829"/>
       </Position13>
       <Position14>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1876" TopLine="1864"/>
+        <Caret Line="3844" TopLine="3829"/>
       </Position14>
       <Position15>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1874" TopLine="1864"/>
+        <Caret Line="3846" TopLine="3829"/>
       </Position15>
       <Position16>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1887" TopLine="1877"/>
+        <Filename Value="ldbackuptemplate.pas"/>
       </Position16>
       <Position17>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="884" TopLine="871"/>
+        <Caret Line="4402" Column="3" TopLine="4386"/>
       </Position17>
       <Position18>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1229" TopLine="1211"/>
+        <Caret Line="3976" TopLine="476"/>
       </Position18>
       <Position19>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1313" Column="4" TopLine="1306"/>
+        <Caret Line="457" TopLine="446"/>
       </Position19>
       <Position20>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1844" TopLine="1816"/>
+        <Caret Line="459" TopLine="446"/>
       </Position20>
       <Position21>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="4027" Column="65" TopLine="4010"/>
+        <Caret Line="24" TopLine="13"/>
       </Position21>
       <Position22>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="4270" Column="24" TopLine="4263"/>
+        <Caret Line="4726" TopLine="4468"/>
       </Position22>
       <Position23>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="58" Column="13" TopLine="47"/>
+        <Caret Line="910" Column="27" TopLine="897"/>
       </Position23>
       <Position24>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="253" Column="24" TopLine="236"/>
+        <Caret Line="4389" TopLine="4371"/>
       </Position24>
       <Position25>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="730" Column="51" TopLine="713"/>
+        <Caret Line="895" Column="197" TopLine="888"/>
       </Position25>
       <Position26>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1318" Column="8" TopLine="1299"/>
+        <Caret Column="38"/>
       </Position26>
       <Position27>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1838" Column="39" TopLine="1770"/>
+        <Caret Line="494" Column="320" TopLine="476"/>
       </Position27>
       <Position28>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="792" TopLine="781"/>
+        <Caret Line="540" Column="98" TopLine="523"/>
       </Position28>
       <Position29>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="850" TopLine="840"/>
+        <Caret Line="575" Column="75" TopLine="558"/>
       </Position29>
       <Position30>
         <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="1211" TopLine="1201"/>
-=======
-        <Caret Line="485" Column="28" TopLine="485"/>
-      </Position1>
-      <Position2>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="488" Column="11" TopLine="481"/>
-      </Position2>
-      <Position3>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="470" TopLine="460"/>
-      </Position3>
-      <Position4>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="471" TopLine="460"/>
-      </Position4>
-      <Position5>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="490" TopLine="481"/>
-      </Position5>
-      <Position6>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="470" TopLine="460"/>
-      </Position6>
-      <Position7>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="490" TopLine="481"/>
-      </Position7>
-      <Position8>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="491" TopLine="481"/>
-      </Position8>
-      <Position9>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="492" TopLine="481"/>
-      </Position9>
-      <Position10>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="493" TopLine="481"/>
-      </Position10>
-      <Position11>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="492" Column="43" TopLine="504"/>
-      </Position11>
-      <Position12>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="495" Column="9" TopLine="486"/>
-      </Position12>
-      <Position13>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="502" Column="9" TopLine="486"/>
-      </Position13>
-      <Position14>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="503" Column="12" TopLine="487"/>
-      </Position14>
-      <Position15>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="514" Column="9" TopLine="498"/>
-      </Position15>
-      <Position16>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="528" Column="9" TopLine="512"/>
-      </Position16>
-      <Position17>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="635" Column="43" TopLine="632"/>
-      </Position17>
-      <Position18>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="2394" Column="368" TopLine="2378"/>
-      </Position18>
-      <Position19>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="3035" Column="56" TopLine="3018"/>
-      </Position19>
-      <Position20>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="3079" Column="405" TopLine="3063"/>
-      </Position20>
-      <Position21>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="3519" Column="92" TopLine="3503"/>
-      </Position21>
-      <Position22>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="361" Column="10" TopLine="353"/>
-      </Position22>
-      <Position23>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="497" Column="10" TopLine="481"/>
-      </Position23>
-      <Position24>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="504" Column="13" TopLine="488"/>
-      </Position24>
-      <Position25>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="508" Column="13" TopLine="492"/>
-      </Position25>
-      <Position26>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="515" Column="10" TopLine="499"/>
-      </Position26>
-      <Position27>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="635" Column="43" TopLine="619"/>
-      </Position27>
-      <Position28>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Column="67"/>
-      </Position28>
-      <Position29>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="376" Column="42" TopLine="361"/>
-      </Position29>
-      <Position30>
-        <Filename Value="ldbackupapp.pas"/>
-        <Caret Line="494" Column="378" TopLine="485"/>
->>>>>>> Raspbian_Support
+        <Caret Line="540" Column="201" TopLine="530"/>
       </Position30>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="0" ActiveMode="default"/>
+      <Modes Count="0" ActiveMode=""/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <BreakPoints Count="1">
-      <Item1>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="ldbackupapp.pas"/>
-<<<<<<< HEAD
-        <Line Value="1211"/>
-      </Item1>
-=======
-        <Line Value="1234"/>
-      </Item1>
-      <Item2>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="ldbackupapp.pas"/>
-        <Line Value="817"/>
-      </Item2>
-      <Item3>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="ldbackupapp.pas"/>
-        <Line Value="1259"/>
-      </Item3>
->>>>>>> Raspbian_Support
-    </BreakPoints>
-  </Debugging>
 </CONFIG>

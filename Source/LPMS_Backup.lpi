@@ -24,7 +24,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="87"/>
+      <BuildNr Value="88"/>
       <Language Value="0809"/>
       <StringTable CompanyName="BlueCrane Software Development CC" ProductName="Backup Manager" ProductVersion="3.02"/>
     </VersionInfo>
@@ -147,7 +147,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);lib/i386-win32"/>
-      <OtherUnitFiles Value="../required/DevTime/synapse40/source/lib"/>
+      <OtherUnitFiles Value="../../../.lazarus/onlinepackagemanager/packages/synapse40.1;../../../.lazarus/onlinepackagemanager/packages/SplashAbout"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
