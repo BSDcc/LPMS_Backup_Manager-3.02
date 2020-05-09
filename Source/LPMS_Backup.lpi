@@ -69,10 +69,6 @@
             <OtherUnitFiles Value="../required/DevTime/synapse40/source/lib"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <CodeGeneration>
-            <TargetCPU Value="arm"/>
-            <TargetOS Value="linux"/>
-          </CodeGeneration>
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>

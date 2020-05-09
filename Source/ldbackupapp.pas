@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // Date.......: 09 October 2012
 // System.....: LPMS Backup Manager
-// Platform...: Lazarus (Winblows, Linux, Raspbian & macOS)
+// Platform...: Lazarus (Linux, macOS & Windows)
 // Author.....: Francois De Bruin Meyer (BlueCrane Software Development CC)
 //------------------------------------------------------------------------------
 // History....: 09 October 2012 - Create first version
@@ -23,26 +23,22 @@ interface
 //------------------------------------------------------------------------------
 uses
 
-   Classes, SysUtils, FileUtil, sqldb, LCLType, Forms, Controls, Graphics,
-   Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn,
-   Spin, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils,
-   Zipper,
+{$ifdef DARWIN}                                    // Target is macOS
+  macOSAll, Folders, FileUtil, mysql57conn,
+{$endif}
 
-{$IFDEF WINDOWS}                     // Target is Winblows
-   usplashabout, mysql56conn;
-{$ENDIF}
+{$ifdef LINUX}                                     // Target is Linux
+  FileUtil, mysql57conn,
+{$endif}
 
-{$IFDEF LINUX}                       // Target is Linux
-   {$IFDEF CPUARMHF}                 // Running on ARM (Raspbian) architecture
-      usplashabout, mysql55conn;
-   {$ELSE}                           // Running on Intel architecture
-      usplashabout, mysql57conn;
-   {$ENDIF}
-{$ENDIF}
+{$ifdef WINDOWS}                                   // Target is Winblows
+  FileUtil, mysql56conn,
+{$endif}
 
-{$IFDEF DARWIN}                      // Target is macOS
-   usplashabout, mysql57conn;
-{$ENDIF}
+  Classes, SysUtils, sqldb, LCLType, Forms, Controls, Graphics, Dialogs,
+  ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn, Spin,
+  usplashabout, strutils, INIFiles, HTTPSend, Synacode, DateUtils,
+  LazFileUtils, Zipper;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -148,6 +144,7 @@ type
    pnl00b2: TPanel;
    pnl00b1: TPanel;
    speBlockSizeC: TSpinEdit;
+   saAbout: TSplashAbout;
    Splitter1: TSplitter;
    ToolButton17: TToolButton;
    ToolButton18: TToolButton;
@@ -227,43 +224,43 @@ type
    tvSmall: TTreeView;
    tvInstructions: TTreeView;
 
-   procedure dlgFindFind( Sender: TObject);
-   procedure FormActivate(Sender: TObject);
-   procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-   procedure FileCloseExecute(Sender: TObject);
-   procedure FileDeleteExecute(Sender: TObject);
-   procedure FileNewExecute(Sender: TObject);
-   procedure EditCancelExecute(Sender: TObject);
-   procedure EditUpdateExecute(Sender: TObject);
-   procedure FormCreate( Sender: TObject);
-   procedure SearchFindExecute(Sender: TObject);
-   procedure ActionsFirstExecute(Sender: TObject);
-   procedure ActionsLastExecute(Sender: TObject);
-   procedure ActionsNextExecute(Sender: TObject);
-   procedure ActionsPreviousExecute(Sender: TObject);
-   procedure ActionsMinimiseExecute(Sender: TObject);
-   procedure ActionsRestoreExecute(Sender: TObject);
-   procedure ActionsRunNowExecute(Sender: TObject);
-   procedure HelpAboutExecute(Sender: TObject);
-   procedure tvInstructionsClick(Sender: TObject);
-   procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
-   procedure edtLocationButtonClick(Sender: TObject);
-   procedure btnOpenLBClick(Sender: TObject);
-   procedure btnDBTestClick(Sender: TObject);
-   procedure btnSMSTestClick(Sender: TObject);
-   procedure btnTemplateClick(Sender: TObject);
-   procedure btnViewerClick(Sender: TObject);
-   procedure cbxDoSortChange(Sender: TObject);
-   procedure btnMinimiseClick(Sender: TObject);
-   procedure cbxTypeChange(Sender: TObject);
-   procedure edtInstrNameCChange(Sender: TObject);
-   procedure pcInstructionsChange(Sender: TObject);
-   procedure timTimer2Timer(Sender: TObject);
-   procedure timTimer1Timer(Sender: TObject);
-   procedure TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-   procedure tvInstructionsEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
-   procedure tvSmallClick( Sender: TObject);
-   procedure tvSmallEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+    procedure dlgFindFind( Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FileCloseExecute(Sender: TObject);
+    procedure FileDeleteExecute(Sender: TObject);
+    procedure FileNewExecute(Sender: TObject);
+    procedure EditCancelExecute(Sender: TObject);
+    procedure EditUpdateExecute(Sender: TObject);
+    procedure FormCreate( Sender: TObject);
+    procedure SearchFindExecute(Sender: TObject);
+    procedure ActionsFirstExecute(Sender: TObject);
+    procedure ActionsLastExecute(Sender: TObject);
+    procedure ActionsNextExecute(Sender: TObject);
+    procedure ActionsPreviousExecute(Sender: TObject);
+    procedure ActionsMinimiseExecute(Sender: TObject);
+    procedure ActionsRestoreExecute(Sender: TObject);
+    procedure ActionsRunNowExecute(Sender: TObject);
+    procedure HelpAboutExecute(Sender: TObject);
+    procedure tvInstructionsClick(Sender: TObject);
+    procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
+    procedure edtLocationButtonClick(Sender: TObject);
+    procedure btnOpenLBClick(Sender: TObject);
+    procedure btnDBTestClick(Sender: TObject);
+    procedure btnSMSTestClick(Sender: TObject);
+    procedure btnTemplateClick(Sender: TObject);
+    procedure btnViewerClick(Sender: TObject);
+    procedure cbxDoSortChange(Sender: TObject);
+    procedure btnMinimiseClick(Sender: TObject);
+    procedure cbxTypeChange(Sender: TObject);
+    procedure edtInstrNameCChange(Sender: TObject);
+    procedure pcInstructionsChange(Sender: TObject);
+    procedure timTimer2Timer(Sender: TObject);
+    procedure timTimer1Timer(Sender: TObject);
+    procedure TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure tvInstructionsEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
+    procedure tvSmallClick( Sender: TObject);
+    procedure tvSmallEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 
 type
    TYPE_DISPLAY = (TYPE_LOGALL,         // Information message is displayed in the Overall Log only
@@ -359,7 +356,6 @@ private { private declarations }
    KeepVersion      : string;      // Holds the current DB version if this is a LPMS DB
    LastMsg          : string;      // Last SQL error message
    OSName           : string;      // Holds the name of the Platform we are running on
-   OSShort          : string;      // Holds the short name of the Platform we are running on
    SMSResult        : string;      // Holds result returned by the SMS Provider
    SaveName         : string;      // Holds instruction name when an Update started - used in case of a Cancel
    InstrSel         : string;      // Contains the Text of the selected TreeView item
@@ -373,23 +369,17 @@ private { private declarations }
    Instr_List       : Array_Instructions; // Array of in-memory Backup instructions
    UpdateRec        : REC_InstrRecord;    // Used to insert/change/delete records from the Treeview
 
-   saAbout          : TSplashAbout; // Shows an About screen
+{$ifdef WINDOWS}
+   sqlCon : TMySQL56Connection;  // Running on Winblows
+{$endif}
 
-{$IFDEF WINDOWS}                   // Target is Winblows
-   sqlCon  : TMySQL56Connection;
-{$ENDIF}
+{$ifdef LINUX}
+   sqlCon : TMySQL57Connection;  // Running on Linux
+{$endif}
 
-{$IFDEF LINUX}                     // Target is Linux
-   {$IFDEF CPUARMHF}               // Running on ARM (Raspbian) architecture
-      sqlCon : TMySQL55Connection;
-   {$ELSE}                         // Running on Intel architecture
-      sqlCon : TMySQL57Connection;
-   {$ENDIF}
-{$ENDIF}
-
-{$IFDEF DARWIN}                    // Target is macOS
-   sqlCon : TMySQL57Connection;
-{$ENDIF}
+{$ifdef DARWIN}
+   sqlCon : TMySQL57Connection;  // Running on macOS
+{$endif}
 
 const
 
@@ -482,42 +472,27 @@ begin
    FirstRun := True;
    FLPMSBackup.Hide;
 
+
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
 
-   OSDelim := '/';
-
-   saAbout                 := TSplashAbout.Create(nil);
-   saAbout.Author          := 'BlueCrane Software Development CC';
-   saAbout.BackGroundColor := clMoneyGreen;
-   saAbout.UserTitle       := 'Backup Manager';
-   saAbout.Description     := 'Made with: LCL' + saAbout.PoweredBy.InfoLCLVersion + ' and FPC ' + saAbout.PoweredBy.InfoFPCVersion + #10 + 'For: ' + saAbout.PoweredBy.InfoFPCTarget + ' (' + saAbout.PoweredBy.InfoWidgetSet + ')' + #10 + #10 + 'Support: support@bluecrane.cc' + #10 + 'Visit: www.bluecrane.cc' + #10 + #10 + 'Copyright (c) 2009 - ' + FormatDateTime('yyyy',Now());
-   saAbout.ShowDescription := True;
-
-{$IFDEF WINDOWS}                    // Target is Winblows
+{$ifdef WINDOWS}
    OSDelim := '\';
    OSName  := 'MS-Windows';
-   OSSHort := 'MS';
    sqlCon  := TMySQL56Connection.Create(nil);
-{$ENDIF}
+{$endif}
 
-{$IFDEF LINUX}                      // Target is Linux
-   {$IFDEF CPUARMHF}                // Running on ARM (Raspbian) architecture
-      OSName  := 'Raspbian';
-      OSShort := 'Pi';
-      sqlCon  := TMySQL55Connection.Create(nil);
-   {$ELSE}                          // Running on Intel architecture
-      OSName  := 'Linux';
-      OSShort := 'L';
-      sqlCon  := TMySQL57Connection.Create(nil);
-   {$ENDIF}
-{$ENDIF}
-
-{$IFDEF DARWIN}                     // Target is macOS
-   OSName  := 'macOS';
-   OSShort := 'Mac';
+{$ifdef LINUX}
+   OSDelim := '/';
+   OSName  := 'Linux';
    sqlCon  := TMySQL57Connection.Create(nil);
-{$ENDIF}
+{$endif}
+
+{$ifdef DARWIN}
+   OSDelim := '/';
+   OSName  := 'macOS';
+   sqlCon  := TMySQL57Connection.Create(nil);
+{$endif}
 
    sqlTran.DataBase    := sqlCon;
    sqlQry1.Transaction := sqlTran;
@@ -642,9 +617,9 @@ begin
 
    ActionsLastExecute(Sender);
 
-{$IFDEF WINDOWS}
+{$ifdef WINDOWS}
    TrayIcon.Visible := True;
-{$ENDIF}
+{$endif}
 
 end;
 
@@ -2393,7 +2368,7 @@ begin
 
                if (((rbSMSFailure.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[idx1].Instr_Rec.BackupSMSProvider <> 0)) then begin
 
-                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + Instr_List[idx1].Instr_Rec.BackupHostName + '(' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + ') {' + OSShort + '}';
+                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + Instr_List[idx1].Instr_Rec.BackupHostName + '(' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + ') {' + OSName + '}';
                   SMSMessage  := Get_Send_XML(DispMessage);
                   SendSMS(SMSMessage);
 
@@ -3034,7 +3009,6 @@ begin
    OutFile := AnsiReplaceStr(OutFile,'&DBPrefix',Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix);
    OutFile := AnsiReplaceStr(OutFile,'&DBSuffix',Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
    OutFile := AnsiReplaceStr(OutFile,'&OSName',OSName);
-   OutFile := AnsiReplaceStr(OutFile,'&OSShort',OSShort);
 
    DispLogMsg('------ Backup will be saved to ''' + OutFile + '''');
    StartTime := Now;
@@ -3078,7 +3052,7 @@ begin
       btnOpenLB.Enabled := False;
 
    if (((rbSMSSuccess.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[ActiveInstr].Instr_Rec.BackupSMSProvider <> 0)) then begin
-      DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup Successful (Time: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime) + ', Records: ' + RecTotalF + ', Size: ' + ThisMsgF + '). ' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + '(' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ') {' + OSShort + '}';
+      DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup Successful (Time: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime) + ', Records: ' + RecTotalF + ', Size: ' + ThisMsgF + '). ' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + '(' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ') {' + OSName + '}';
       SMSMessage  := Get_Send_XML(DispMessage);
 
       SendSMS(SMSMessage);
@@ -3518,7 +3492,7 @@ begin
    DispLogMsg(LastMsg);
 
    if (((Instr_List[ActiveInstr].Instr_Rec.BackupSMSFailure = true) or (Instr_List[ActiveInstr].Instr_Rec.BackupSMSAlways = true)) and (Instr_List[ActiveInstr].Instr_Rec.BackupSMSProvider <> 0)) then begin
-      LastMsg := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + LastMsg + ' {' + OSShort + '}';
+      LastMsg := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + LastMsg + ' {' + OSName + '}';
       SMSMessage  := Get_Send_XML(LastMsg);
 
       SendSMS(SMSMessage);
