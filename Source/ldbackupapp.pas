@@ -26,22 +26,26 @@ uses
    Classes, SysUtils, FileUtil, sqldb, LCLType, Forms, Controls, Graphics,
    Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn,
    Spin, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils,
-   Zipper,
+   Zipper, usplashabout,
 
 {$IFDEF WINDOWS}                     // Target is Winblows
-   usplashabout, mysql56conn;
+   mysql56conn;
 {$ENDIF}
 
 {$IFDEF LINUX}                       // Target is Linux
    {$IFDEF CPUARMHF}                 // Running on ARM (Raspbian) architecture
-      usplashabout, mysql55conn;
+      mysql55conn;
    {$ELSE}                           // Running on Intel architecture
-      usplashabout, mysql57conn;
+      mysql57conn;
    {$ENDIF}
 {$ENDIF}
 
 {$IFDEF DARWIN}                      // Target is macOS
-   usplashabout, mysql57conn;
+   {$IFDEF CPUI386}                  // Running on a version below Catalina
+      mysql55conn;
+   {$ELSE}                           // Running on Catalina
+      mysql57conn;
+   {$ENDIF}
 {$ENDIF}
 
 //------------------------------------------------------------------------------
@@ -388,7 +392,11 @@ private { private declarations }
 {$ENDIF}
 
 {$IFDEF DARWIN}                    // Target is macOS
-   sqlCon : TMySQL57Connection;
+   {$IFDEF CPUI386}                // Running on a version below Catalina
+      sqlCon : TMySQL55Connection;
+   {$ELSE}                         // Running on Catalina
+      sqlCon : TMySQL57Connection;
+   {$ENDIF}
 {$ENDIF}
 
 const
@@ -516,7 +524,11 @@ begin
 {$IFDEF DARWIN}                     // Target is macOS
    OSName  := 'macOS';
    OSShort := 'Mac';
-   sqlCon  := TMySQL57Connection.Create(nil);
+   {$IFDEF CPUI386}                 // Running on a version below Catalina
+      sqlCon := TMySQL55Connection.Create(nil);
+   {$ELSE}
+      sqlCon := TMySQL57Connection.Create(nil);
+   {$ENDIF}
 {$ENDIF}
 
    sqlTran.DataBase    := sqlCon;

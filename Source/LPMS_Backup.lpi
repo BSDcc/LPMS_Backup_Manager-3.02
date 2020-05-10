@@ -24,7 +24,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="88"/>
+      <BuildNr Value="91"/>
       <Language Value="0809"/>
       <StringTable CompanyName="BlueCrane Software Development CC" ProductName="Backup Manager" ProductVersion="3.02"/>
     </VersionInfo>
@@ -142,9 +142,6 @@
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
-    <Target>
-      <Filename Value="LPMS_Backup"/>
-    </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);lib/i386-win32"/>
       <OtherUnitFiles Value="../../../.lazarus/onlinepackagemanager/packages/synapse40.1;../../../.lazarus/onlinepackagemanager/packages/SplashAbout"/>
