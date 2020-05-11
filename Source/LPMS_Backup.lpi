@@ -24,7 +24,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="91"/>
+      <BuildNr Value="94"/>
       <Language Value="0809"/>
       <StringTable CompanyName="BlueCrane Software Development CC" ProductName="Backup Manager" ProductVersion="3.02"/>
     </VersionInfo>
@@ -61,18 +61,11 @@
       <Item3 Name="Release">
         <CompilerOptions>
           <Version Value="11"/>
-          <Target>
-            <Filename Value="LPMS_Backup"/>
-          </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);lib/i386-win32"/>
             <OtherUnitFiles Value="../required/DevTime/synapse40/source/lib"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
-          <CodeGeneration>
-            <TargetCPU Value="arm"/>
-            <TargetOS Value="linux"/>
-          </CodeGeneration>
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>

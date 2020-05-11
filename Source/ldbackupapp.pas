@@ -26,7 +26,7 @@ uses
    Classes, SysUtils, FileUtil, sqldb, LCLType, Forms, Controls, Graphics,
    Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn,
    Spin, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils,
-   Zipper, usplashabout,
+   Zipper, usplashabout, FileInfo,
 
 {$IFDEF WINDOWS}                     // Target is Winblows
    mysql56conn;
@@ -369,6 +369,11 @@ private { private declarations }
    InstrSel         : string;      // Contains the Text of the selected TreeView item
    ActiveName       : string;      // Name of the Instruction scheduled by the Scheduler
    LocalPath        : string;      // Dir where Log, Config File and Back Instructions File are stored
+   Version          : string;      // String containing the full version
+   Major            : string;      // Major portion of the Version Number
+   Minor            : string;      // Minor portion of the Version Number
+   VerRelease       : string;      // Release portion of the Version Number
+   Build            : string;      // Build portion of the Version Number
    StartTime        : TDateTime;   // Start time of the current Backup
    EndTime          : TDateTime;   // End time of the current Backup
    IniFile          : TINIFile;    // IniFile holding defaults
@@ -428,6 +433,8 @@ const
    function  GetBasicInfo() : boolean;
    function  ReadTable(Table: string; LimitStart: integer; LimitEnd: integer) : boolean;
    function  AccessTreeView(ThisReq: REC_InstrRecord) : boolean;
+   procedure GetVersion();
+
 
 public  { public declarations }
 
@@ -641,10 +648,19 @@ begin
    timTimer2.Interval := 1000;
    timTimer2.Enabled  := True;
 
+   GetVersion();
+
+{$IFOPT D+}
+   Version := 'Version ' + Major + '.' + Minor + '.' + VerRelease + ' [DEBUG]';
+{$ELSE}
+   Version := 'Version ' + Major + '.' + Minor + '.' + VerRelease + ' [' + Build + ']';
+{$ENDIF}
+
+
 //--- Set up the non-instruction related information in the Status Bar
 
    sbStatus.Panels.Items[0].Text := ' Backup Manager © 2008-' + FormatDateTime('YYYY',Now()) + ' BlueCrane Software Development CC';
-   sbStatus.Panels.Items[1].Text := ' Version 3.02';
+   sbStatus.Panels.Items[1].Text := Version;
    sbStatus.Panels.Items[2].Text := ' Waiting...';
    sbStatus.Panels.Items[5].Text := OSName;
 
@@ -4732,6 +4748,101 @@ begin
    end;
 
    Result := S2;
+
+end;
+
+//------------------------------------------------------------------------------
+// Procedure to extract the version info from the Application
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.GetVersion();
+var
+
+{$IFDEF DARWIN}
+   BundleRef     : CFBundleRef;
+   KeyRef        : CFStringRef;
+   ValueRef      : CFTypeRef;
+{$ENDIF}
+
+   idx           : integer;
+   VersionString : string;
+   VersionTokens : TStringList;
+   FileVerInfo   : TFileVersionInfo;
+
+begin
+
+{$IFDEF DARWIN}
+
+   try
+
+      BundleRef := CFBundleGetMainBundle;
+
+      if BundleRef = nil then
+         Exit;
+
+      KeyRef   := CFStringCreateWithPascalString(nil,'CFBundleVersion',kCFStringEncodingUTF8);
+      ValueRef := CFBundleGetValueForInfoDictionaryKey(BundleRef, KeyRef);
+
+      if ValueRef = nil then
+         Exit;
+
+      if CFGetTypeID(ValueRef) <> CFStringGetTypeID then
+         Exit;
+
+      VersionString := CFStringToStr(ValueRef);
+
+   except on E : Exception do
+      ShowMessage(E.Message);
+
+   end;
+
+   FreeCFString(KeyRef);
+
+   VersionTokens := TStringList.Create;
+   FileVerInfo   := TFileVersionInfo.Create(nil);
+
+   ExtractStrings(['.'], [], PChar(VersionString), VersionTokens);
+
+   Major      := Copy(VersionTokens[0],13,99);
+   Minor      := VersionTokens[1];
+   VerRelease := VersionTokens[2];
+   Build      := VersionTokens[3];
+
+   VersionTokens.Free;
+   FileVerInfo.Free;
+
+{$ELSE}
+
+   VersionTokens := TStringList.Create;
+   FileVerInfo   := TFileVersionInfo.Create(nil);
+
+   try
+
+     FileVerInfo.ReadFileInfo;
+
+     for idx := 0 to FileVerInfo.VersionStrings.Count -1 do begin
+
+        VersionString := FileVerInfo.VersionStrings[idx];
+
+        if Copy(VersionString,1,12) = 'FileVersion=' then
+           break;
+
+     end;
+
+     ExtractStrings(['.'], [], PChar(VersionString), VersionTokens);
+
+     Major      := Copy(VersionTokens[0],13,99);
+     Minor      := VersionTokens[1];
+     VerRelease := VersionTokens[2];
+     Build      := VersionTokens[3];
+
+   finally
+
+     VersionTokens.Free;
+     FileVerInfo.Free;
+
+   end;
+
+{$ENDIF}
 
 end;
 
