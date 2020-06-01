@@ -202,6 +202,7 @@ begin
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSUser     := edtSMSUser.Text;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupTemplate    := edtTemplate.Text;
    FLPMSBackup.BackupTemplate.Instr_Rec.BackupViewer      := edtViewer.Text;
+   FLPMSBackup.BackupTemplate.LastBackup                  := '';
 
 //--- Update the 'Registry'
 
@@ -228,6 +229,7 @@ begin
    IniFile.WriteString('Template','BackupSMSUser',FLPMSBackup.BackupTemplate.Instr_Rec.BackupSMSUser);
    IniFile.WriteString('Template','BackupTemplate',FLPMSBackup.BackupTemplate.Instr_Rec.BackupTemplate);
    IniFile.WriteString('Template','BackupViewer',FLPMSBackup.BackupTemplate.Instr_Rec.BackupViewer);
+   IniFile.WriteString('Template','BackupLast',FLPMSBackup.BackupTemplate.LastBackup);
 
    IniFile.Destroy;
 

@@ -25,7 +25,7 @@ uses
 
    Classes, SysUtils, FileUtil, sqldb, LCLType, Forms, Controls, Graphics,
    Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons, ExtCtrls, EditBtn,
-   Spin, strutils, INIFiles, HTTPSend, Synacode, DateUtils, LazFileUtils,
+   Spin, strutils, INIFiles, HTTPSend, SynaCode, DateUtils, LazFileUtils,
    Zipper, usplashabout, FileInfo,
 
 {$IFDEF WINDOWS}                     // Target is Winblows
@@ -65,6 +65,7 @@ type
    cbxCompress: TCheckBox;
    cbxDoSort: TCheckBox;
    cbxDelete: TCheckBox;
+   edtNextBackup: TEditButton;
    FileDelete: TAction;
    FileNew: TAction;
    btnSMSTest: TButton;
@@ -123,7 +124,6 @@ type
    Bevel3: TBevel;
    edtConfigFile: TEdit;
    edtHostName: TEdit;
-   edtNextBackup: TEdit;
    edtLocation: TEdit;
    imgLargeN: TImageList;
    lblDBVersion: TLabel;
@@ -232,6 +232,7 @@ type
    tvInstructions: TTreeView;
 
    procedure dlgFindFind( Sender: TObject);
+   procedure edtNextBackupButtonClick(Sender: TObject);
    procedure FormActivate(Sender: TObject);
    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
    procedure FileCloseExecute(Sender: TObject);
@@ -332,6 +333,7 @@ type
       NextTime              : string;
       SymCpy                : string;
       SymVersion            : string;
+      LastBackup            : string;
       Instr_Rec             : Rec_IniRecord;
       Status                : integer;
    end;
@@ -762,6 +764,7 @@ begin
             IniFile.WriteString('Parameters','BackupSMSUser',Instr_List[idx1].Instr_Rec.BackupSMSUser);
             IniFile.WriteString('Parameters','BackupTemplate',Instr_List[idx1].Instr_Rec.BackupTemplate);
             IniFile.WriteString('Parameters','BackupViewer',Instr_List[idx1].Instr_Rec.BackupViewer);
+            IniFile.WriteString('Parameters','BackupLast',Instr_List[idx1].LastBackup);
 
             IniFile.Destroy;
 
@@ -805,6 +808,7 @@ begin
    IniFile.WriteString('Template','BackupSMSUser',BackupTemplate.Instr_Rec.BackupSMSUser);
    IniFile.WriteString('Template','BackupTemplate',BackupTemplate.Instr_Rec.BackupTemplate);
    IniFile.WriteString('Template','BackupViewer',BackupTemplate.Instr_Rec.BackupViewer);
+   IniFile.WriteString('Template','BackupLast',BackupTemplate.LastBackup);
 
    IniFile.Destroy;
 
@@ -895,6 +899,7 @@ begin
    Instr_List[ThisInstr].Instr_Rec.BackupSMSUser         := BackupTemplate.Instr_Rec.BackupSMSUser;
    Instr_List[ThisInstr].Instr_Rec.BackupTemplate        := BackupTemplate.Instr_Rec.BackupTemplate;
    Instr_List[ThisInstr].Instr_Rec.BackupViewer          := BackupTemplate.Instr_Rec.BackupViewer;
+   Instr_List[ThisInstr].LastBackup                      := BackupTemplate.LastBackup;
    Instr_List[ThisInstr].Instr_Rec.BackupSMSProviderName := BackupTemplate.Instr_Rec.BackupSMSProviderName;
 
    Instr_List[ThisInstr].Active := False;
@@ -993,6 +998,7 @@ begin
    Instr_List[SaveInstr].Instr_Rec.BackupSMSUser     := IniFile.ReadString('Parameters','BackupSMSUser','');
    Instr_List[SaveInstr].Instr_Rec.BackupTemplate    := IniFile.ReadString('Parameters','BackupTemplate','&Date@&Time - &BackupType Backup (&CpyName on &HostName)');
    Instr_List[SaveInstr].Instr_Rec.BackupViewer      := IniFile.ReadString('Parameters','BackupViewer','');
+   Instr_List[SaveInstr].LastBackup                  := IniFile.ReadString('Parameters','BackupLast','');
 
    IniFile.Destroy;
 
@@ -1004,9 +1010,11 @@ begin
       cbxType.ItemIndex    := Instr_List[SaveInstr].Instr_Rec.BackupType;
       cbxTypeChange(Sender);
 
-      cbxT01.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT01;
-      cbxT02.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT02;
-      cbxT03.ItemIndex     := Instr_List[SaveInstr].Instr_Rec.BackupT03;
+      edtLastBackup.Text := Instr_List[SaveInstr].LastBackup;
+
+      cbxT01.ItemIndex := Instr_List[SaveInstr].Instr_Rec.BackupT01;
+      cbxT02.ItemIndex := Instr_List[SaveInstr].Instr_Rec.BackupT02;
+      cbxT03.ItemIndex := Instr_List[SaveInstr].Instr_Rec.BackupT03;
 
       edtSMSNumber.Text    := Instr_List[SaveInstr].Instr_Rec.BackupSMSNumber;
       rbSMSSuccess.Checked := Instr_List[SaveInstr].Instr_Rec.BackupSMSSuccess;
@@ -1359,6 +1367,7 @@ begin
    IniFile.WriteString('Parameters','BackupSMSUser',Instr_List[ThisInstr].Instr_Rec.BackupSMSUser);
    IniFile.WriteString('Parameters','BackupTemplate',Instr_List[ThisInstr].Instr_Rec.BackupTemplate);
    IniFile.WriteString('Parameters','BackupViewer',Instr_List[ThisInstr].Instr_Rec.BackupViewer);
+   IniFile.WriteString('Parameters','BackupLast',Instr_List[ThisInstr].LastBackup);
 
    IniFile.Destroy;
 
@@ -1488,6 +1497,13 @@ begin
      end;
 
    end;
+
+end;
+
+procedure TFLPMSBackup.edtNextBackupButtonClick(Sender: TObject);
+begin
+
+   ActionsRunNowExecute(Sender);
 
 end;
 
@@ -1857,9 +1873,9 @@ begin
    edtLocationC.RootDir := Instr_List[GetInstruction()].Instr_Rec.BackupLocation;
 end;
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Function to open the last successfull backup file
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 procedure TFLPMSBackup.btnOpenLBClick(Sender: TObject);
 var
    ThisNum : integer;
@@ -1868,7 +1884,7 @@ begin
 
    ThisNum := GetInstruction();
 
-   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('''' + edtLastBackup.Text + ''''),[]);
+   ExecuteProcess(Instr_List[ThisNum].Instr_Rec.BackupViewer,PChar('"' + edtLastBackup.Text + '"'),[]);
 
 end;
 
@@ -1885,6 +1901,14 @@ begin
 
    if tsConfiguration.Visible = True then
       edtInstrNameC.SetFocus;
+
+
+//--- Set the disposition of the button to open the last backup
+
+   if ((FileExists(edtViewerC.Text) = true) and (FileExists(edtLastBackup.Text) = True))  then
+      btnOpenLB.Enabled := True
+   else
+      btnOpenLB.Enabled := False;
 
 end;
 
@@ -2643,9 +2667,11 @@ begin
 
 //--- Update the fields on the Instruction Page
 
-   cbxT01.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT01;
-   cbxT02.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT02;
-   cbxT03.ItemIndex     := Instr_List[ListNum].Instr_Rec.BackupT03;
+   edtLastBackup.Text := Instr_List[ListNum].LastBackup;
+
+   cbxT01.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupT01;
+   cbxT02.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupT02;
+   cbxT03.ItemIndex := Instr_List[ListNum].Instr_Rec.BackupT03;
 
    if Instr_List[ListNum].Instr_Rec.BackupSMSProvider = 0 then begin
 
@@ -2716,6 +2742,13 @@ begin
 
    end;
 
+//--- Set the disposition of the button to open the last backup
+
+   if ((FileExists(Instr_List[ListNum].Instr_Rec.BackupViewer) = true) and (FileExists(edtLastBackup.Text) = True))  then
+      btnOpenLB.Enabled := True
+   else
+      btnOpenLB.Enabled := False;
+
 //--- Update the Statusbar
 
    sbStatus.Panels.Items[3].Text := ' ' + Instr_List[ListNum].Instr_Rec.BackupHostName + '[' + Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix + ']';
@@ -2724,7 +2757,7 @@ begin
    DoSave    := False;
    CanUpdate := True;
 
-   btnOpenLB.Enabled := False;
+//   btnOpenLB.Enabled := False;
 
 //--- Shutdown the Database for now - we will open it again when a Backup starts
 
@@ -3110,7 +3143,7 @@ begin
 
    EndTime := Now;
 
-   edtLastBackup.Text := OutFile;
+   edtLastBackup.Text := Instr_List[ActiveInstr].LastBackup;
 
    if FileExists(Instr_List[ActiveInstr].Instr_Rec.BackupViewer) = True then
       btnOpenLB.Enabled := True
@@ -3518,14 +3551,21 @@ begin
       ThisZipper := TZipper.Create;
 
       ThisZipper.FileName := Instr_List[ActiveInstr].Instr_Rec.BackupLocation + ChangeFileExt(ExtractFileName(FileName),'.zip');
-      ThisZipper.Entries.AddFileEntry(FileName);
+      ThisZipper.Entries.AddFileEntry(FileName,ExtractFileName(FileName));
       ThisZipper.ZipAllFiles;
 
       ThisZipper.Free;
 
+//--- Store the output file name
+
+      Instr_List[ActiveInstr].LastBackup := Instr_List[ActiveInstr].Instr_Rec.BackupLocation + ChangeFileExt(ExtractFileName(FileName),'.zip');
+
+//--- Delete the .lpb file as the backup is now in a .zip archive
+
       DeleteFile(FileName);
 
-   end;
+   end else
+      Instr_List[ActiveInstr].LastBackup := Instr_List[ActiveInstr].Instr_Rec.BackupLocation + FileName;
 
 //--- Clear and delete the Lists that were used
 
@@ -4107,6 +4147,7 @@ begin
       BackupTemplate.Instr_Rec.BackupSMSUser     := IniFile.ReadString('Template','BackupSMSUser','');
       BackupTemplate.Instr_Rec.BackupTemplate    := IniFile.ReadString('Template','BackupTemplate','&Date@&Time - &BackupType Backup (&Instruction)');
       BackupTemplate.Instr_Rec.BackupViewer      := IniFile.ReadString('Template','BackupViewer','');
+      BackupTemplate.LastBackup                  := IniFile.ReadString('Template','BackupLast','');
 
       IniFile.Destroy;
 
@@ -4206,6 +4247,7 @@ begin
          Instr_List[idx1].Instr_Rec.BackupSMSUser         := BackupTemplate.Instr_Rec.BackupSMSUser;
          Instr_List[idx1].Instr_Rec.BackupTemplate        := BackupTemplate.Instr_Rec.BackupTemplate;
          Instr_List[idx1].Instr_Rec.BackupViewer          := BackupTemplate.Instr_Rec.BackupViewer;
+         Instr_List[idx1].LastBackup                      := BackupTemplate.LastBackup;
          Instr_List[idx1].Instr_Rec.BackupSMSProviderName := BackupTemplate.Instr_Rec.BackupSMSProviderName;
 
          Instr_List[idx1].Active := False;
@@ -4237,6 +4279,7 @@ begin
          Instr_List[idx1].Instr_Rec.BackupSMSUser     := IniFile.ReadString('Parameters','BackupSMSUser','');
          Instr_List[idx1].Instr_Rec.BackupTemplate    := IniFile.ReadString('Parameters','BackupTemplate','&Date@&Time - &BackupType Backup (&CpyName on &HostName)');
          Instr_List[idx1].Instr_Rec.BackupViewer      := IniFile.ReadString('Parameters','BackupViewer','');
+         Instr_List[idx1].LastBackup                  := IniFile.ReadString('Parameters','BackupLast','');
 
          IniFile.Destroy;
 
