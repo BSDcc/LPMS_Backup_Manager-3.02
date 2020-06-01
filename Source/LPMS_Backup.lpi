@@ -38,7 +38,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);lib/i386-win32"/>
-            <OtherUnitFiles Value="../required/DevTime/synapse40/source/lib"/>
+            <OtherUnitFiles Value="../../../.lazarus/onlinepackagemanager/packages/synapse40.1"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Linking>

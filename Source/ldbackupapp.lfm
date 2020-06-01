@@ -1,5 +1,5 @@
 object FLPMSBackup: TFLPMSBackup
-  Left = 975
+  Left = 676
   Height = 718
   Top = 154
   Width = 1242
@@ -12,26 +12,26 @@ object FLPMSBackup: TFLPMSBackup
   OnClose = FormClose
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '2.0.8.0'
   object pnlP00: TPanel
     Left = 205
-    Height = 572
+    Height = 571
     Top = 57
     Width = 1037
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 572
+    ClientHeight = 571
     ClientWidth = 1037
     TabOrder = 3
     object pnlP00b: TPanel
       Left = 0
-      Height = 572
+      Height = 571
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 572
+      ClientHeight = 571
       ClientWidth = 1037
       TabOrder = 1
       object pnl00b1: TPanel
@@ -159,7 +159,7 @@ object FLPMSBackup: TFLPMSBackup
             TabOrder = 1
             object Label7: TLabel
               Left = 16
-              Height = 15
+              Height = 17
               Top = 10
               Width = 61
               Caption = 'Config File:'
@@ -167,7 +167,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label8: TLabel
               Left = 16
-              Height = 15
+              Height = 17
               Top = 42
               Width = 66
               Caption = 'Host Name:'
@@ -175,7 +175,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label9: TLabel
               Left = 16
-              Height = 15
+              Height = 17
               Top = 74
               Width = 73
               Caption = 'Next Backup:'
@@ -183,7 +183,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblDBVersion: TLabel
               Left = 16
-              Height = 15
+              Height = 17
               Top = 106
               Width = 91
               Caption = 'Output Location:'
@@ -191,7 +191,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtConfigFile: TEdit
               Left = 135
-              Height = 26
+              Height = 27
               Top = 6
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -199,7 +199,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtHostName: TEdit
               Left = 135
-              Height = 26
+              Height = 27
               Top = 38
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -207,7 +207,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtNextBackup: TEdit
               Left = 135
-              Height = 26
+              Height = 27
               Top = 70
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -215,7 +215,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLocation: TEdit
               Left = 135
-              Height = 26
+              Height = 27
               Top = 102
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -240,17 +240,17 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnl00b2: TPanel
         Left = 0
-        Height = 434
+        Height = 433
         Top = 138
         Width = 1037
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 434
+        ClientHeight = 433
         ClientWidth = 1037
         TabOrder = 1
         object lvLogAll: TListView
           Left = 0
-          Height = 434
+          Height = 433
           Top = 0
           Width = 1037
           Align = alClient
@@ -283,44 +283,44 @@ object FLPMSBackup: TFLPMSBackup
     end
     object pnlP00a: TPanel
       Left = 0
-      Height = 572
+      Height = 571
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 572
+      ClientHeight = 571
       ClientWidth = 1037
       TabOrder = 0
       object pcInstructions: TPageControl
         Left = 0
-        Height = 572
+        Height = 571
         Top = 0
         Width = 1037
-        ActivePage = tsConfiguration
+        ActivePage = tsInstruction
         Align = alClient
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
         OnChange = pcInstructionsChange
         object tsInstruction: TTabSheet
           Caption = 'Instruction'
-          ClientHeight = 537
+          ClientHeight = 536
           ClientWidth = 1031
           object pnlP00a2: TPanel
             Left = 0
-            Height = 135
+            Height = 134
             Top = 0
             Width = 1031
             Align = alTop
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
-            ClientHeight = 135
+            ClientHeight = 134
             ClientWidth = 1031
             TabOrder = 0
             object Label4: TLabel
               Left = 12
-              Height = 15
+              Height = 17
               Top = 42
-              Width = 73
+              Width = 74
               Caption = 'Backup Type:'
               ParentColor = False
               ParentShowHint = False
@@ -344,7 +344,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL01: TLabel
               Left = 12
-              Height = 15
+              Height = 17
               Top = 74
               Width = 24
               Caption = 'T01:'
@@ -367,7 +367,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL02: TLabel
               Left = 334
-              Height = 15
+              Height = 17
               Top = 74
               Width = 21
               Caption = 'T02'
@@ -390,7 +390,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object lblL03: TLabel
               Left = 658
-              Height = 15
+              Height = 17
               Top = 74
               Width = 21
               Caption = 'T03'
@@ -413,7 +413,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label6: TLabel
               Left = 12
-              Height = 15
+              Height = 17
               Top = 106
               Width = 77
               Caption = 'SMS Number:'
@@ -422,7 +422,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtSMSNumber: TEdit
               Left = 150
-              Height = 26
+              Height = 27
               Top = 102
               Width = 106
               OnChange = edtInstrNameCChange
@@ -469,7 +469,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLastBackup: TEdit
               Left = 150
-              Height = 26
+              Height = 27
               Top = 6
               Width = 838
               Anchors = [akTop, akLeft, akRight]
@@ -515,7 +515,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object Label5: TLabel
               Left = 12
-              Height = 15
+              Height = 17
               Top = 10
               Width = 70
               Caption = 'Last Backup:'
@@ -525,19 +525,19 @@ object FLPMSBackup: TFLPMSBackup
           end
           object pnlP00a3: TPanel
             Left = 0
-            Height = 403
+            Height = 402
             Top = 134
             Width = 1031
             Align = alBottom
             Anchors = [akTop, akLeft, akRight, akBottom]
             BevelOuter = bvNone
             Caption = 'pnlP00a3'
-            ClientHeight = 403
+            ClientHeight = 402
             ClientWidth = 1031
             TabOrder = 1
             object lvLogSel: TListView
               Left = 0
-              Height = 403
+              Height = 402
               Top = 0
               Width = 1031
               Align = alClient
@@ -570,11 +570,11 @@ object FLPMSBackup: TFLPMSBackup
         end
         object tsConfiguration: TTabSheet
           Caption = 'Configuration'
-          ClientHeight = 537
+          ClientHeight = 536
           ClientWidth = 1031
           object Label10: TLabel
             Left = 8
-            Height = 16
+            Height = 18
             Top = 8
             Width = 131
             Caption = 'Backup Instruction:'
@@ -585,7 +585,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label11: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 40
             Width = 100
             Caption = 'Instruction Name:'
@@ -593,7 +593,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtInstrNameC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 36
             Width = 272
             OnChange = edtInstrNameCChange
@@ -601,7 +601,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label12: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 72
             Width = 66
             Caption = 'Host Name:'
@@ -609,7 +609,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtHostNameC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 68
             Width = 272
             OnChange = edtInstrNameCChange
@@ -617,7 +617,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label13: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 104
             Width = 55
             Caption = 'Template:'
@@ -625,7 +625,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtTemplateC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Hint = 'Valid Symbolic Variables are: &Date, &Year, &Month, &Day, &Time, & Hour, &Minute, &CpyName, &Instruction, &HostName, &BackupType, &DBPrefix, &DBSuffix and &OSName'
             Top = 100
             Width = 860
@@ -637,7 +637,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label14: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 136
             Width = 94
             Caption = 'Backup Location:'
@@ -645,7 +645,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtLocationC: TDirectoryEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 132
             Width = 860
             OnAcceptDirectory = edtLocationAcceptDirectory
@@ -661,7 +661,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label15: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 168
             Width = 90
             Caption = 'Read Block Size:'
@@ -669,7 +669,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object speBlockSizeC: TSpinEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 164
             Width = 118
             MaxValue = 100000
@@ -680,7 +680,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label16: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 200
             Width = 85
             Caption = 'Backup Viewer:'
@@ -688,7 +688,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtViewerC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 196
             Width = 829
             Anchors = [akTop, akLeft, akRight]
@@ -733,7 +733,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label17: TLabel
             Left = 8
-            Height = 16
+            Height = 18
             Top = 230
             Width = 88
             Caption = 'SMS Provider:'
@@ -744,7 +744,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label18: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 262
             Width = 87
             Caption = 'Provider Name:'
@@ -770,7 +770,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object lblSMSUser: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 303
             Width = 46
             Caption = 'User ID:'
@@ -778,7 +778,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtSMSUserC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 290
             Width = 221
             OnChange = edtInstrNameCChange
@@ -786,7 +786,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object lblSMSPass: TLabel
             Left = 16
-            Height = 15
+            Height = 17
             Top = 338
             Width = 57
             Caption = 'Password:'
@@ -794,7 +794,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtSMSPassC: TEdit
             Left = 160
-            Height = 26
+            Height = 27
             Top = 322
             Width = 221
             EchoMode = emPassword
@@ -823,7 +823,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label2: TLabel
             Left = 466
-            Height = 15
+            Height = 17
             Top = 72
             Width = 46
             Caption = 'User ID:'
@@ -831,7 +831,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtDBUserC: TEdit
             Left = 560
-            Height = 26
+            Height = 27
             Top = 68
             Width = 160
             OnChange = edtInstrNameCChange
@@ -839,7 +839,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label3: TLabel
             Left = 753
-            Height = 15
+            Height = 17
             Top = 72
             Width = 57
             Caption = 'Password:'
@@ -847,7 +847,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtDBPassC: TEdit
             Left = 860
-            Height = 26
+            Height = 27
             Top = 68
             Width = 160
             EchoMode = emPassword
@@ -857,7 +857,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label19: TLabel
             Left = 466
-            Height = 15
+            Height = 17
             Top = 40
             Width = 57
             Caption = 'Database:'
@@ -865,7 +865,7 @@ object FLPMSBackup: TFLPMSBackup
           end
           object edtDBPrefixC: TEdit
             Left = 560
-            Height = 26
+            Height = 27
             Top = 36
             Width = 160
             OnChange = edtInstrNameCChange
@@ -887,8 +887,8 @@ object FLPMSBackup: TFLPMSBackup
   end
   object sbStatus: TStatusBar
     Left = 0
-    Height = 20
-    Top = 677
+    Height = 21
+    Top = 676
     Width = 1242
     Panels = <    
       item
@@ -917,7 +917,7 @@ object FLPMSBackup: TFLPMSBackup
   end
   object splSplit01: TSplitter
     Left = 200
-    Height = 572
+    Height = 571
     Top = 57
     Width = 5
     Beveled = True
@@ -1531,18 +1531,18 @@ object FLPMSBackup: TFLPMSBackup
   end
   object pnlP02: TPanel
     Left = 0
-    Height = 572
+    Height = 571
     Top = 57
     Width = 200
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 572
+    ClientHeight = 571
     ClientWidth = 200
     TabOrder = 1
     object tvInstructions: TTreeView
       Left = 0
-      Height = 572
+      Height = 571
       Top = 0
       Width = 200
       Align = alClient
@@ -1558,7 +1558,7 @@ object FLPMSBackup: TFLPMSBackup
   object pnlP03: TPanel
     Left = 0
     Height = 48
-    Top = 629
+    Top = 628
     Width = 1242
     Align = alBottom
     BevelOuter = bvNone
@@ -1614,8 +1614,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL04: TLabel
       Left = 12
-      Height = 15
-      Top = 8
+      Height = 17
+      Top = 6
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '
@@ -1623,8 +1623,8 @@ object FLPMSBackup: TFLPMSBackup
     end
     object lblL05: TLabel
       Left = 12
-      Height = 15
-      Top = 28
+      Height = 17
+      Top = 26
       Width = 6
       Anchors = [akLeft, akBottom]
       Caption = '  '

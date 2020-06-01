@@ -482,7 +482,9 @@ uses ldBackupTemplate;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup. FormCreate( Sender: TObject);
 begin
+
    FirstRun := False;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -4123,8 +4125,8 @@ begin
 
    end else begin
 
-      InstrTokens.Add('New Instruction');
-      NumInstr := 1;
+//      InstrTokens.Add('New Instruction');
+//      NumInstr := 1;
 
    end;
 
