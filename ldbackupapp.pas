@@ -65,7 +65,10 @@ type
    cbxCompress: TCheckBox;
    cbxDoSort: TCheckBox;
    cbxDelete: TCheckBox;
+   edtLocation: TEditButton;
+   edtConfigFile: TEditButton;
    edtNextBackup: TEditButton;
+   edtHostName: TEditButton;
    FileDelete: TAction;
    FileNew: TAction;
    btnSMSTest: TButton;
@@ -122,9 +125,6 @@ type
    EditCancel: TAction;
    Bevel1: TBevel;
    Bevel3: TBevel;
-   edtConfigFile: TEdit;
-   edtHostName: TEdit;
-   edtLocation: TEdit;
    imgLargeN: TImageList;
    lblDBVersion: TLabel;
    Label7: TLabel;
@@ -232,6 +232,9 @@ type
    tvInstructions: TTreeView;
 
    procedure dlgFindFind( Sender: TObject);
+   procedure edtConfigFileButtonClick(Sender: TObject);
+   procedure edtHostNameButtonClick(Sender: TObject);
+   procedure edtLocationButtonClick(Sender: TObject);
    procedure edtNextBackupButtonClick(Sender: TObject);
    procedure FormActivate(Sender: TObject);
    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -252,7 +255,7 @@ type
    procedure HelpAboutExecute(Sender: TObject);
    procedure tvInstructionsClick(Sender: TObject);
    procedure edtLocationAcceptDirectory(Sender: TObject; var Value: String);
-   procedure edtLocationButtonClick(Sender: TObject);
+   procedure edtLocationCButtonClick(Sender: TObject);
    procedure btnOpenLBClick(Sender: TObject);
    procedure btnDBTestClick(Sender: TObject);
    procedure btnSMSTestClick(Sender: TObject);
@@ -408,8 +411,10 @@ private { private declarations }
 
 const
 
-   SMSProvider : array[1..4] of string  = ('Inactive', 'SMS Portal',
-                                           'BulkSMS', 'WinSMS');
+   SMSProvider : array[1..4] of string = ('Inactive', 'SMS Portal',
+                                          'BulkSMS', 'WinSMS');
+
+   BackupType  : array[1..3] of string = ('Hourly', 'Daily', 'Weekly');
 
    function  GetInstruction() : integer;
    procedure ShowInstruction();
@@ -473,7 +478,7 @@ var
 
 implementation
 
-uses ldBackupTemplate;
+uses ldBackupTemplate, ldShowInfo;
 
 {$R *.lfm}
 
@@ -497,7 +502,7 @@ begin
       Exit;
 
    FirstRun := True;
-   FLPMSBackup.Hide;
+//   FLPMSBackup.Hide;
 
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
@@ -615,7 +620,7 @@ begin
    LogInstrType := ord(TYPE_LOGALL);
    SMSDone      := False;
 
-   FLPMSBackup.Caption := 'Backup Manager';
+   FLPMSBackup.Caption := 'BACKUP MANAGER';
    CfgFile             := LocalPath + 'Backup_Manager.ini';
 
    tvInstructions.Items.Clear;
@@ -638,7 +643,7 @@ begin
    tvInstructions.AutoExpand := True;
    tvInstructions.FullExpand;
 
-   FLPMSBackup.Show;
+//   FLPMSBackup.Show;
 
 //--- Start the Time display and Scheduler timers
 
@@ -1500,13 +1505,6 @@ begin
 
 end;
 
-procedure TFLPMSBackup.edtNextBackupButtonClick(Sender: TObject);
-begin
-
-   ActionsRunNowExecute(Sender);
-
-end;
-
 //------------------------------------------------------------------------------
 // Procedure to drive the Search function
 //------------------------------------------------------------------------------
@@ -1782,6 +1780,107 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// User clicked on Show INI File Content button on the Root display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtConfigFileButtonClick(Sender: TObject);
+begin
+
+   FldShowInfo := TFldShowInfo.Create(Application);
+
+//--- Populate the FileName in FldShowInfo
+
+   FldShowInfo.FileName := edtConfigFile.Text;
+   FldShowInfo.Config   := True;
+
+   FLPMSBackup.Hide;
+   FldShowInfo.ShowModal;
+   FldShowInfo.Destroy;
+   FLPMSBackup.Show;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on Test Host Connection button on the Root display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtHostNameButtonClick(Sender: TObject);
+var
+   ListNum   : integer;
+   Connected : boolean;
+
+begin
+
+   ListNum := GetInstruction();
+
+//--- Temporarily stop the Scheduler
+
+   timTimer1.Enabled := False;
+
+//--- Try and connect to the database
+
+   sqlQry1.Close;
+   sqlCon.Close;
+
+   sqlCon.HostName     := Instr_List[ListNum].Instr_Rec.BackupHostName;
+   sqlCon.UserName     := Instr_List[ListNum].Instr_Rec.BackupDBUser;
+   sqlCon.Password     := Instr_List[ListNum].Instr_Rec.BackupDBPass;
+   sqlCon.DatabaseName := Instr_List[ListNum].Instr_Rec.BackupDBPrefix + Instr_List[ListNum].Instr_Rec.BackupDBSuffix;
+
+   sqlQry1.DataBase := sqlCon;
+
+   Connected := True;
+
+   try
+
+      sqlCon.Connected := True;
+
+   except
+
+      Connected := False;
+
+   end;
+
+   if Connected = True then
+      Application.MessageBox(PChar('Connection to ''' + sqlCon.HostName + ''' successfully established.'),'Backup Manager',(MB_OK + MB_ICONINFORMATION))
+   else
+      Application.MessageBox(PChar('Connection to ''' + sqlCon.HostName + ''' failed!'),'Backup Manager',(MB_OK + MB_ICONSTOP));
+
+///--- Restart the Scheduler
+
+   timTimer1.Enabled := True;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on Show Previous Backups button on the Root display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtLocationButtonClick(Sender: TObject);
+begin
+
+      FldShowInfo := TFldShowInfo.Create(Application);
+
+   //--- Populate the FileName in FldShowInfo
+
+      FldShowInfo.FileName := edtLocation.Text;
+      FldShowInfo.Config   := False;
+
+      FLPMSBackup.Hide;
+      FldShowInfo.ShowModal;
+      FldShowInfo.Destroy;
+      FLPMSBackup.Show;
+
+end;
+
+//------------------------------------------------------------------------------
+// User clicked on Run Now button on the Root display
+//------------------------------------------------------------------------------
+procedure TFLPMSBackup.edtNextBackupButtonClick(Sender: TObject);
+begin
+
+   ActionsRunNowExecute(Sender);
+
+end;
+
+//------------------------------------------------------------------------------
 // User clicked on a node in the Instructions Treeview
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.tvInstructionsClick(Sender: TObject);
@@ -1868,7 +1967,7 @@ end;
 //------------------------------------------------------------------------------
 // User clicked on the button to select a directory
 //------------------------------------------------------------------------------
-procedure TFLPMSBackup.edtLocationButtonClick(Sender: TObject);
+procedure TFLPMSBackup.edtLocationCButtonClick(Sender: TObject);
 begin
    edtLocationC.RootDir := Instr_List[GetInstruction()].Instr_Rec.BackupLocation;
 end;
@@ -2349,7 +2448,7 @@ var
    idx1                               : integer;
    RunBackup, JustRan                 : boolean;
    SMSMessage, DispMessage            : string;
-   ThisDate, Thistime                 : string;
+   ThisDate, Thistime, ThisType       : string;
 
 begin
 
@@ -2455,14 +2554,15 @@ begin
 
                DispLogMsg('---    Backup failed with error message: ''' + LastMsg + '''');
 
-               if (((rbSMSFailure.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[idx1].Instr_Rec.BackupSMSProvider <> 0)) then begin
+               if (((Instr_List[idx1].Instr_Rec.BackupSMSFailure = True) or (Instr_List[idx1].Instr_Rec.BackupSMSAlways = True)) and (Instr_List[idx1].Instr_Rec.BackupSMSProvider <> 0)) then begin
 
-                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + Instr_List[idx1].Instr_Rec.BackupHostName + '(' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + ') {' + OSShort + '}';
+                  ThisType := BackupType[Instr_List[idx1].Instr_Rec.BackupType + 1];
+                  DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + ThisType + ' Backup FAILED (Time: ' + FormatDateTime('hh:nn:ss.zzz',Now - StartTime) + ', Records: ' + FloatToStrF(RecTotal,ffNumber,10,0) + '). Check Log for errors. ' + Instr_List[idx1].Instr_Rec.BackupHostName + '(' + Instr_List[idx1].Instr_Rec.BackupDBPrefix + ') {' + OSShort + '}';
                   SMSMessage  := Get_Send_XML(DispMessage);
                   SendSMS(SMSMessage);
 
                   if (SMSDone = true) then
-                     DispLogMsg('---   SMS indicating FAILURE with message ''' + DispMessage + ''' sent to ''' + edtSMSNumber.Text + '''')
+                     DispLogMsg('---   SMS indicating FAILURE with message ''' + DispMessage + ''' sent to ''' + Instr_List[idx1].Instr_Rec.BackupSMSNumber + '''')
                   else
                      DispLogMsg('---   Attempt to send SMS indicating FAILURE failed');
 
@@ -2584,9 +2684,16 @@ begin
 
    ListNum := -1;
 
-//--- Get the Instruction name so that we can find it in the in-memory list.
+//--- Get the Instruction name so that we can find it in the in-memory list. If
+//--- we are at level 0 then the intended action operates on the list of
+//--- instructions in the small listview but we still search in the large
+//--- listview
 
-   ThisInstr := tvInstructions.Selected.Text;
+   if tvInstructions.Selected.Level = 0 then
+      ThisInstr := tvSmall.Selected.Text
+   else
+      ThisInstr := tvInstructions.Selected.Text;
+
    InstrSel  := ThisInstr;
 
    for idx1 := 0 to NumInstr - 1 do begin
@@ -3077,9 +3184,7 @@ end;
 //------------------------------------------------------------------------------
 function TFLPMSBackup.DoBackup() : boolean;
 var
-   ThisTime     : string;
-   SMSMessage   : string;
-   DispMessage  : string;
+   ThisTime, ThisType, SMSMessage, DispMessage : string;
 
 begin
 
@@ -3103,7 +3208,7 @@ begin
    OutFile := AnsiReplaceStr(OutFile,'&CpyName',Instr_List[ActiveInstr].SymCpy);
    OutFile := AnsiReplaceStr(OutFile,'&Instruction',Instr_List[ActiveInstr].Instruction);
    OutFile := AnsiReplaceStr(OutFile,'&HostName',Instr_List[ActiveInstr].Instr_Rec.BackupHostName);
-   OutFile := AnsiReplaceStr(OutFile,'&BackupType',cbxType.Text);
+   OutFile := AnsiReplaceStr(OutFile,'&BackupType',BackupType[Instr_List[ActiveInstr].Instr_Rec.BackupType + 1]);
    OutFile := AnsiReplaceStr(OutFile,'&DBPrefix',Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix);
    OutFile := AnsiReplaceStr(OutFile,'&DBSuffix',Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix);
    OutFile := AnsiReplaceStr(OutFile,'&OSName',OSName);
@@ -3150,16 +3255,19 @@ begin
    else
       btnOpenLB.Enabled := False;
 
-   if (((rbSMSSuccess.Checked = true) or (rbSMSAlways.Checked = true)) and (Instr_List[ActiveInstr].Instr_Rec.BackupSMSProvider <> 0)) then begin
-      DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + cbxType.Text + ' Backup Successful (Time: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime) + ', Records: ' + RecTotalF + ', Size: ' + ThisMsgF + '). ' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + '(' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ') {' + OSShort + '}';
+   if (((Instr_List[ActiveInstr].Instr_Rec.BackupSMSSuccess = true) or (Instr_List[ActiveInstr].Instr_Rec.BackupSMSAlways = true)) and (Instr_List[ActiveInstr].Instr_Rec.BackupSMSProvider <> 0)) then begin
+
+      ThisType := BackupType[Instr_List[ActiveInstr].Instr_Rec.BackupType + 1];
+      DispMessage := FormatDateTime('yyyy/MM/dd@hh:nn:ss',Now) + ' ' + ThisType + ' Backup Successful (Time: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime) + ', Records: ' + RecTotalF + ', Size: ' + ThisMsgF + '). ' + Instr_List[ActiveInstr].Instr_Rec.BackupHostName + '(' + Instr_List[ActiveInstr].Instr_Rec.BackupDBPrefix + Instr_List[ActiveInstr].Instr_Rec.BackupDBSuffix + ') {' + OSShort + '}';
       SMSMessage  := Get_Send_XML(DispMessage);
 
       SendSMS(SMSMessage);
 
       if (SMSDone = true) then
-         DispLogMsg('------ SMS indicating SUCCESS with message ''' + DispMessage + ''' sent to ''' + edtSMSNumber.Text + '''')
+         DispLogMsg('------ SMS indicating SUCCESS with message ''' + DispMessage + ''' sent to ''' + Instr_List[ActiveInstr].Instr_Rec.BackupSMSNumber + '''')
       else
          DispLogMsg('------ Attempt to send SMS indicating SUCCESS failed with message ''' + SMSResult + '''');
+
    end;
 
    DispLogMsg('--- Backup attempt completed on ' + FormatDateTime('yyyy/MM/dd',Now()) + ' at ' + FormatDateTime('hh:nn:ss.zzz',EndTime) + ', Time taken: ' + FormatDateTime('hh:nn:ss.zzz',EndTime - StartTime));
@@ -3260,7 +3368,7 @@ begin
 
 //--- Set the Flags
 
-   ThisTitle   := 'Backup Manager';
+   ThisTitle   := 'BSD Backup Manager';
    ThisDate    := FormatDateTime('yyyy/mm/dd',Now);
    ThisTime    := FormatDateTime('hh:nn:ss',Now);
    TypeBackup  := 'Full';

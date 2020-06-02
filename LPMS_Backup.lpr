@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, ldBackupApp, ldbackuptemplate;
+  Forms, ldBackupApp, ldbackuptemplate, ldShowInfo;
 
 {$R *.res}
 
@@ -17,6 +17,7 @@ begin
   Application.Title:='Backup Manager';
    Application.Initialize;
    Application. CreateForm( TFLPMSBackup, FLPMSBackup);
+  Application.CreateForm(TFldShowInfo, FldShowInfo);
    Application.Run;
 end.
 

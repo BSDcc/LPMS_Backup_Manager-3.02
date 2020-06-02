@@ -80,32 +80,11 @@ type
     procedure deDirectoryAcceptDirectory(Sender: TObject; var Value: String);
     procedure edtHostNameChange( Sender: TObject);
     procedure FormActivate(Sender: TObject);
-{
-    procedure btnCancelClick(Sender: TObject);
-    procedure btnSMSTestClick(Sender: TObject);
-    procedure btnUpdateClick(Sender: TObject);
-    procedure btnViewerClick(Sender: TObject);
-    procedure cbSMSProviderChange(Sender: TObject);
-    procedure edtDBPrefixChange(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-}
+
   private { private declarations }
     DoSave          : boolean;    // Controls whether a Save is required before Exiting
-{
-    DBPrefixChanged : boolean;    // Indicates  change in the value of DBPrefix
-    KeepDBPrefix    : string;     // Retain value of DBPrefix for later use
-    RegString       : string;     // Points to the correct INI file taking MultiCompany into account
-}
+
   public  { public declarations }
-{
-    SMSProvider     : integer;    // Index for the SMS Provider dropdown list
-    BackupBlock     : integer;    // Number of records to read in one operation
-    SMSUser         : string;     // UserID for SMS Provider login
-    SMSPassword     : string;     // Password for SMS Provider login
-    DBPrefix        : string;     // DBPRefix value passed from calling program
-    BackupViewer    : string;     // App to view the last backup
-    MultiCompany    : boolean;    // Multi Company value passed from calling program
-}
 
 end;
 
