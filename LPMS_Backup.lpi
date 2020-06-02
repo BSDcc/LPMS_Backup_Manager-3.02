@@ -24,7 +24,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="95"/>
+      <BuildNr Value="96"/>
       <Language Value="0809"/>
       <StringTable CompanyName="BlueCrane Software Development CC" ProductName="Backup Manager" ProductVersion="3.02"/>
     </VersionInfo>
@@ -60,10 +60,13 @@
           <Version Value="11"/>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <Libraries Value="lib/x86_64-linux"/>
-            <OtherUnitFiles Value="../../../.lazarus/onlinepackagemanager/packages/synapse40.1"/>
+            <OtherUnitFiles Value="../../.lazarus/onlinepackagemanager/packages/synapse40.1"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
+          <CodeGeneration>
+            <TargetCPU Value="arm"/>
+            <TargetOS Value="linux"/>
+          </CodeGeneration>
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>
@@ -133,6 +136,7 @@
         <Filename Value="ldshowinfo.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FldShowInfo"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ldShowInfo"/>
       </Unit3>
