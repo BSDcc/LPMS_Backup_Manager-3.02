@@ -95,6 +95,8 @@ begin
 
       end;
 
+      memInfo.VertScrollBar.Position := memInfo.Lines.Count - 1;
+
    end;
 
  end;

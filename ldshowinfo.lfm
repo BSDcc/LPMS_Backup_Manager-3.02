@@ -113,7 +113,7 @@ object FldShowInfo: TFldShowInfo
   }
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '2.0.8.0'
+  LCLVersion = '2.0.6.0'
   object Panel1: TPanel
     Left = 0
     Height = 464
@@ -130,6 +130,7 @@ object FldShowInfo: TFldShowInfo
       Top = 0
       Width = 1017
       Align = alClient
+      HideSelection = False
       ReadOnly = True
       ScrollBars = ssAutoBoth
       TabOrder = 0
