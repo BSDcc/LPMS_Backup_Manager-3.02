@@ -4270,11 +4270,11 @@ begin
 
       NumInstr := InstrTokens.Count;
 
-   end else begin
-
-      InstrTokens.Add('New Instruction');
-      NumInstr := 1;
-
+//   end else begin
+//
+//      InstrTokens.Add('New Instruction');
+//      NumInstr := 1;
+//
    end;
 
 //--- Build the Treeview and the in-memory array of instructions
