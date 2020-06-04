@@ -19,7 +19,7 @@ interface
 //------------------------------------------------------------------------------
 uses
   Classes, SysUtils, FileUtil, IDEWindowIntf, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, Spin, INIFiles, LCLType, Buttons, EditBtn;
+  Dialogs, StdCtrls, Spin, INIFiles, LCLType, Buttons, EditBtn, LazFileUtils;
 
 //------------------------------------------------------------------------------
 // Declarations
@@ -332,29 +332,11 @@ end;
 // User selected a directory
 //------------------------------------------------------------------------------
 procedure TFLPMSBackupTemplate.deDirectoryAcceptDirectory(Sender: TObject; var Value: String);
-var
-   ThisDir : string;
-
 begin
 
-   ThisDir := Value;
+//--- We need to add a final OS dependant delimiter to the path.
 
-//--- We need to add a final OS dependant delimiter (OSDelim) to the path.
-//--- If we are running on Winblows then the path must be at least 4 chars in
-//--- length (e.g 'C:\A') before we can add the backslash
-
-{$IFDEF WINDOWS}
-
-   if (Length(ThisDir) > 3) then
-      ThisDir := ThisDir + FLPMSBackup.OSDelim;
-
-{$ELSE}
-
-   ThisDir := ThisDir + FLPMSBackup.OSDelim;
-
-{$ENDIF}
-
-   Value := ThisDir;
+   Value := AppendPathDelim(Value);
 
 end;
 

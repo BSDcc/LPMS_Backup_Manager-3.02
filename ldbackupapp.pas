@@ -445,7 +445,7 @@ const
 
 public  { public declarations }
 
-   OSDelim         : string;             // Holds '/' or '\' depending on the OS
+//   OSDelim         : string;             // Holds '/' or '\' depending on the OS
    CfgFile         : string;             // Name of the default Configuration File
    BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
 
@@ -507,7 +507,7 @@ begin
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
 
-   OSDelim := '/';
+//   OSDelim := '/';
 
    saAbout                 := TSplashAbout.Create(nil);
    saAbout.Author          := 'BlueCrane Software Development CC';
@@ -517,7 +517,7 @@ begin
    saAbout.ShowDescription := True;
 
 {$IFDEF WINDOWS}                    // Target is Winblows
-   OSDelim := '\';
+//   OSDelim := '\';
    OSName  := 'MS-Windows';
    OSSHort := 'MS';
    sqlCon  := TMySQL56Connection.Create(nil);
@@ -582,12 +582,12 @@ begin
 
    end;
 
-   LocalPath := LocalPath + 'Backup_Manager' + OSDelim;
+   LocalPath := AppendPathDelim(LocalPath + 'Backup_Manager');
 
 {$ELSE}
 
    LocalPath := AppendPathDelim(GetUSerDir);
-   LocalPath := LocalPath + '.backup_manager' + OSDelim;
+   LocalPath := AppendPathDelim(LocalPath + '.backup_manager');
 
 {$ENDIF}
 
@@ -1937,30 +1937,12 @@ end;
 // User selected a directory
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.edtLocationAcceptDirectory(Sender: TObject; var Value: String);
-var
-   ThisDir : string;
-
 begin
 
-   ThisDir := Value;
+//--- We need to add a final OS dependant delimiter to the path.
 
-//--- We need to add a final OS dependant delimiter (OSDelim) to the path.
-//--- If we are running on Winblows then the path must be at least 4 chars in
-//--- length (e.g ''C:\A'') before we can add the backslash
-
-{$IFDEF WINDOWS}
-
-   if (Length(ThisDir) > 3) then
-      ThisDir := ThisDir + OSDelim;
-
-{$ELSE}
-
-   ThisDir := ThisDir + OSDelim;
-
-{$ENDIF}
-
-   Value := ThisDir;
-   Instr_List[GetInstruction()].Instr_Rec.BackupLocation := ThisDir;
+   Value := AppendPathDelim(Value);
+   Instr_List[GetInstruction()].Instr_Rec.BackupLocation := Value;
 
 end;
 
@@ -4270,11 +4252,6 @@ begin
 
       NumInstr := InstrTokens.Count;
 
-//   end else begin
-//
-//      InstrTokens.Add('New Instruction');
-//      NumInstr := 1;
-//
    end;
 
 //--- Build the Treeview and the in-memory array of instructions
