@@ -3350,7 +3350,7 @@ begin
 
 //--- Set the Flags
 
-   ThisTitle   := 'BSD Backup Manager';
+   ThisTitle   := 'BSD_Backup_Manager';
    ThisDate    := FormatDateTime('yyyy/mm/dd',Now);
    ThisTime    := FormatDateTime('hh:nn:ss',Now);
    TypeBackup  := 'Full';

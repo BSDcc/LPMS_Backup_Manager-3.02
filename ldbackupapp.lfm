@@ -5,7 +5,7 @@ object FLPMSBackup: TFLPMSBackup
   Width = 1242
   ActiveControl = pnlP01
   Caption = 'BACKUP MANAGER'
-  ClientHeight = 698
+  ClientHeight = 697
   ClientWidth = 1242
   Icon.Data = {
     BE0C00000000010001002020000001001800A80C000016000000280000002000
@@ -120,27 +120,27 @@ object FLPMSBackup: TFLPMSBackup
   LCLVersion = '2.0.6.0'
   object pnlP00: TPanel
     Left = 205
-    Height = 570
+    Height = 572
     Top = 57
     Width = 1037
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 570
+    ClientHeight = 572
     ClientWidth = 1037
     TabOrder = 3
     object pnlP00a: TPanel
       Left = 0
-      Height = 570
+      Height = 572
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 570
+      ClientHeight = 572
       ClientWidth = 1037
       TabOrder = 0
       object pcInstructions: TPageControl
         Left = 0
-        Height = 570
+        Height = 572
         Top = 0
         Width = 1037
         ActivePage = tsConfiguration
@@ -150,7 +150,7 @@ object FLPMSBackup: TFLPMSBackup
         OnChange = pcInstructionsChange
         object tsInstruction: TTabSheet
           Caption = 'Instruction'
-          ClientHeight = 536
+          ClientHeight = 537
           ClientWidth = 1031
           object pnlP00a2: TPanel
             Left = 0
@@ -177,7 +177,7 @@ object FLPMSBackup: TFLPMSBackup
               Height = 23
               Top = 38
               Width = 150
-              ItemHeight = 15
+              ItemHeight = 0
               ItemIndex = 1
               Items.Strings = (
                 'Hourly'
@@ -203,7 +203,7 @@ object FLPMSBackup: TFLPMSBackup
               Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 15
+              ItemHeight = 0
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -226,7 +226,7 @@ object FLPMSBackup: TFLPMSBackup
               Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 15
+              ItemHeight = 0
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -249,7 +249,7 @@ object FLPMSBackup: TFLPMSBackup
               Height = 23
               Top = 70
               Width = 150
-              ItemHeight = 15
+              ItemHeight = 0
               ItemIndex = 0
               Items.Strings = (
                 ''
@@ -404,7 +404,7 @@ object FLPMSBackup: TFLPMSBackup
                 item
                   AutoSize = True
                   Caption = 'Message'
-                  Width = 61
+                  Width = 714
                 end>
               GridLines = True
               HideSelection = False
@@ -417,13 +417,13 @@ object FLPMSBackup: TFLPMSBackup
         end
         object tsConfiguration: TTabSheet
           Caption = 'Configuration'
-          ClientHeight = 542
-          ClientWidth = 1029
+          ClientHeight = 537
+          ClientWidth = 1031
           object Label10: TLabel
             Left = 8
-            Height = 17
+            Height = 16
             Top = 8
-            Width = 119
+            Width = 131
             Caption = 'Backup Instruction:'
             Font.Height = -13
             Font.Style = [fsBold, fsUnderline]
@@ -434,13 +434,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 40
-            Width = 95
+            Width = 100
             Caption = 'Instruction Name:'
             ParentColor = False
           end
           object edtInstrNameC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 36
             Width = 272
             OnChange = edtInstrNameCChange
@@ -450,13 +450,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 72
-            Width = 63
+            Width = 66
             Caption = 'Host Name:'
             ParentColor = False
           end
           object edtHostNameC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 68
             Width = 272
             OnChange = edtInstrNameCChange
@@ -466,16 +466,16 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 104
-            Width = 53
+            Width = 55
             Caption = 'Template:'
             ParentColor = False
           end
           object edtTemplateC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Hint = 'Valid Symbolic Variables are: &Date, &Year, &Month, &Day, &Time, & Hour, &Minute, &CpyName, &Instruction, &HostName, &BackupType, &DBPrefix, &DBSuffix and &OSName'
             Top = 100
-            Width = 858
+            Width = 860
             Anchors = [akTop, akLeft, akRight]
             OnChange = edtInstrNameCChange
             ParentShowHint = False
@@ -486,15 +486,15 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 136
-            Width = 91
+            Width = 94
             Caption = 'Backup Location:'
             ParentColor = False
           end
           object edtLocationC: TDirectoryEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 132
-            Width = 858
+            Width = 860
             OnAcceptDirectory = edtLocationAcceptDirectory
             DialogTitle = 'Backup Manager - Select Backup Folder'
             ShowHidden = False
@@ -510,13 +510,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 168
-            Width = 84
+            Width = 90
             Caption = 'Read Block Size:'
             ParentColor = False
           end
           object speBlockSizeC: TSpinEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 164
             Width = 118
             MaxValue = 100000
@@ -529,21 +529,21 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 200
-            Width = 80
+            Width = 85
             Caption = 'Backup Viewer:'
             ParentColor = False
           end
           object edtViewerC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 196
-            Width = 827
+            Width = 829
             Anchors = [akTop, akLeft, akRight]
             OnChange = edtInstrNameCChange
             TabOrder = 9
           end
           object btnViewer: TSpeedButton
-            Left = 990
+            Left = 992
             Height = 26
             Top = 196
             Width = 28
@@ -580,9 +580,9 @@ object FLPMSBackup: TFLPMSBackup
           end
           object Label17: TLabel
             Left = 8
-            Height = 17
+            Height = 16
             Top = 230
-            Width = 87
+            Width = 88
             Caption = 'SMS Provider:'
             Font.Height = -13
             Font.Style = [fsBold, fsUnderline]
@@ -593,16 +593,16 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 262
-            Width = 82
+            Width = 87
             Caption = 'Provider Name:'
             ParentColor = False
           end
           object cbSMSProviderC: TComboBox
             Left = 160
-            Height = 23
+            Height = 25
             Top = 258
             Width = 118
-            ItemHeight = 15
+            ItemHeight = 0
             ItemIndex = 0
             Items.Strings = (
               'Inactive'
@@ -619,13 +619,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 303
-            Width = 40
+            Width = 46
             Caption = 'User ID:'
             ParentColor = False
           end
           object edtSMSUserC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 290
             Width = 221
             OnChange = edtInstrNameCChange
@@ -635,13 +635,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 16
             Height = 15
             Top = 338
-            Width = 53
+            Width = 57
             Caption = 'Password:'
             ParentColor = False
           end
           object edtSMSPassC: TEdit
             Left = 160
-            Height = 23
+            Height = 26
             Top = 322
             Width = 221
             EchoMode = emPassword
@@ -661,9 +661,9 @@ object FLPMSBackup: TFLPMSBackup
           end
           object cbxDBSuffixC: TCheckBox
             Left = 751
-            Height = 19
+            Height = 21
             Top = 40
-            Width = 104
+            Width = 114
             Caption = ' LPMS Database'
             OnChange = edtInstrNameCChange
             TabOrder = 2
@@ -672,13 +672,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 466
             Height = 15
             Top = 72
-            Width = 40
+            Width = 46
             Caption = 'User ID:'
             ParentColor = False
           end
           object edtDBUserC: TEdit
             Left = 560
-            Height = 23
+            Height = 26
             Top = 68
             Width = 160
             OnChange = edtInstrNameCChange
@@ -688,13 +688,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 753
             Height = 15
             Top = 72
-            Width = 53
+            Width = 57
             Caption = 'Password:'
             ParentColor = False
           end
           object edtDBPassC: TEdit
             Left = 860
-            Height = 23
+            Height = 26
             Top = 68
             Width = 160
             EchoMode = emPassword
@@ -706,13 +706,13 @@ object FLPMSBackup: TFLPMSBackup
             Left = 466
             Height = 15
             Top = 40
-            Width = 51
+            Width = 57
             Caption = 'Database:'
             ParentColor = False
           end
           object edtDBPrefixC: TEdit
             Left = 560
-            Height = 23
+            Height = 26
             Top = 36
             Width = 160
             OnChange = edtInstrNameCChange
@@ -733,13 +733,13 @@ object FLPMSBackup: TFLPMSBackup
     end
     object pnlP00b: TPanel
       Left = 0
-      Height = 570
+      Height = 572
       Top = 0
       Width = 1037
       Align = alClient
       BevelOuter = bvNone
       Caption = 'pnlP00b'
-      ClientHeight = 570
+      ClientHeight = 572
       ClientWidth = 1037
       TabOrder = 1
       object pnl00b1: TPanel
@@ -764,18 +764,18 @@ object FLPMSBackup: TFLPMSBackup
           TabOrder = 0
           object cbxDoSort: TCheckBox
             Left = 10
-            Height = 19
+            Height = 21
             Top = 8
-            Width = 170
+            Width = 182
             Caption = 'Sort Instructions in TreeView'
             OnChange = cbxDoSortChange
             TabOrder = 0
           end
           object cbxDelete: TCheckBox
             Left = 10
-            Height = 19
+            Height = 21
             Top = 40
-            Width = 200
+            Width = 213
             Caption = 'Discard invalid instructions on Exit'
             TabOrder = 1
           end
@@ -798,9 +798,9 @@ object FLPMSBackup: TFLPMSBackup
           end
           object cbxCompress: TCheckBox
             Left = 10
-            Height = 19
+            Height = 21
             Top = 72
-            Width = 177
+            Width = 187
             Caption = 'Compress Output Backup File'
             TabOrder = 3
           end
@@ -869,7 +869,7 @@ object FLPMSBackup: TFLPMSBackup
               Left = 16
               Height = 15
               Top = 10
-              Width = 60
+              Width = 61
               Caption = 'Config File:'
               ParentColor = False
             end
@@ -877,7 +877,7 @@ object FLPMSBackup: TFLPMSBackup
               Left = 16
               Height = 15
               Top = 42
-              Width = 63
+              Width = 66
               Caption = 'Host Name:'
               ParentColor = False
             end
@@ -885,7 +885,7 @@ object FLPMSBackup: TFLPMSBackup
               Left = 16
               Height = 15
               Top = 74
-              Width = 69
+              Width = 73
               Caption = 'Next Backup:'
               ParentColor = False
             end
@@ -893,7 +893,7 @@ object FLPMSBackup: TFLPMSBackup
               Left = 16
               Height = 15
               Top = 106
-              Width = 90
+              Width = 91
               Caption = 'Output Location:'
               ParentColor = False
             end
@@ -906,7 +906,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtNextBackup: TEditButton
               Left = 135
-              Height = 23
+              Height = 26
               Top = 70
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -921,7 +921,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtHostName: TEditButton
               Left = 135
-              Height = 23
+              Height = 26
               Top = 38
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -936,7 +936,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtLocation: TEditButton
               Left = 135
-              Height = 23
+              Height = 26
               Top = 102
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -951,7 +951,7 @@ object FLPMSBackup: TFLPMSBackup
             end
             object edtConfigFile: TEditButton
               Left = 135
-              Height = 23
+              Height = 26
               Top = 6
               Width = 485
               Anchors = [akTop, akLeft, akRight]
@@ -976,17 +976,17 @@ object FLPMSBackup: TFLPMSBackup
       end
       object pnl00b2: TPanel
         Left = 0
-        Height = 432
+        Height = 434
         Top = 138
         Width = 1037
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 432
+        ClientHeight = 434
         ClientWidth = 1037
         TabOrder = 1
         object lvLogAll: TListView
           Left = 0
-          Height = 432
+          Height = 434
           Top = 0
           Width = 1037
           Align = alClient
@@ -1006,7 +1006,7 @@ object FLPMSBackup: TFLPMSBackup
             item
               AutoSize = True
               Caption = 'Message'
-              Width = 61
+              Width = 720
             end>
           GridLines = True
           HideSelection = False
@@ -1020,8 +1020,8 @@ object FLPMSBackup: TFLPMSBackup
   end
   object sbStatus: TStatusBar
     Left = 0
-    Height = 23
-    Top = 675
+    Height = 20
+    Top = 677
     Width = 1242
     Panels = <    
       item
@@ -1050,7 +1050,7 @@ object FLPMSBackup: TFLPMSBackup
   end
   object splSplit01: TSplitter
     Left = 200
-    Height = 570
+    Height = 572
     Top = 57
     Width = 5
     Beveled = True
@@ -1058,7 +1058,7 @@ object FLPMSBackup: TFLPMSBackup
   object pnlP03: TPanel
     Left = 0
     Height = 48
-    Top = 627
+    Top = 629
     Width = 1242
     Align = alBottom
     BevelOuter = bvNone
@@ -1740,18 +1740,18 @@ object FLPMSBackup: TFLPMSBackup
   end
   object pnlP02: TPanel
     Left = 0
-    Height = 570
+    Height = 572
     Top = 57
     Width = 200
     Align = alLeft
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 570
+    ClientHeight = 572
     ClientWidth = 200
     TabOrder = 1
     object tvInstructions: TTreeView
       Left = 0
-      Height = 570
+      Height = 572
       Top = 0
       Width = 200
       Align = alClient
