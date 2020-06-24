@@ -227,20 +227,20 @@ begin
    if Trim(edtViewer.Text) <> '' then
       dlgOpen.InitialDir := ExtractFilePath(edtViewer.Text);
 
-{$ifdef WINDOWS}
+{$IFDEF WINDOWS}
    dlgOpen.DefaultExt := '.exe';
    dlgOpen.Filter     := 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
-{$ifdef LINUX}
+{$IFDEF LINUX}
    dlgOpen.DefaultExt := '';
    dlgOpen.Filter     := 'All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
-{$ifdef DARWIN}
+{$IFDEF DARWIN}
    dlgOpen.DefaultExt := '';
    dlgOpen.Filter     := 'All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
    if (dlgOpen.Execute = true) then
       edtViewer.Text := dlgOpen.FileName;

@@ -41,9 +41,9 @@ uses
 {$ENDIF}
 
 {$IFDEF DARWIN}                      // Target is macOS
-   {$IFDEF CPUI386}                  // Running on a version below Catalina
+   {$IFDEF CPUI386}                  // Running on older hardware - Widget set must be Carbon
       mysql55conn;
-   {$ELSE}                           // Running on Catalina
+   {$ELSE}                           // Running on new har4dware - Widget set must be Cocoa
       mysql57conn;
    {$ENDIF}
 {$ENDIF}
@@ -402,9 +402,9 @@ private { private declarations }
 {$ENDIF}
 
 {$IFDEF DARWIN}                    // Target is macOS
-   {$IFDEF CPUI386}                // Running on a version below Catalina
+   {$IFDEF CPUI386}                // Running on older hardware
       sqlCon : TMySQL55Connection;
-   {$ELSE}                         // Running on Catalina
+   {$ELSE}                         // Running on new hardware
       sqlCon : TMySQL57Connection;
    {$ENDIF}
 {$ENDIF}
@@ -445,7 +445,6 @@ const
 
 public  { public declarations }
 
-//   OSDelim         : string;             // Holds '/' or '\' depending on the OS
    CfgFile         : string;             // Name of the default Configuration File
    BackupTemplate  : REC_Instructions;   // Template to be used for new/invalid backup instructions
 
@@ -502,12 +501,9 @@ begin
       Exit;
 
    FirstRun := True;
-//   FLPMSBackup.Hide;
 
 //--- Determine the Platform on which we are running and set the defaults to be
 //--- Platform specific
-
-//   OSDelim := '/';
 
    saAbout                 := TSplashAbout.Create(nil);
    saAbout.Author          := 'BlueCrane Software Development CC';
@@ -538,9 +534,9 @@ begin
 {$IFDEF DARWIN}                     // Target is macOS
    OSName  := 'macOS';
    OSShort := 'Mac';
-   {$IFDEF CPUI386}                 // Running on a version below Catalina
+   {$IFDEF CPUI386}                 // Running on older hardware
       sqlCon := TMySQL55Connection.Create(nil);
-   {$ELSE}
+   {$ELSE}                          // Running on new hardware
       sqlCon := TMySQL57Connection.Create(nil);
    {$ENDIF}
 {$ENDIF}
@@ -642,8 +638,6 @@ begin
    tvInstructions.Items.Item[0].Selected := True;
    tvInstructions.AutoExpand := True;
    tvInstructions.FullExpand;
-
-//   FLPMSBackup.Show;
 
 //--- Start the Time display and Scheduler timers
 
@@ -1654,10 +1648,6 @@ begin
 
    Instr_List[ListNum].Status := ord(STAT_RUNNOW);
 
-//--- Set the state of the buttons
-
-//   Set_Buttons(ord(BTN_RUNNOW));
-
 end;
 
 //------------------------------------------------------------------------------
@@ -1755,11 +1745,11 @@ end;
 procedure TFLPMSBackup.ActionsMinimiseExecute(Sender: TObject);
 begin
 
-{$ifdef Windows}
+{$IFDEF WINDOWS}
    FLPMSBackup.Hide;
-{$else}
+{$ELSE}
    Application.Minimize;
-{$endif}
+{$ENDIF}
 
 end;
 
@@ -2061,7 +2051,9 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.tvSmallEditing(Sender: TObject; Node: TTreeNode; var AllowEdit: Boolean);
 begin
+
    AllowEdit := False;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -2231,20 +2223,20 @@ begin
    if Trim(edtViewerC.Text) <> '' then
       dlgOpen.InitialDir := ExtractFilePath(edtViewerC.Text);
 
-{$ifdef WINDOWS}
+{$IFDEF WINDOWS}
    dlgOpen.DefaultExt := '.exe';
    dlgOpen.Filter     := 'Application Files (*.exe)|*.exe|All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
-{$ifdef LINUX}
+{$IFDEF LINUX}
    dlgOpen.DefaultExt := '';
    dlgOpen.Filter     := 'All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
-{$ifdef DARWIN}
+{$IFDEF DARWIN}
    dlgOpen.DefaultExt := '';
    dlgOpen.Filter     := 'All Files (*.*)|*.*';
-{$endif}
+{$ENDIF}
 
    if (dlgOpen.Execute = true) then
       edtViewerC.Text := dlgOpen.FileName;
@@ -2419,7 +2411,9 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.btnMinimiseClick(Sender: TObject);
 begin
-      FLPMSBackup.Hide;
+
+   FLPMSBackup.Hide;
+
 end;
 
 //------------------------------------------------------------------------------
@@ -2651,7 +2645,9 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.TrayIconMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
+
    Set_Hint(ord(HINT_WAITING));
+
 end;
 
 //------------------------------------------------------------------------------
@@ -3001,7 +2997,6 @@ end;
 //------------------------------------------------------------------------------
 procedure TFLPMSBackup.Navigate();
 begin
-
 
    if tvInstructions.Selected.Level = 0 then begin
 
@@ -3510,15 +3505,6 @@ begin
          ThisLine := '2' + Res + ';';
 
       WriteLn(BackupFile,ThisLine);
-
-//--- Update the Message fields
-
-      if (ActiveName = InstrSel) then begin
-
-//         lblL05.Caption := 'Backing up Table ''' + ThisTable + ''', Reading...';
-//         lblL05.Refresh;
-
-      end;
 
 //--- Create and write the Insert statements for this Table in blocks
 
@@ -4385,6 +4371,7 @@ begin
 //--- and to do a backup on the next quarter
 
       if ((Instr_List[idx1].Instr_Rec.BackupType = 0) and (Instr_List[idx1].Instr_Rec.BackupT01 = 0) and (Instr_List[idx1].Instr_Rec.BackupT02 = 0) and (Instr_List[idx1].Instr_Rec.BackupT03 = 0)) then begin
+
          Instr_List[idx1].Instr_Rec.BackupType := 1;
          Instr_List[idx1].Instr_Rec.BackupT01  := StrToInt(FormatDateTime('HH',Now()));
          Instr_List[idx1].Instr_Rec.BackupT02  := StrToInt(FormatDateTime('mm',Now()));
@@ -4396,9 +4383,12 @@ begin
          else if (Instr_List[idx1].Instr_Rec.BackupT02 < 45) then
             Instr_List[idx1].Instr_Rec.BackupT02 := 4
          else begin
+
             Instr_List[idx1].Instr_Rec.BackupT02 := 1;
             inc(Instr_List[idx1].Instr_Rec.BackupT01);
+
          end;
+
       end;
 
       ThisNodeM.SelectedIndex := 3;
@@ -4552,9 +4542,8 @@ begin
 
    end;
 
-   if (NumLines = 0) then begin
+   if (NumLines = 0) then
       DispLogMsg(FormatDateTime('yyyy/MM/dd',Now()),FormatDateTime('hh:nn:ss.zzz',Now()), 'Backup', '##New Log File Created');
-   end;
 
 end;
 
@@ -4610,14 +4599,14 @@ begin
       begin
 
          LastMsg := E.Message;
-         Result := false;
+         Result := False;
          Exit;
 
       end;
 
    end;
 
-   Result := true;
+   Result := True;
 
 end;
 
@@ -4659,7 +4648,7 @@ begin
    if sqlQry1.RecordCount = 0 then
       LimitActive := False;
 
-   Result := true;
+   Result := True;
 
 end;
 

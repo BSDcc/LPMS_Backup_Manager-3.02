@@ -38,13 +38,13 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
 
-  private { private declarations }
+private { private declarations }
 
-  public  { public declarations }
+public  { public declarations }
     Config   : boolean;
     FileName : string;
 
-  end;
+end;
 
 //------------------------------------------------------------------------------
 // Global variables

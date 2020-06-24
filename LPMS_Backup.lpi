@@ -24,7 +24,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="3"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="96"/>
+      <BuildNr Value="98"/>
       <Language Value="0809"/>
       <StringTable CompanyName="BlueCrane Software Development CC" ProductName="Backup Manager" ProductVersion="3.02"/>
     </VersionInfo>
@@ -36,7 +36,7 @@
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
             <OtherUnitFiles Value="../../.lazarus/onlinepackagemanager/packages/synapse40.1"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/$(BuildMode)"/>
           </SearchPaths>
           <Linking>
             <Options>
@@ -58,7 +58,7 @@
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
             <OtherUnitFiles Value="../../.lazarus/onlinepackagemanager/packages/synapse40.1"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/$(BuildMode)"/>
           </SearchPaths>
           <Linking>
             <Debugging>
@@ -78,6 +78,9 @@
           </Other>
         </CompilerOptions>
       </Item3>
+      <SharedMatrixOptions Count="1">
+        <Item1 ID="924327015696" Modes="Debug,Default,Release" Type="OutDir" Value="lib/$(TargetCPU)-$(TargetOS)/$(BuildMode)"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>

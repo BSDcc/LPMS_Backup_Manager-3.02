@@ -14,7 +14,7 @@ uses
 begin
    RequireDerivedFormResource := True;
   Application.Scaled:=True;
-  Application.Title:='Backup Manager';
+   Application.Title:='Backup Manager';
    Application.Initialize;
    Application. CreateForm( TFLPMSBackup, FLPMSBackup);
   Application.CreateForm(TFldShowInfo, FldShowInfo);

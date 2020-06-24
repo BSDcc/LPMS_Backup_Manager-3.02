@@ -119,16 +119,16 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 12
-    Width = 63
+    Width = 66
     Caption = 'Host Name:'
     ParentColor = False
   end
   object cbSMSProvider: TComboBox
     Left = 100
-    Height = 23
+    Height = 25
     Top = 297
     Width = 118
-    ItemHeight = 15
+    ItemHeight = 0
     Items.Strings = (
       'Inactive'
       'SMS Portal'
@@ -143,13 +143,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 44
-    Width = 61
+    Width = 67
     Caption = 'User Name:'
     ParentColor = False
   end
   object edtDBUser: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 40
     Width = 225
     Anchors = [akTop, akLeft, akRight]
@@ -160,13 +160,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 337
     Height = 15
     Top = 44
-    Width = 53
+    Width = 57
     Caption = 'Password:'
     ParentColor = False
   end
   object edtDBPass: TEdit
     Left = 432
-    Height = 23
+    Height = 26
     Top = 40
     Width = 225
     Anchors = [akTop, akLeft, akRight]
@@ -179,13 +179,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 76
-    Width = 47
+    Width = 52
     Caption = 'DBPrefix:'
     ParentColor = False
   end
   object edtDBPrefix: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 72
     Width = 225
     MaxLength = 6
@@ -196,7 +196,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 108
-    Width = 49
+    Width = 50
     Caption = 'Location:'
     ParentColor = False
   end
@@ -204,7 +204,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 204
-    Width = 55
+    Width = 59
     Caption = 'Block Size:'
     ParentColor = False
   end
@@ -228,7 +228,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object speBlockSize: TSpinEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 200
     Width = 118
     MaxValue = 100000
@@ -241,13 +241,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 140
-    Width = 38
+    Width = 41
     Caption = 'Viewer:'
     ParentColor = False
   end
   object edtViewer: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 136
     Width = 531
     Anchors = [akTop, akLeft, akRight]
@@ -292,7 +292,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object edtHostName: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 8
     Width = 557
     Anchors = [akTop, akLeft, akRight]
@@ -301,7 +301,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object deDirectory: TDirectoryEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 104
     Width = 557
     OnAcceptDirectory = deDirectoryAcceptDirectory
@@ -316,13 +316,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 172
-    Width = 53
+    Width = 55
     Caption = 'Template:'
     ParentColor = False
   end
   object edtTemplate: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 168
     Width = 557
     Anchors = [akTop, akLeft, akRight]
@@ -333,13 +333,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 268
-    Width = 73
+    Width = 77
     Caption = 'SMS Number:'
     ParentColor = False
   end
   object edtSMSNumber: TEdit
     Left = 100
-    Height = 23
+    Height = 26
     Top = 264
     Width = 120
     OnChange = edtHostNameChange
@@ -348,36 +348,36 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object rbSuccess: TRadioButton
     Left = 232
-    Height = 19
+    Height = 21
     Top = 266
-    Width = 80
+    Width = 87
     Caption = 'On Success'
     OnChange = edtHostNameChange
     TabOrder = 14
   end
   object rbFailure: TRadioButton
     Left = 344
-    Height = 19
+    Height = 21
     Top = 266
-    Width = 74
+    Width = 80
     Caption = 'On Failure'
     OnChange = edtHostNameChange
     TabOrder = 15
   end
   object rbAlways: TRadioButton
     Left = 456
-    Height = 19
+    Height = 21
     Top = 266
-    Width = 86
+    Width = 93
     Caption = 'Always Send'
     OnChange = edtHostNameChange
     TabOrder = 16
   end
   object rbNever: TRadioButton
     Left = 568
-    Height = 19
+    Height = 21
     Top = 266
-    Width = 80
+    Width = 88
     Caption = 'Never Send'
     Checked = True
     OnChange = edtHostNameChange
@@ -388,13 +388,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 230
     Height = 15
     Top = 300
-    Width = 61
+    Width = 67
     Caption = 'User Name:'
     ParentColor = False
   end
   object edtSMSUser: TEdit
     Left = 319
-    Height = 23
+    Height = 26
     Top = 296
     Width = 118
     Anchors = [akTop, akLeft, akRight]
@@ -405,13 +405,13 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 449
     Height = 15
     Top = 300
-    Width = 53
+    Width = 57
     Caption = 'Password:'
     ParentColor = False
   end
   object edtSMSPass: TEdit
     Left = 538
-    Height = 23
+    Height = 26
     Top = 296
     Width = 119
     Anchors = [akTop, akLeft, akRight]
@@ -424,16 +424,16 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 300
-    Width = 69
+    Width = 73
     Caption = 'SMS Povider:'
     ParentColor = False
   end
   object cbxBackupType: TComboBox
     Left = 319
-    Height = 23
+    Height = 25
     Top = 201
     Width = 118
-    ItemHeight = 15
+    ItemHeight = 0
     Items.Strings = (
       'Hourly'
       'Daily'
@@ -447,7 +447,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 230
     Height = 15
     Top = 204
-    Width = 71
+    Width = 73
     Caption = 'Backup Type:'
     ParentColor = False
   end
@@ -455,7 +455,7 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 8
     Height = 15
     Top = 236
-    Width = 19
+    Width = 21
     Caption = 'T01'
     ParentColor = False
   end
@@ -463,16 +463,16 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 230
     Height = 15
     Top = 236
-    Width = 19
+    Width = 21
     Caption = 'T02'
     ParentColor = False
   end
   object cbxT02: TComboBox
     Left = 319
-    Height = 23
+    Height = 25
     Top = 233
     Width = 118
-    ItemHeight = 15
+    ItemHeight = 0
     Items.Strings = (
       ''
     )
@@ -484,16 +484,16 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
     Left = 449
     Height = 15
     Top = 236
-    Width = 19
+    Width = 21
     Caption = 'T03'
     ParentColor = False
   end
   object cbxT03: TComboBox
     Left = 538
-    Height = 23
+    Height = 25
     Top = 233
     Width = 118
-    ItemHeight = 15
+    ItemHeight = 0
     Items.Strings = (
       ''
     )
@@ -503,10 +503,10 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object cbxT01: TComboBox
     Left = 100
-    Height = 23
+    Height = 25
     Top = 233
     Width = 118
-    ItemHeight = 15
+    ItemHeight = 0
     Items.Strings = (
       ''
     )
@@ -524,9 +524,9 @@ object FLPMSBackupTemplate: TFLPMSBackupTemplate
   end
   object cbDBSuffix: TCheckBox
     Left = 337
-    Height = 19
+    Height = 21
     Top = 74
-    Width = 101
+    Width = 111
     Caption = 'LPMS Database'
     TabOrder = 4
   end
